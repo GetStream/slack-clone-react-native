@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginBottom: 10,
     flexDirection: 'column',
-    flex: 6,
   },
   thumbnail: {
     height: 150,
