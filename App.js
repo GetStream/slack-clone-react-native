@@ -77,7 +77,11 @@ function ChannelScreen({navigation, route}) {
   return (
     <SafeAreaView style={{backgroundColor: 'white'}}>
       <View style={{flexDirection: 'column', height: '100%'}}>
-        <ChannelHeader navigation={navigation} channel={channel} />
+        <ChannelHeader
+          navigation={navigation}
+          channel={channel}
+          client={chatClient}
+        />
         <View style={styles.chatContainer}>
           <Chat client={chatClient} style={theme}>
             <Channel channel={channel}>
@@ -112,8 +116,8 @@ const user = {
   name: 'Vishal',
 };
 
-const userTate = {
-  id: 'tate',
+const userJaap = {
+  id: 'jaap',
   name: 'Jaap',
 };
 const userTokenTate =

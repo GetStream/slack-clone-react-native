@@ -3,7 +3,20 @@ import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
 import iconSearch from '../images/icon-search.png';
 import iconThreeDots from '../images/icon-3-dots.png';
 
-export const ChannelHeader = ({navigation, channel}) => {
+export const ChannelHeader = ({navigation, channel, client}) => {
+  let channelTitle = '#channel_name';
+  if (channel && channel.data && channel.data.name) {
+    channelTitle = '# ' + channel.data.name.toLowerCase().replace(' ', '_');
+  }
+
+  const memberIds =
+    channel && channel.state ? Object.keys(channel.state.members) : [];
+  if (channel && memberIds.length === 2) {
+    const otherUserId =
+      memberIds[0] === client.user.id ? memberIds[1] : memberIds[0];
+    channelTitle = channel.state.members[otherUserId].user.name;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.leftContent}>
@@ -13,13 +26,7 @@ export const ChannelHeader = ({navigation, channel}) => {
           }}>
           <Text style={styles.hamburgerIcon}>☰</Text>
         </TouchableOpacity>
-        {channel && channel.data && channel.data.name ? (
-          <Text style={styles.channelTitle}>
-            #{channel.data.name.toLowerCase().replace(' ', '_')}
-          </Text>
-        ) : (
-          <Text style={styles.channelTitle}>#channel_name</Text>
-        )}
+        <Text style={styles.channelTitle}>{channelTitle}</Text>
       </View>
       <View style={styles.rightContent}>
         <TouchableOpacity style={styles.searchIconContainer}>
@@ -61,10 +68,12 @@ export const styles = StyleSheet.create({
   },
   searchIconContainer: {marginRight: 15, alignSelf: 'center'},
   searchIcon: {
-    height: 18, width: 18,
+    height: 18,
+    width: 18,
   },
   menuIcon: {
-    height: 18, width: 18
+    height: 18,
+    width: 18,
   },
   menuIconContainer: {alignSelf: 'center'},
 });

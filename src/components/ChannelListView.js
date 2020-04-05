@@ -19,7 +19,7 @@ export const ChannelListView = ({client, setActiveChannel}) => {
   const [hasMoreChannels, setHasMoreChannels] = useState(true);
   const filters = {
     type: 'messaging',
-    example: 'slack-5',
+    example: 'slack-7',
     members: {
       $in: [client.user.id],
     },
