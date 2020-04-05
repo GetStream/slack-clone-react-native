@@ -16,14 +16,6 @@ import {ChannelHeader} from './src/components/ChannelHeader';
 import {StreamChat} from 'stream-chat';
 // Read more about style customizations at - https://getstream.io/chat/react-native-chat/tutorial/#custom-styles
 const theme = {
-  avatar: {
-    image: {
-      size: 32,
-    },
-  },
-  colors: {
-    primary: 'magenta',
-  },
   spinner: {
     css: `
         width: 15px;
@@ -62,6 +54,16 @@ const theme = {
     },
   },
 };
+
+const chatClient = new StreamChat('q95x9hkbyd6p');
+const userToken =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk';
+const user = {
+  id: 'vishal',
+  name: 'Vishal',
+};
+
+chatClient.setUser(user, userToken);
 
 function ChannelScreen({navigation, route}) {
   const [channel, setChannel] = useState(null);
@@ -107,31 +109,6 @@ function ChannelScreen({navigation, route}) {
     </SafeAreaView>
   );
 }
-
-const chatClient = new StreamChat('q95x9hkbyd6p');
-const userToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk';
-const user = {
-  id: 'vishal',
-  name: 'Vishal',
-};
-
-const userJaap = {
-  id: 'jaap',
-  name: 'Jaap',
-};
-const userTokenTate =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidGF0ZSJ9.o6tXDbN9_uDw0-rKID5JvOfLbE-5nv5VBhRUZiJaDws';
-
-const userNick = {
-  id: 'twilliot',
-  name: 'Nick',
-};
-
-const userTokenNick =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidHdpbGxpb3QifQ.IgBm7u8YgEFTqW-vtpYLovI3WUQoFwysXCvXgkn0AcY';
-
-chatClient.setUser(user, userToken);
 
 const CustomDrawerContent = props => {
   return (
