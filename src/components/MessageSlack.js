@@ -2,6 +2,7 @@ import React from 'react';
 import {MessageSimple, MessageAvatar} from 'stream-chat-react-native';
 import {MessageFooter} from './MessageFooter';
 import {UrlPreview} from './UrlPreview';
+import {Giphy} from './Giphy';
 import {View, Text, StyleSheet} from 'react-native';
 import Moment from 'moment';
 
@@ -13,7 +14,8 @@ export const MessageSlack = props => {
     <MessageSimple
       {...props}
       forceAlign="left"
-      Card={UrlPreview}
+      UrlPreview={UrlPreview}
+      Giphy={Giphy}
       MessageAvatar={SquareMessageAvatar}
       ReactionList={null}
       MessageHeader={MessageHeader}

@@ -16,34 +16,43 @@ export const UrlPreview = props => {
     return domain.slice(0, indexOfSlash);
   };
   return (
-    <TouchableOpacity
-      style={{
-        borderLeftWidth: 5,
-        borderLeftColor: '#E4E4E4',
-        paddingLeft: 10,
-        marginLeft: 10,
-        flexDirection: 'row',
-      }}>
-      <View style={{flexDirection: 'column', flex: 6}}>
-        <Text style={urlPreviewStyles.titleUrl}>
-          {getDomain(props.title_link)}
-        </Text>
-        <Text style={urlPreviewStyles.title}>{props.title}</Text>
-        <Text style={urlPreviewStyles.description}>{props.text}</Text>
+    <TouchableOpacity style={styles.container}>
+      <View style={styles.detailsContainer}>
+        <Text style={styles.titleUrl}>{getDomain(props.title_link)}</Text>
+        <Text style={styles.title}>{props.title}</Text>
+        <Text style={styles.description}>{props.text}</Text>
       </View>
-      <View style={{flex: 1}}>
+      <View style={styles.thumbnailContainer}>
         <Image
           source={{
             url: props.image_url || props.thumb_url,
           }}
-          style={{height: 40, width: 40}}
+          style={styles.thumbnail}
         />
       </View>
     </TouchableOpacity>
   );
 };
 
-const urlPreviewStyles = StyleSheet.create({
+const styles = StyleSheet.create({
+  container: {
+    borderLeftWidth: 5,
+    borderLeftColor: '#E4E4E4',
+    paddingLeft: 10,
+    marginLeft: 10,
+    flexDirection: 'row',
+  },
+  detailsContainer: {
+    flexDirection: 'column',
+    flex: 6,
+  },
+  thumbnailContainer: {
+    flex: 1,
+  },
+  thumbnail: {
+    height: 40,
+    width: 40,
+  },
   titleUrl: {
     fontFamily: 'Lato-Regular',
     fontWeight: 'bold',
