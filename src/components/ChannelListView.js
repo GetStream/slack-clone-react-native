@@ -165,6 +165,7 @@ export const ChannelListView = ({client, setActiveChannel}) => {
                   isUnread={true}
                   channel={c}
                   client={client}
+                  key={c.id}
                 />
               );
             })}
@@ -182,6 +183,7 @@ export const ChannelListView = ({client, setActiveChannel}) => {
                   isUnread={false}
                   channel={c}
                   client={client}
+                  key={c.id}
                 />
               );
             })}
@@ -199,6 +201,7 @@ export const ChannelListView = ({client, setActiveChannel}) => {
                   isUnread={false}
                   channel={c}
                   client={client}
+                  key={c.id}
                 />
               );
             })}

@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   thumbnail: {
     height: 150,
-    width: '100%',
+    width: 250,
     borderRadius: 10,
   },
   title: {
