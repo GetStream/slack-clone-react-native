@@ -4,22 +4,22 @@ import {StyleSheet, Image, View, TouchableOpacity, Text} from 'react-native';
 import iconEmoticon from '../images/icon-emoticon.png';
 
 export const MessageFooter = props => {
-  if (
-    !props.message.latest_reactions ||
-    props.message.latest_reactions.length === 0
-  ) {
-    return null;
-  }
-
   return (
     <View style={styles.reactionListContainer}>
-      {renderReactions(
-        props.message.latest_reactions,
-        props.supportedReactions,
-        props.message.reaction_counts,
-        props.handleReaction,
-      )}
-      <ReactionPickerWrapper {...props}>
+      {props.message.latest_reactions &&
+        props.message.latest_reactions.length > 0 &&
+        renderReactions(
+          props.message.latest_reactions,
+          props.supportedReactions,
+          props.message.reaction_counts,
+          props.handleReaction,
+        )}
+      <ReactionPickerWrapper
+        {...props}
+        offset={{
+          left: -70,
+          top: 10,
+        }}>
         {props.message.latest_reactions &&
           props.message.latest_reactions.length > 0 && (
             <View style={styles.reactionPickerContainer}>
