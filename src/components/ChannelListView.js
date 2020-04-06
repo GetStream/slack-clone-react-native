@@ -1,21 +1,81 @@
 import React, {useState, useEffect} from 'react';
-import {
-  Button,
-  View,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  TextInput,
-  StyleSheet,
-} from 'react-native';
+import {View, Text, SafeAreaView, TextInput, StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import {ChannelListItem} from './ChannelListItem';
 
-export const ChannelListView = ({client, setActiveChannel}) => {
+export const ChannelListView = ({client, changeChannel}) => {
+  const {
+    activeChannelId,
+    setActiveChannelId,
+    unreadChannels,
+    readChannels,
+    oneOnOneConversations,
+  } = useWatchedChannels(client, changeChannel);
+
+  const renderChannelRow = (channel, isUnread, isOneOnOneConversation) => {
+    return (
+      <ChannelListItem
+        activeChannelId={activeChannelId}
+        setActiveChannelId={setActiveChannelId}
+        changeChannel={changeChannel}
+        isOneOnOneConversation={isOneOnOneConversation}
+        isUnread={isUnread}
+        channel={channel}
+        client={client}
+        key={channel.id}
+        currentUserId={client.user.id}
+      />
+    );
+  };
+
+  return (
+    <SafeAreaView>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <TextInput
+            style={styles.inputSearchBox}
+            placeholderTextColor="grey"
+            placeholder="Jump to"
+          />
+        </View>
+
+        <ScrollView style={styles.scrollView}>
+
+          {/* Unread channels group */}
+          <View style={styles.groupTitleContainer}>
+            <Text style={styles.groupTitle}>Unreads</Text>
+          </View>
+          {unreadChannels &&
+            unreadChannels.map(c => {
+              const isOneOnOneConversation =
+                Object.keys(c.state.members).length === 2;
+              return renderChannelRow(c, true, isOneOnOneConversation);
+            })}
+
+          {/* Read channels group */}
+          <View style={styles.groupTitleContainer}>
+            <Text style={styles.groupTitle}>Channels</Text>
+          </View>
+          {readChannels &&
+            readChannels.map(c => renderChannelRow(c, false, false))}
+
+          {/* Direct messages group */}
+          <View style={styles.groupTitleContainer}>
+            <Text style={styles.groupTitle}>Direct Messages</Text>
+          </View>
+          {oneOnOneConversations &&
+            oneOnOneConversations.map(c => renderChannelRow(c, false, true))}
+        </ScrollView>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const useWatchedChannels = (client, changeChannel) => {
   const [activeChannelId, setActiveChannelId] = useState(null);
   const [unreadChannels, setUnreadChannels] = useState([]);
   const [readChannels, setReadChannels] = useState([]);
   const [oneOnOneConversations, setOneOnOneConversations] = useState([]);
-  const [offset, setOffset] = useState(0);
   const [hasMoreChannels, setHasMoreChannels] = useState(true);
   const filters = {
     type: 'messaging',
@@ -32,11 +92,20 @@ export const ChannelListView = ({client, setActiveChannel}) => {
     if (!hasMoreChannels) {
       return;
     }
+
     let offset = 0;
     const _unreadChannels = [];
     const _readChannels = [];
     const _oneOnOneConversations = [];
 
+    /**
+     * fetchChannels simply gets the channels from queryChannels endpoint
+     * and sorts them by following 3 categories:
+     *
+     * - Unread channels
+     * - Channels (read channels)
+     * - Direct conversations/messages
+     */
     async function fetchChannels() {
       const channels = await client.queryChannels(filters, sort, {
         ...options,
@@ -63,7 +132,7 @@ export const ChannelListView = ({client, setActiveChannel}) => {
       } else {
         setHasMoreChannels(false);
         setActiveChannelId(_readChannels[0].id);
-        setActiveChannel(_readChannels[0].id);
+        changeChannel(_readChannels[0].id);
       }
     }
 
@@ -74,31 +143,42 @@ export const ChannelListView = ({client, setActiveChannel}) => {
     function handleEvents(e) {
       if (e.type === 'message.new') {
         const cid = e.cid;
-        // get channel index
+
+        // Check if the channel (which received new message) exists in group channels.
         const channelReadIndex = readChannels.findIndex(
           channel => channel.cid === cid,
         );
-        const channelUnreadIndex = unreadChannels.findIndex(
-          channel => channel.cid === cid,
-        );
+
+        if (channelReadIndex >= 0) {
+          // If yes, then remove it from reacChannels list and add it to unreadChannels list
+          const channel = readChannels[channelReadIndex];
+          readChannels.splice(channelReadIndex, 1);
+          setReadChannels([...readChannels]);
+          setUnreadChannels([channel, ...unreadChannels]);
+        }
+
+        // Check if the channel (which received new message) exists in oneOnOneConversations list.
         const oneOnOneConversationIndex = oneOnOneConversations.findIndex(
           channel => channel.cid === cid,
         );
-        let channel;
-        if (channelReadIndex >= 0) {
-          channel = readChannels[channelReadIndex];
-          readChannels.splice(channelReadIndex, 1);
-          setReadChannels([...readChannels]);
-        } else if (oneOnOneConversationIndex >= 0) {
-          channel = oneOnOneConversations[oneOnOneConversationIndex];
+        if (oneOnOneConversationIndex >= 0) {
+          // If yes, then remove it from oneOnOneConversations list and add it to unreadChannels list
+          const channel = oneOnOneConversations[oneOnOneConversationIndex];
           oneOnOneConversations.splice(oneOnOneConversationIndex, 1);
           setOneOnOneConversations([...oneOnOneConversations]);
-        } else if (channelUnreadIndex >= 0) {
-          channel = unreadChannels[channelUnreadIndex];
+          setUnreadChannels([channel, ...unreadChannels]);
+        }
+
+        // Check if the channel (which received new message) already exists in unreadChannels.
+        const channelUnreadIndex = unreadChannels.findIndex(
+          channel => channel.cid === cid,
+        );
+        if (channelUnreadIndex >= 0) {
+          const channel = unreadChannels[channelUnreadIndex];
           unreadChannels.splice(channelUnreadIndex, 1);
           setReadChannels([...readChannels]);
+          setUnreadChannels([channel, ...unreadChannels]);
         }
-        setUnreadChannels([channel, ...unreadChannels]);
       }
 
       if (e.type === 'message.read') {
@@ -116,10 +196,6 @@ export const ChannelListView = ({client, setActiveChannel}) => {
 
         // get channel from channels
         const channel = unreadChannels[channelIndex];
-        // set new channel state
-        if (this._unmounted) {
-          return;
-        }
 
         unreadChannels.splice(channelIndex, 1);
         setUnreadChannels([...unreadChannels]);
@@ -131,193 +207,32 @@ export const ChannelListView = ({client, setActiveChannel}) => {
         }
       }
     }
+
     client.on(handleEvents);
 
     return () => {
       client.off(handleEvents);
     };
   }, [client, readChannels, unreadChannels, oneOnOneConversations]);
-  return (
-    <SafeAreaView>
-      <View style={channelListStyles.container}>
-        <View style={channelListStyles.headerContainer}>
-          <TextInput
-            style={channelListStyles.inputSearchBox}
-            placeholderTextColor="grey"
-            placeholder="Jump to"
-            inlineImageLeft="search_icon"
-          />
-        </View>
-        <ScrollView style={channelListStyles.scrollView}>
-          <View style={channelListStyles.groupTitleContainer}>
-            <Text style={channelListStyles.groupTitle}>Unreads</Text>
-          </View>
-          {unreadChannels &&
-            unreadChannels.map(c => {
-              return (
-                <ChannelRow
-                  activeChannelId={activeChannelId}
-                  setActiveChannelId={setActiveChannelId}
-                  setActiveChannel={setActiveChannel}
-                  isOneOnOneConversation={
-                    Object.keys(c.state.members).length === 2
-                  }
-                  isUnread={true}
-                  channel={c}
-                  client={client}
-                  key={c.id}
-                />
-              );
-            })}
-          <View style={channelListStyles.groupTitleContainer}>
-            <Text style={channelListStyles.groupTitle}>Channels</Text>
-          </View>
-          {readChannels &&
-            readChannels.map(c => {
-              return (
-                <ChannelRow
-                  activeChannelId={activeChannelId}
-                  setActiveChannelId={setActiveChannelId}
-                  setActiveChannel={setActiveChannel}
-                  isOneOnOneConversation={false}
-                  isUnread={false}
-                  channel={c}
-                  client={client}
-                  key={c.id}
-                />
-              );
-            })}
-          <View style={channelListStyles.groupTitleContainer}>
-            <Text style={channelListStyles.groupTitle}>Direct Messages</Text>
-          </View>
-          {oneOnOneConversations &&
-            oneOnOneConversations.map(c => {
-              return (
-                <ChannelRow
-                  activeChannelId={activeChannelId}
-                  setActiveChannelId={setActiveChannelId}
-                  setActiveChannel={setActiveChannel}
-                  isOneOnOneConversation={true}
-                  isUnread={false}
-                  channel={c}
-                  client={client}
-                  key={c.id}
-                />
-              );
-            })}
-        </ScrollView>
-      </View>
-    </SafeAreaView>
-  );
+
+  return {
+    activeChannelId,
+    setActiveChannelId,
+    unreadChannels,
+    setUnreadChannels,
+    readChannels,
+    setReadChannels,
+    oneOnOneConversations,
+    setOneOnOneConversations,
+  };
 };
 
-const ChannelRow = ({
-  setActiveChannelId,
-  setActiveChannel,
-  isOneOnOneConversation,
-  isUnread,
-  channel,
-  activeChannelId,
-  client,
-}) => {
-  let otherUserId;
-  let ChannelPrefix = null;
-  let ChannelTitle = null;
-  let countUnreadMentions = channel.countUnreadMentions();
-  if (isOneOnOneConversation) {
-    const currentUserId = client.user.id;
-    const memberIds = Object.keys(channel.state.members);
-    otherUserId = memberIds[0] === currentUserId ? memberIds[1] : memberIds[0];
-    ChannelPrefix = channel.state.members[otherUserId].user.online ? (
-      <PresenceIndicator online={true} />
-    ) : (
-      <PresenceIndicator online={false} />
-    );
-
-    ChannelTitle = (
-      <Text
-        style={
-          isUnread
-            ? channelListStyles.unreadChannelTitle
-            : channelListStyles.channelTitle
-        }>
-        {channel.state.members[otherUserId].user.name}
-      </Text>
-    );
-  } else {
-    ChannelPrefix = <Text style={channelListStyles.channelTitlePrefix}>#</Text>;
-    ChannelTitle = (
-      <Text
-        style={
-          isUnread
-            ? channelListStyles.unreadChannelTitle
-            : channelListStyles.channelTitle
-        }>
-        {channel.data.name && channel.data.name.toLowerCase().replace(' ', '_')}
-      </Text>
-    );
-  }
-
-  return (
-    <TouchableOpacity
-      key={channel.id}
-      onPress={() => {
-        setActiveChannelId(channel.id);
-        setActiveChannel(channel.id);
-      }}
-      style={{
-        ...channelListStyles.channelRow,
-        backgroundColor: activeChannelId === channel.id ? '#0676db' : undefined,
-      }}>
-      <View style={channelListStyles.channelTitleContainer}>
-        {ChannelPrefix}
-        {ChannelTitle}
-      </View>
-      {countUnreadMentions > 0 && (
-        <View style={channelListStyles.unreadMentionsContainer}>
-          <Text style={channelListStyles.unreadMentionsText}>
-            {channel.countUnreadMentions()}
-          </Text>
-        </View>
-      )}
-    </TouchableOpacity>
-  );
-};
-var PresenceIndicator = ({online}) => {
-  return (
-    <View
-      style={
-        online ? channelListStyles.onlineCircle : channelListStyles.offlineCircle
-      }
-    />
-  );
-};
-
-const textStyles = {
-  fontFamily: 'Lato-Regular',
-  color: 'white',
-  fontSize: 18,
-};
-const channelListStyles = StyleSheet.create({
-  onlineCircle: {
-    width: 10,
-    height: 10,
-    borderRadius: 100 / 2,
-    backgroundColor: 'green',
-  },
-  offlineCircle: {
-    width: 10,
-    height: 10,
-    borderRadius: 100 / 2,
-    borderColor: 'white',
-    borderWidth: 0.3,
-    backgroundColor: 'transparent',
-  },
+const styles = StyleSheet.create({
   container: {
     paddingLeft: 5,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    height: '100%'
+    height: '100%',
   },
   headerContainer: {
     padding: 10,
@@ -330,60 +245,6 @@ const channelListStyles = StyleSheet.create({
   scrollView: {
     flexGrow: 1,
     flexShrink: 1,
-  },
-  channelRow: {
-    padding: 3,
-    paddingLeft: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderRadius: 6,
-    marginRight: 5,
-  },
-  activeChannelRow: {
-    backgroundColor: '#0476BB',
-  },
-  channelTitleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  unreadChannelTitle: {
-    marginLeft: 3,
-    fontWeight: 'bold',
-    padding: 5,
-    ...textStyles,
-  },
-  channelTitle: {
-    padding: 5,
-    fontWeight: '300',
-    paddingLeft: 10,
-    ...textStyles,
-  },
-  channelTitlePrefix: {
-    fontWeight: '300',
-    ...textStyles,
-  },
-  onlineDot: {
-    fontSize: 9,
-  },
-  offlineDot: {
-    color: 'white',
-    fontWeight: '300',
-    fontSize: 10,
-  },
-  unreadMentionsContainer: {
-    backgroundColor: 'red',
-    borderRadius: 20,
-    alignSelf: 'center',
-    marginRight: 20,
-  },
-  unreadMentionsText: {
-    color: 'white',
-    padding: 3,
-    paddingRight: 6,
-    paddingLeft: 6,
-    fontSize: 15,
-    fontWeight: '900',
-    fontFamily: 'Lato-Regular',
   },
   groupTitleContainer: {
     padding: 10,
