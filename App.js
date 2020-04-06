@@ -9,7 +9,7 @@ import {
   MessageInput,
   Channel,
 } from 'stream-chat-react-native';
-import {ChannelListView} from './src/components/ChannelListView';
+import {ChannelList} from './src/components/ChannelList';
 import {ChannelHeader} from './src/components/ChannelHeader';
 
 import {StreamChat} from 'stream-chat';
@@ -74,7 +74,7 @@ function ChannelScreen({navigation, route}) {
 
 const ChannelListDrawer = props => {
   return (
-    <ChannelListView
+    <ChannelList
       client={chatClient}
       changeChannel={channelId => {
         props.navigation.jumpTo('ChannelScreen', {

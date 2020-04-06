@@ -1,9 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, SafeAreaView, TextInput, StyleSheet} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TextInput,
+  StyleSheet,
+  SectionList,
+} from 'react-native';
 import {ChannelListItem} from './ChannelListItem';
 
-export const ChannelListView = ({client, changeChannel}) => {
+export const ChannelList = ({client, changeChannel}) => {
   const {
     activeChannelId,
     setActiveChannelId,
@@ -12,7 +18,10 @@ export const ChannelListView = ({client, changeChannel}) => {
     oneOnOneConversations,
   } = useWatchedChannels(client, changeChannel);
 
-  const renderChannelRow = (channel, isUnread, isOneOnOneConversation) => {
+  const renderChannelRow = (channel, isUnread) => {
+    const isOneOnOneConversation =
+      Object.keys(channel.state.members).length === 2;
+
     return (
       <ChannelListItem
         activeChannelId={activeChannelId}
@@ -39,33 +48,32 @@ export const ChannelListView = ({client, changeChannel}) => {
           />
         </View>
 
-        <ScrollView style={styles.scrollView}>
-
-          {/* Unread channels group */}
-          <View style={styles.groupTitleContainer}>
-            <Text style={styles.groupTitle}>Unreads</Text>
-          </View>
-          {unreadChannels &&
-            unreadChannels.map(c => {
-              const isOneOnOneConversation =
-                Object.keys(c.state.members).length === 2;
-              return renderChannelRow(c, true, isOneOnOneConversation);
-            })}
-
-          {/* Read channels group */}
-          <View style={styles.groupTitleContainer}>
-            <Text style={styles.groupTitle}>Channels</Text>
-          </View>
-          {readChannels &&
-            readChannels.map(c => renderChannelRow(c, false, false))}
-
-          {/* Direct messages group */}
-          <View style={styles.groupTitleContainer}>
-            <Text style={styles.groupTitle}>Direct Messages</Text>
-          </View>
-          {oneOnOneConversations &&
-            oneOnOneConversations.map(c => renderChannelRow(c, false, true))}
-        </ScrollView>
+        <SectionList
+          sections={[
+            {
+              title: 'Unread',
+              id: 'unread',
+              data: unreadChannels || [],
+            },
+            {
+              title: 'Channels',
+              data: readChannels || [],
+            },
+            {
+              title: 'Direct Messages',
+              data: oneOnOneConversations || [],
+            },
+          ]}
+          keyExtractor={(item, index) => item.id + index}
+          renderItem={({item, section}) => {
+            return renderChannelRow(item, section.id === 'unread');
+          }}
+          renderSectionHeader={({section: {title}}) => (
+            <View style={styles.groupTitleContainer}>
+              <Text style={styles.groupTitle}>{title}</Text>
+            </View>
+          )}
+        />
       </View>
     </SafeAreaView>
   );
