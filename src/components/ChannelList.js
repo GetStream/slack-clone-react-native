@@ -49,24 +49,35 @@ export const ChannelList = ({client, changeChannel}) => {
         </View>
 
         <SectionList
+          style={styles.sectionList}
           sections={[
             {
               title: 'Unread',
-              id: 'unread',
+              /**
+               * As you can note here, I have supplied `isUnread: true` to unread section data.
+               * This way I can tell the renderChannelRow function if the current channel to render
+               * is unread or now. Its not utterly necessary since you can easily get unread count
+               * of channel in renderChannelRow using channel.unreadCount() to decide if its
+               * read or unread. But its just a way to avoid extra call to channel.countUnread()
+               * - which basically loops through messages.
+               */
+              isUnread: true,
               data: unreadChannels || [],
             },
             {
               title: 'Channels',
+              isUnread: false,
               data: readChannels || [],
             },
             {
               title: 'Direct Messages',
+              isUnread: false,
               data: oneOnOneConversations || [],
             },
           ]}
           keyExtractor={(item, index) => item.id + index}
           renderItem={({item, section}) => {
-            return renderChannelRow(item, section.id === 'unread');
+            return renderChannelRow(item, section.isUnread);
           }}
           renderSectionHeader={({section: {title}}) => (
             <View style={styles.groupTitleContainer}>
@@ -78,7 +89,6 @@ export const ChannelList = ({client, changeChannel}) => {
     </SafeAreaView>
   );
 };
-
 const useWatchedChannels = (client, changeChannel) => {
   const [activeChannelId, setActiveChannelId] = useState(null);
   const [unreadChannels, setUnreadChannels] = useState([]);
@@ -87,7 +97,7 @@ const useWatchedChannels = (client, changeChannel) => {
   const [hasMoreChannels, setHasMoreChannels] = useState(true);
   const filters = {
     type: 'messaging',
-    example: 'slack-7',
+    example: 'slack-8',
     members: {
       $in: [client.user.id],
     },
@@ -250,7 +260,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2e0a2f',
     padding: 10,
   },
-  scrollView: {
+  sectionList: {
     flexGrow: 1,
     flexShrink: 1,
   },

@@ -27,6 +27,19 @@ const user = {
 
 chatClient.setUser(user, userToken);
 
+const ChannelListDrawer = props => {
+  return (
+    <ChannelList
+      client={chatClient}
+      changeChannel={channelId => {
+        props.navigation.jumpTo('ChannelScreen', {
+          channelId,
+        });
+      }}
+    />
+  );
+};
+
 function ChannelScreen({navigation, route}) {
   const [channel, setChannel] = useState(null);
   useEffect(() => {
@@ -39,8 +52,8 @@ function ChannelScreen({navigation, route}) {
   }, [route.params]);
 
   return (
-    <SafeAreaView style={{backgroundColor: 'white'}}>
-      <View style={{flexDirection: 'column', height: '100%'}}>
+    <SafeAreaView style={styles.channelScreenSaveAreaView}>
+      <View style={styles.channelScreenContainer}>
         <ChannelHeader
           navigation={navigation}
           channel={channel}
@@ -72,19 +85,6 @@ function ChannelScreen({navigation, route}) {
   );
 }
 
-const ChannelListDrawer = props => {
-  return (
-    <ChannelList
-      client={chatClient}
-      changeChannel={channelId => {
-        props.navigation.jumpTo('ChannelScreen', {
-          channelId,
-        });
-      }}
-    />
-  );
-};
-
 const Drawer = createDrawerNavigator();
 
 export default function App() {
@@ -102,6 +102,10 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  channelScreenSaveAreaView: {
+    backgroundColor: 'white',
+  },
+  channelScreenContainer: {flexDirection: 'column', height: '100%'},
   drawerNavigator: {
     backgroundColor: '#3F0E40',
     width: 350,

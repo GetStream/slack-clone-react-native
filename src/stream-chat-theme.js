@@ -1,10 +1,4 @@
 export default {
-  spinner: {
-    css: `
-          width: 15px;
-          height: 15px;
-        `,
-  },
   'messageList.dateSeparator.date': 'color: black;',
   'messageInput.container':
     'border-top-color: #979A9A; border-top-width: 0.4; background-color: white; margin: 0; border-radius: 0;',
@@ -17,8 +11,8 @@ export default {
     'flex: 1; align-items: stretch; max-width: 320px; padding-top: 0; border-radius: 0;',
   'message.content.textContainer':
     'align-self: stretch; padding-top: 0;margin-top: 0;border-color: white;width: 100%',
-  'message.avatarWrapper.container': 'align-self: flex-start',
   'message.container': 'margin-bottom: 0; margin-top: 0',
+  'message.avatarWrapper.container': 'align-self: flex-start',
   'avatar.image': 'border-radius: 5;',
   'message.card.container':
     'border-top-left-radius: 8;border-top-right-radius: 8;border-bottom-left-radius: 8; border-bottom-right-radius: 8',
@@ -31,9 +25,6 @@ export default {
     text: {
       fontSize: 16,
       fontFamily: 'Lato-Regular',
-    },
-    codeBlock: {
-      color: 'black',
-    },
+    }
   },
 };

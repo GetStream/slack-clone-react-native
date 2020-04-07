@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, TouchableOpacity, View, Text, StyleSheet} from 'react-native';
+import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
 import {
   AutoCompleteInput,
   AttachButton,
@@ -18,6 +18,7 @@ export const InputBox = props => {
             }}>
             <Text style={styles.textActionLabel}>@</Text>
           </TouchableOpacity>
+          {/* Text editor is not functional yet. We will cover it in some future tutorials */}
           <TouchableOpacity style={styles.textEditorContainer}>
             <Text style={styles.textActionLabel}>Aa</Text>
           </TouchableOpacity>
@@ -45,5 +46,5 @@ const styles = StyleSheet.create({
   },
   textEditorContainer: {
     marginLeft: 10,
-  }
+  },
 });

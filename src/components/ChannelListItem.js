@@ -10,15 +10,37 @@ export const ChannelListItem = ({
   activeChannelId,
   currentUserId,
 }) => {
-  let otherUserId;
+  /**
+   * Prefix could be one of following
+   *
+   * '#' - if its a normal group channel
+   * empty circle - if its direct message or oneOnOneConversation with offline user
+   * green circle - if its direct message or oneOnOneConversation with online user
+   */
   let ChannelPrefix = null;
+  /**
+   * Its the label component or title component to show for channel
+   * For normal group channel, its the name of the channel - channel.data.name
+   * For oneOnOneConversation, its the name of other user (on other end of chat).
+   */
   let ChannelTitle = null;
+  /**
+   * Id of other user in oneOnOneConversation. This will be used to decide ChannelTitle
+   */
+  let otherUserId;
+  /**
+   * Number of unread mentions (@vishal) in channel
+   */
   let countUnreadMentions = channel.countUnreadMentions();
 
   if (isOneOnOneConversation) {
+    // If its a oneOnOneConversation, then we need to display the name of the other user.
+    // For this purpose, we need to find out, among two members of this channel,
+    // which one is current user and which one is the other one.
     const memberIds = Object.keys(channel.state.members);
     otherUserId = memberIds[0] === currentUserId ? memberIds[1] : memberIds[0];
     ChannelPrefix = channel.state.members[otherUserId].user.online ? (
+      // If the other user is online, then show the green presence indicator next to his name
       <PresenceIndicator online={true} />
     ) : (
       <PresenceIndicator online={false} />
@@ -55,16 +77,14 @@ export const ChannelListItem = ({
       </View>
       {countUnreadMentions > 0 && (
         <View style={styles.unreadMentionsContainer}>
-          <Text style={styles.unreadMentionsText}>
-            {channel.countUnreadMentions()}
-          </Text>
+          <Text style={styles.unreadMentionsText}>{countUnreadMentions}</Text>
         </View>
       )}
     </TouchableOpacity>
   );
 };
 
-var PresenceIndicator = ({online}) => {
+const PresenceIndicator = ({online}) => {
   return <View style={online ? styles.onlineCircle : styles.offlineCircle} />;
 };
 

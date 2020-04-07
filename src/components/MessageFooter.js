@@ -1,5 +1,5 @@
 import React from 'react';
-import {ReactionPickerWrapper} from 'stream-chat-react-native-core';
+import {ReactionPickerWrapper} from 'stream-chat-react-native';
 import {StyleSheet, Image, View, TouchableOpacity, Text} from 'react-native';
 import iconEmoticon from '../images/icon-emoticon.png';
 

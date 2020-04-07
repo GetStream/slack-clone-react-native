@@ -5,15 +5,21 @@ import iconThreeDots from '../images/icon-3-dots.png';
 
 export const ChannelHeader = ({navigation, channel, client}) => {
   let channelTitle = '#channel_name';
+
+  // For normal group channel/conversation, its channel name as display title.
   if (channel && channel.data && channel.data.name) {
     channelTitle = '# ' + channel.data.name.toLowerCase().replace(' ', '_');
   }
 
   const memberIds =
     channel && channel.state ? Object.keys(channel.state.members) : [];
+
+  // Check if its oneOneOneConversation.
   if (channel && memberIds.length === 2) {
+    // If yes, then use name of other user in conversation as channel display title.
     const otherUserId =
       memberIds[0] === client.user.id ? memberIds[1] : memberIds[0];
+
     channelTitle = channel.state.members[otherUserId].user.name;
   }
 
