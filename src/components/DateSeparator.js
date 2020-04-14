@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import moment from 'moment';
 
-export const DateSeperator = ({message}) => {
+export const DateSeparator = ({message}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.date}>{moment(message.date).calendar()}</Text>

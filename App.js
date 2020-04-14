@@ -1,21 +1,21 @@
-import React, {useState, useEffect} from 'react';
-import {View, SafeAreaView, StyleSheet} from 'react-native';
+import {ChannelHeader} from './src/components/ChannelHeader';
+import React, {useEffect, useState} from 'react';
+import {View, SafeAreaView, Text, StyleSheet} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
-import {MessageSlack, DateSeparator, InputBox} from './src/components';
+import {ChannelList} from './src/components/ChannelList';
+import {DateSeparator} from './src/components/DateSeparator';
+import {MessageSlack} from './src/components/MessageSlack';
+import {InputBox} from './src/components/InputBox';
+import streamChatTheme from './src/stream-chat-theme.js';
+
+import {StreamChat} from 'stream-chat';
 import {
   Chat,
   MessageList,
   MessageInput,
   Channel,
 } from 'stream-chat-react-native';
-import {ChannelList} from './src/components/ChannelList';
-import {ChannelHeader} from './src/components/ChannelHeader';
-
-import {StreamChat} from 'stream-chat';
-
-// Read more about style customizations at - https://getstream.io/chat/react-native-chat/tutorial/#custom-styles
-import streamChatTheme from './src/stream-chat-theme';
 
 const chatClient = new StreamChat('q95x9hkbyd6p');
 const userToken =
@@ -26,19 +26,6 @@ const user = {
 };
 
 chatClient.setUser(user, userToken);
-
-const ChannelListDrawer = props => {
-  return (
-    <ChannelList
-      client={chatClient}
-      changeChannel={channelId => {
-        props.navigation.jumpTo('ChannelScreen', {
-          channelId,
-        });
-      }}
-    />
-  );
-};
 
 function ChannelScreen({navigation, route}) {
   const [channel, setChannel] = useState(null);
@@ -85,12 +72,24 @@ function ChannelScreen({navigation, route}) {
   );
 }
 
+const ChannelListDrawer = props => {
+  return (
+    <ChannelList
+      client={chatClient}
+      changeChannel={channelId => {
+        props.navigation.jumpTo('ChannelScreen', {
+          channelId,
+        });
+      }}
+    />
+  );
+};
 const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <View style={{flex: 1, backgroundColor: 'black'}}>
+      <View style={styles.container}>
         <Drawer.Navigator
           drawerContent={ChannelListDrawer}
           drawerStyle={styles.drawerNavigator}>
@@ -106,6 +105,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   channelScreenContainer: {flexDirection: 'column', height: '100%'},
+  container: {
+    flex: 1,
+  },
   drawerNavigator: {
     backgroundColor: '#3F0E40',
     width: 350,

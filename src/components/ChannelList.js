@@ -7,6 +7,7 @@ import {
   StyleSheet,
   SectionList,
 } from 'react-native';
+
 import {ChannelListItem} from './ChannelListItem';
 
 export const ChannelList = ({client, changeChannel}) => {
@@ -53,31 +54,21 @@ export const ChannelList = ({client, changeChannel}) => {
           sections={[
             {
               title: 'Unread',
-              /**
-               * As you can note here, I have supplied `isUnread: true` to unread section data.
-               * This way I can tell the renderChannelRow function if the current channel to render
-               * is unread or now. Its not utterly necessary since you can easily get unread count
-               * of channel in renderChannelRow using channel.unreadCount() to decide if its
-               * read or unread. But its just a way to avoid extra call to channel.countUnread()
-               * - which basically loops through messages.
-               */
-              isUnread: true,
+              id: 'unread',
               data: unreadChannels || [],
             },
             {
               title: 'Channels',
-              isUnread: false,
               data: readChannels || [],
             },
             {
               title: 'Direct Messages',
-              isUnread: false,
               data: oneOnOneConversations || [],
             },
           ]}
           keyExtractor={(item, index) => item.id + index}
           renderItem={({item, section}) => {
-            return renderChannelRow(item, section.isUnread);
+            return renderChannelRow(item, section.id === 'unread');
           }}
           renderSectionHeader={({section: {title}}) => (
             <View style={styles.groupTitleContainer}>
@@ -89,6 +80,7 @@ export const ChannelList = ({client, changeChannel}) => {
     </SafeAreaView>
   );
 };
+
 const useWatchedChannels = (client, changeChannel) => {
   const [activeChannelId, setActiveChannelId] = useState(null);
   const [unreadChannels, setUnreadChannels] = useState([]);
@@ -97,13 +89,13 @@ const useWatchedChannels = (client, changeChannel) => {
   const [hasMoreChannels, setHasMoreChannels] = useState(true);
   const filters = {
     type: 'messaging',
-    example: 'slack-8',
+    example: 'slack-demo',
     members: {
       $in: [client.user.id],
     },
   };
 
-  const sort = {has_unread: -1};
+  const sort = {has_unread: -1, cid: -1};
   const options = {limit: 30, state: true};
 
   useEffect(() => {
@@ -131,7 +123,7 @@ const useWatchedChannels = (client, changeChannel) => {
       });
 
       offset = offset + channels.length;
-      channels.forEach(c => {
+      channels.forEach((c) => {
         if (c.countUnread() > 0) {
           _unreadChannels.push(c);
         } else if (Object.keys(c.state.members).length === 2) {
@@ -164,7 +156,7 @@ const useWatchedChannels = (client, changeChannel) => {
 
         // Check if the channel (which received new message) exists in group channels.
         const channelReadIndex = readChannels.findIndex(
-          channel => channel.cid === cid,
+          (channel) => channel.cid === cid,
         );
 
         if (channelReadIndex >= 0) {
@@ -177,7 +169,7 @@ const useWatchedChannels = (client, changeChannel) => {
 
         // Check if the channel (which received new message) exists in oneOnOneConversations list.
         const oneOnOneConversationIndex = oneOnOneConversations.findIndex(
-          channel => channel.cid === cid,
+          (channel) => channel.cid === cid,
         );
         if (oneOnOneConversationIndex >= 0) {
           // If yes, then remove it from oneOnOneConversations list and add it to unreadChannels list
@@ -189,7 +181,7 @@ const useWatchedChannels = (client, changeChannel) => {
 
         // Check if the channel (which received new message) already exists in unreadChannels.
         const channelUnreadIndex = unreadChannels.findIndex(
-          channel => channel.cid === cid,
+          (channel) => channel.cid === cid,
         );
         if (channelUnreadIndex >= 0) {
           const channel = unreadChannels[channelUnreadIndex];
@@ -206,7 +198,7 @@ const useWatchedChannels = (client, changeChannel) => {
         const cid = e.cid;
         // get channel index
         const channelIndex = unreadChannels.findIndex(
-          channel => channel.cid === cid,
+          (channel) => channel.cid === cid,
         );
         if (channelIndex < 0) {
           return;
