@@ -10,7 +10,7 @@
 
 ## Tutorial
 
-https://medium.com/p/f71a5e6a339f/edit
+https://medium.com/@vishalnarkhede.iitd/slack-clone-with-react-native-part-1-f71a5e6a339f
 
 ## How to run project
 
