@@ -27,3 +27,7 @@ cd ios && pod install && cd ..
 # Run on ios simulator
 react-native run-ios
 ```
+
+## Expo app
+
+https://github.com/GetStream/slack-clone-expo
