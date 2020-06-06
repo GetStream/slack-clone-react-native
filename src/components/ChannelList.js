@@ -41,13 +41,6 @@ export const ChannelList = ({client, changeChannel}) => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <TextInput
-            style={styles.inputSearchBox}
-            placeholderTextColor="grey"
-            placeholder="Jump to"
-          />
-        </View>
 
         <SectionList
           style={styles.sectionList}
@@ -249,6 +242,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   inputSearchBox: {
+    color: "white",
     backgroundColor: '#2e0a2f',
     padding: 10,
   },
