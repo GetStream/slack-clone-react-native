@@ -8,6 +8,7 @@ import {DateSeparator} from './src/components/DateSeparator';
 import {MessageSlack} from './src/components/MessageSlack';
 import {InputBox} from './src/components/InputBox';
 import streamChatTheme from './src/stream-chat-theme.js';
+import {Searchboxview} from './src/components/Searchboxview'
 
 import {StreamChat} from 'stream-chat';
 import {
@@ -16,6 +17,7 @@ import {
   MessageInput,
   Channel,
 } from 'stream-chat-react-native';
+import { TextInput } from 'react-native-gesture-handler';
 
 const chatClient = new StreamChat('q95x9hkbyd6p');
 const userToken =
@@ -74,6 +76,14 @@ function ChannelScreen({navigation, route}) {
 
 const ChannelListDrawer = props => {
   return (
+    <>
+    <TextInput
+            style={styles.inputSearchBox}
+            placeholderTextColor="grey"
+            onFocus={() => props.navigation.navigate('searchScreen',{client : chatClient})}
+            placeholder="Jump to"
+            blurOnSubmit={true}
+      />
     <ChannelList
       client={chatClient}
       changeChannel={channelId => {
@@ -82,6 +92,7 @@ const ChannelListDrawer = props => {
         });
       }}
     />
+    </>
   );
 };
 const Drawer = createDrawerNavigator();
@@ -91,9 +102,11 @@ export default function App() {
     <NavigationContainer>
       <View style={styles.container}>
         <Drawer.Navigator
+          drawerType={"front"}
           drawerContent={ChannelListDrawer}
           drawerStyle={styles.drawerNavigator}>
           <Drawer.Screen name="ChannelScreen" component={ChannelScreen} />
+          <Drawer.Screen name="searchScreen" component={Searchboxview}/>
         </Drawer.Navigator>
       </View>
     </NavigationContainer>
@@ -101,6 +114,11 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  inputSearchBox: {
+    color: "white",
+    backgroundColor: '#2e0a2f',
+    padding: 10,
+  },
   channelScreenSaveAreaView: {
     backgroundColor: 'white',
   },

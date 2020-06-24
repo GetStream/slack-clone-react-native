@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
+import {TouchableOpacity, View, Text, Image, StyleSheet, Platform} from 'react-native';
 import iconSearch from '../images/icon-search.png';
 import iconThreeDots from '../images/icon-3-dots.png';
 
@@ -64,6 +64,7 @@ export const styles = StyleSheet.create({
   channelTitle: {
     color: 'black',
     marginLeft: 10,
+    marginTop: Platform.OS == 'ios'? 0 :10 ,
     fontWeight: '900',
     fontSize: 17,
     fontFamily: 'Lato-Regular',
