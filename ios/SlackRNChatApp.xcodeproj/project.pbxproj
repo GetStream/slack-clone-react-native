@@ -86,6 +86,7 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		FC750D0252D04E8C8BF4E88D /* Lato-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Thin.ttf"; path = "../src/fonts/Lato-Thin.ttf"; sourceTree = "<group>"; };
+		FCF5BBE324BF40B800147166 /* SlackRNChatApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = SlackRNChatApp.entitlements; path = SlackRNChatApp/SlackRNChatApp.entitlements; sourceTree = "<group>"; };
 		FEDC10CD54B94AE386351550 /* Lato-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-ThinItalic.ttf"; path = "../src/fonts/Lato-ThinItalic.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -160,6 +161,7 @@
 		13B07FAE1A68108700A75B9A /* SlackRNChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				FCF5BBE324BF40B800147166 /* SlackRNChatApp.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -682,6 +684,7 @@
 			baseConfigurationReference = 453C178C97E19D08BD220A9F /* Pods-SlackRNChatApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SlackRNChatApp/SlackRNChatApp.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = EHV7XZLAHA;
@@ -692,7 +695,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.SlackCloneRNChatApp;
 				PRODUCT_NAME = SlackRNChatApp;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -703,6 +706,7 @@
 			baseConfigurationReference = 66C52F85615424E11E0BB6D5 /* Pods-SlackRNChatApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SlackRNChatApp/SlackRNChatApp.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = EHV7XZLAHA;
 				INFOPLIST_FILE = SlackRNChatApp/Info.plist;
@@ -712,7 +716,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.SlackCloneRNChatApp;
 				PRODUCT_NAME = SlackRNChatApp;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

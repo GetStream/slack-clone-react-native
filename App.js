@@ -1,6 +1,6 @@
 import {ChannelHeader} from './src/components/ChannelHeader';
-import React, {useEffect, useState} from 'react';
-import {View, SafeAreaView, Text, StyleSheet} from 'react-native';
+import React, {useEffect, useState, useRef} from 'react';
+import {View, SafeAreaView, Text, StyleSheet, AppState} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {ChannelList} from './src/components/ChannelList';
@@ -17,6 +17,9 @@ import {
   Channel,
 } from 'stream-chat-react-native';
 
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+var PushNotification = require('react-native-push-notification');
+
 const chatClient = new StreamChat('q95x9hkbyd6p');
 const userToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk';
@@ -25,7 +28,46 @@ const user = {
   name: 'Vishal',
 };
 
-chatClient.setUser(user, userToken);
+const setUserPromise = chatClient.setUser(user, userToken);
+
+PushNotification.configure({
+  // (optional) Called when Token is generated (iOS and Android)
+  onRegister: async function(token) {
+    await setUserPromise;
+    chatClient.addDevice(token.token, token.os === 'ios' ? 'apn' : 'firebase');
+    console.r.log('TOKEN:', token);
+  },
+
+  // (required) Called when a remote is received or opened, or local notification is opened
+  onNotification: function(notification) {
+    console.warn('NOTIFICATION clicked:', notification);
+
+    // process the notification
+
+    // (required) Called when a remote is received or opened, or local notification is opened
+    notification.finish(PushNotificationIOS.FetchResult.NoData);
+  },
+
+  // IOS ONLY (optional): default: all - Permissions to register.
+  permissions: {
+    alert: true,
+    badge: true,
+    sound: true,
+  },
+
+  // Should the initial notification be popped automatically
+  // default: true
+  popInitialNotification: true,
+
+  /**
+   * (optional) default: true
+   * - Specified if permissions (ios) and token (android and ios) will requested or not,
+   * - if not, you must call PushNotificationsHandler.requestPermissions() later
+   * - if you are not using remote notification or do not have Firebase installed, use this:
+   *     requestPermissions: Platform.OS === 'ios'
+   */
+  requestPermissions: true,
+});
 
 function ChannelScreen({navigation, route}) {
   const [channel, setChannel] = useState(null);
@@ -87,6 +129,32 @@ const ChannelListDrawer = props => {
 const Drawer = createDrawerNavigator();
 
 export default function App() {
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+  useEffect(() => {
+    AppState.addEventListener('change', _handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener('change', _handleAppStateChange);
+    };
+  }, []);
+
+  const _handleAppStateChange = nextAppState => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      chatClient._setupConnection();
+    } else {
+      chatClient.wsConnection.disconnect();
+    }
+
+    appState.current = nextAppState;
+    setAppStateVisible(appState.current);
+    console.log('AppState', appState.current);
+  };
+
   return (
     <NavigationContainer>
       <View style={styles.container}>
