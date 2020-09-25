@@ -30,12 +30,13 @@ chatClient.setUser(user, userToken);
 function ChannelScreen({navigation, route}) {
   const [channel, setChannel] = useState(null);
   useEffect(() => {
-    if (!channel) {
-      navigation.openDrawer();
-    }
     const channelId = route.params ? route.params.channelId : null;
-    const _channel = chatClient.channel('messaging', channelId);
-    setChannel(_channel);
+    if (!channelId) {
+      navigation.openDrawer();
+    } else {
+      const _channel = chatClient.channel('messaging', channelId);
+      setChannel(_channel);
+    }
   }, [route.params]);
 
   return (
@@ -48,7 +49,7 @@ function ChannelScreen({navigation, route}) {
         />
         <View style={styles.chatContainer}>
           <Chat client={chatClient} style={streamChatTheme}>
-            <Channel channel={channel}>
+            <Channel channel={channel} keyboardVerticalOffset={100}>
               <MessageList
                 Message={MessageSlack}
                 DateSeparator={DateSeparator}
@@ -91,6 +92,7 @@ export default function App() {
     <NavigationContainer>
       <View style={styles.container}>
         <Drawer.Navigator
+          openByDefault
           drawerContent={ChannelListDrawer}
           drawerStyle={styles.drawerNavigator}>
           <Drawer.Screen name="ChannelScreen" component={ChannelScreen} />
