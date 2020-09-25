@@ -51,3 +51,5 @@ target 'SlackRNChatApp-tvOS' do
   end
 
 end
+
+install! 'cocoapods', :deterministic_uuids => false, :integrate_targets => false
