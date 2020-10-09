@@ -1,6 +1,6 @@
 import {ChannelHeader} from './src/components/ChannelHeader';
 import React, {useEffect, useState} from 'react';
-import {View, SafeAreaView, Text, StyleSheet} from 'react-native';
+import {View, SafeAreaView, Platform, StyleSheet} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {ChannelList} from './src/components/ChannelList';
@@ -8,7 +8,7 @@ import {DateSeparator} from './src/components/DateSeparator';
 import {MessageSlack} from './src/components/MessageSlack';
 import {InputBox} from './src/components/InputBox';
 import streamChatTheme from './src/stream-chat-theme.js';
-
+import {KeyboardCompatibleView} from 'stream-chat-react-native';
 import {StreamChat} from 'stream-chat';
 import {
   Chat,
@@ -26,6 +26,13 @@ const user = {
 };
 
 chatClient.setUser(user, userToken);
+const CustomKeyboardCompatibleView = ({children}) => (
+  <KeyboardCompatibleView
+    keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : -200}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'position'}>
+    {children}
+  </KeyboardCompatibleView>
+);
 
 function ChannelScreen({navigation, route}) {
   const [channel, setChannel] = useState(null);
@@ -49,7 +56,7 @@ function ChannelScreen({navigation, route}) {
         />
         <View style={styles.chatContainer}>
           <Chat client={chatClient} style={streamChatTheme}>
-            <Channel channel={channel} keyboardVerticalOffset={100}>
+            <Channel channel={channel} KeyboardCompatibleView={CustomKeyboardCompatibleView}>
               <MessageList
                 Message={MessageSlack}
                 DateSeparator={DateSeparator}
