@@ -28,7 +28,7 @@ export const ChannelHeader = ({navigation, channel, client}) => {
       <View style={styles.leftContent}>
         <TouchableOpacity
           onPress={() => {
-            navigation.openDrawer();
+            navigation.goBack();
           }}>
           <Text style={styles.hamburgerIcon}>☰</Text>
         </TouchableOpacity>

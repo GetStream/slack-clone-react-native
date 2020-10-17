@@ -1,8 +1,19 @@
 import {ChannelHeader} from './src/components/ChannelHeader';
 import React, {useEffect, useState} from 'react';
-import {View, SafeAreaView, Platform, StyleSheet} from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
 import {ChannelList} from './src/components/ChannelList';
 import {DateSeparator} from './src/components/DateSeparator';
 import {MessageSlack} from './src/components/MessageSlack';
@@ -28,7 +39,7 @@ const user = {
 chatClient.setUser(user, userToken);
 const CustomKeyboardCompatibleView = ({children}) => (
   <KeyboardCompatibleView
-    keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : -200}
+    keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : -200}
     behavior={Platform.OS === 'ios' ? 'padding' : 'position'}>
     {children}
   </KeyboardCompatibleView>
@@ -39,7 +50,7 @@ function ChannelScreen({navigation, route}) {
   useEffect(() => {
     const channelId = route.params ? route.params.channelId : null;
     if (!channelId) {
-      navigation.openDrawer();
+      navigation.goBack();
     } else {
       const _channel = chatClient.channel('messaging', channelId);
       setChannel(_channel);
@@ -56,7 +67,9 @@ function ChannelScreen({navigation, route}) {
         />
         <View style={styles.chatContainer}>
           <Chat client={chatClient} style={streamChatTheme}>
-            <Channel channel={channel} KeyboardCompatibleView={CustomKeyboardCompatibleView}>
+            <Channel
+              channel={channel}
+              KeyboardCompatibleView={CustomKeyboardCompatibleView}>
               <MessageList
                 Message={MessageSlack}
                 DateSeparator={DateSeparator}
@@ -85,25 +98,130 @@ const ChannelListDrawer = props => {
     <ChannelList
       client={chatClient}
       changeChannel={channelId => {
-        props.navigation.jumpTo('ChannelScreen', {
+        props.navigation.navigate('ChannelScreen', {
           channelId,
         });
       }}
     />
   );
 };
-const Drawer = createDrawerNavigator();
 
+const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
+function MyTabBar({state, descriptors, navigation}) {
+  const getTitle = key => {
+    switch (key) {
+      case 'home':
+        return {
+          title: '🏠',
+          subtitle: 'Home',
+        };
+      case 'dms':
+        return {
+          title: '💬',
+          subtitle: 'DMs',
+        };
+      case 'mentions':
+        return {
+          title: 'ⓐ',
+          subtitle: 'Mention',
+        };
+      case 'you':
+        return {
+          title: '〄',
+          subtitle: 'You',
+        };
+    }
+  };
+  return (
+    <View style={{flexDirection: 'row'}}>
+      {state.routes.map((route, index) => {
+        const tab = getTitle(route.name);
+
+        const isFocused = state.index === index;
+
+        const onPress = () => {
+          const event = navigation.emit({
+            type: 'tabPress',
+            target: route.key,
+          });
+
+          if (!isFocused && !event.defaultPrevented) {
+            navigation.navigate(route.name);
+          }
+        };
+
+        return (
+          <TouchableOpacity
+            onPress={onPress}
+            style={{
+              flex: 1,
+              padding: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={{color: isFocused ? '#673ab7' : '#222'}}>
+              {tab.title}
+            </Text>
+            <Text style={{fontSize: 12}}>{tab.subtitle}</Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+}
+
+const Stack = createStackNavigator();
+
+const HomeScreen = props => {
+  return (
+    <Stack.Navigator initialRouteName="Home" mode="modal">
+      <Stack.Screen
+        name="getstream"
+        component={MyTabs}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="ChannelScreen"
+        component={ChannelScreen}
+        options={{headerShown: false, tabBarVisible: false}}
+      />
+    </Stack.Navigator>
+  );
+};
+
+function MyTabs() {
+  return (
+    <Tab.Navigator tabBar={props => <MyTabBar {...props} />}>
+      <Tab.Screen
+        // name="🏠"
+        name="home"
+        subTitle={'ChannelList'}
+        component={ChannelListDrawer}
+        options={{
+          title: 'My home',
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
+      <Tab.Screen name={'dms'} component={() => null} />
+      <Tab.Screen name={'mentions'} component={() => null} />
+      <Tab.Screen name={'you'} component={() => null} />
+    </Tab.Navigator>
+  );
+}
 export default function App() {
   return (
     <NavigationContainer>
       <View style={styles.container}>
-        <Drawer.Navigator
-          openByDefault
-          drawerContent={ChannelListDrawer}
-          drawerStyle={styles.drawerNavigator}>
-          <Drawer.Screen name="ChannelScreen" component={ChannelScreen} />
-        </Drawer.Navigator>
+        <HomeScreen />
       </View>
     </NavigationContainer>
   );

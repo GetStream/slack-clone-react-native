@@ -39,45 +39,64 @@ export const ChannelList = ({client, changeChannel}) => {
   };
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <TextInput
-            style={styles.inputSearchBox}
-            placeholderTextColor="grey"
-            placeholder="Jump to"
+    <>
+      <View
+        style={{
+          height: 70,
+          backgroundColor: '#3F0E40',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 17,
+            fontWeight: '600',
+            textAlignVertical: 'center',
+          }}>
+          getstream
+        </Text>
+      </View>
+      <SafeAreaView>
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <TextInput
+              style={styles.inputSearchBox}
+              placeholderTextColor="grey"
+              placeholder="Jump to"
+            />
+          </View>
+
+          <SectionList
+            style={styles.sectionList}
+            sections={[
+              {
+                title: 'Unread',
+                id: 'unread',
+                data: unreadChannels || [],
+              },
+              {
+                title: 'Channels',
+                data: readChannels || [],
+              },
+              {
+                title: 'Direct Messages',
+                data: oneOnOneConversations || [],
+              },
+            ]}
+            keyExtractor={(item, index) => item.id + index}
+            renderItem={({item, section}) => {
+              return renderChannelRow(item, section.id === 'unread');
+            }}
+            renderSectionHeader={({section: {title}}) => (
+              <View style={styles.groupTitleContainer}>
+                <Text style={styles.groupTitle}>{title}</Text>
+              </View>
+            )}
           />
         </View>
-
-        <SectionList
-          style={styles.sectionList}
-          sections={[
-            {
-              title: 'Unread',
-              id: 'unread',
-              data: unreadChannels || [],
-            },
-            {
-              title: 'Channels',
-              data: readChannels || [],
-            },
-            {
-              title: 'Direct Messages',
-              data: oneOnOneConversations || [],
-            },
-          ]}
-          keyExtractor={(item, index) => item.id + index}
-          renderItem={({item, section}) => {
-            return renderChannelRow(item, section.id === 'unread');
-          }}
-          renderSectionHeader={({section: {title}}) => (
-            <View style={styles.groupTitleContainer}>
-              <Text style={styles.groupTitle}>{title}</Text>
-            </View>
-          )}
-        />
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -123,7 +142,7 @@ const useWatchedChannels = (client, changeChannel) => {
       });
 
       offset = offset + channels.length;
-      channels.forEach((c) => {
+      channels.forEach(c => {
         if (c.countUnread() > 0) {
           _unreadChannels.push(c);
         } else if (Object.keys(c.state.members).length === 2) {
@@ -156,7 +175,7 @@ const useWatchedChannels = (client, changeChannel) => {
 
         // Check if the channel (which received new message) exists in group channels.
         const channelReadIndex = readChannels.findIndex(
-          (channel) => channel.cid === cid,
+          channel => channel.cid === cid,
         );
 
         if (channelReadIndex >= 0) {
@@ -169,7 +188,7 @@ const useWatchedChannels = (client, changeChannel) => {
 
         // Check if the channel (which received new message) exists in oneOnOneConversations list.
         const oneOnOneConversationIndex = oneOnOneConversations.findIndex(
-          (channel) => channel.cid === cid,
+          channel => channel.cid === cid,
         );
         if (oneOnOneConversationIndex >= 0) {
           // If yes, then remove it from oneOnOneConversations list and add it to unreadChannels list
@@ -181,7 +200,7 @@ const useWatchedChannels = (client, changeChannel) => {
 
         // Check if the channel (which received new message) already exists in unreadChannels.
         const channelUnreadIndex = unreadChannels.findIndex(
-          (channel) => channel.cid === cid,
+          channel => channel.cid === cid,
         );
         if (channelUnreadIndex >= 0) {
           const channel = unreadChannels[channelUnreadIndex];
@@ -198,7 +217,7 @@ const useWatchedChannels = (client, changeChannel) => {
         const cid = e.cid;
         // get channel index
         const channelIndex = unreadChannels.findIndex(
-          (channel) => channel.cid === cid,
+          channel => channel.cid === cid,
         );
         if (channelIndex < 0) {
           return;
@@ -245,11 +264,20 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   headerContainer: {
-    padding: 10,
-    marginRight: 10,
+    margin: 10,
+    borderColor: 'grey',
+    borderWidth: 0.3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   inputSearchBox: {
-    backgroundColor: '#2e0a2f',
+    backgroundColor: 'white',
     padding: 10,
   },
   sectionList: {
@@ -258,14 +286,14 @@ const styles = StyleSheet.create({
   },
   groupTitleContainer: {
     padding: 10,
-    borderBottomColor: '#995d9a',
-    borderBottomWidth: 0.3,
+    // borderBottomColor: '#995d9a',
+    // borderBottomWidth: 0.3,
     marginBottom: 7,
   },
   groupTitle: {
-    color: 'white',
-    fontWeight: '100',
-    fontSize: 12,
+    color: 'black',
+    fontWeight: '600',
+    fontSize: 14,
     fontFamily: 'Lato-Regular',
   },
 });

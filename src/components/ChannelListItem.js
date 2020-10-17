@@ -69,7 +69,7 @@ export const ChannelListItem = ({
       }}
       style={{
         ...styles.channelRow,
-        backgroundColor: activeChannelId === channel.id ? '#0676db' : undefined,
+        // backgroundColor: activeChannelId === channel.id ? '#0676db' : undefined,
       }}>
       <View style={styles.channelTitleContainer}>
         {ChannelPrefix}
@@ -90,7 +90,7 @@ const PresenceIndicator = ({online}) => {
 
 const textStyles = {
   fontFamily: 'Lato-Regular',
-  color: 'white',
+  color: 'black',
   fontSize: 18,
 };
 
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 100 / 2,
-    borderColor: 'white',
+    borderColor: 'black',
     borderWidth: 0.3,
     backgroundColor: 'transparent',
   },
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   unreadMentionsText: {
-    color: 'white',
+    color: 'black',
     padding: 3,
     paddingRight: 6,
     paddingLeft: 6,
