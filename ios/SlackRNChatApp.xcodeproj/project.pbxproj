@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		00B99033AE9EB850F1C1961E /* libPods-SlackRNChatApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 022CF4CA4BF62AC6B2B2CCB0 /* libPods-SlackRNChatApp.a */; };
 		00E356F31AD99517003FC87E /* SlackRNChatAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SlackRNChatAppTests.m */; };
+		0C5BA0277CBE4A83BA9C0E85 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E1EBA83AC9CF426C8A66E423 /* Lato-Bold.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -16,20 +17,19 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* SlackRNChatAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SlackRNChatAppTests.m */; };
-		4FD4A3D6B47F2092911B157B /* libPods-SlackRNChatApp-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E088A29603A6C433A61AD5 /* libPods-SlackRNChatApp-tvOSTests.a */; };
-		7E636278D5F4E31DA27B2FD4 /* libPods-SlackRNChatApp-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D53B593C50A3B2B55D9B7BA /* libPods-SlackRNChatApp-tvOS.a */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		FFF5508D1A092395C7C46CFA /* libPods-SlackRNChatApp-SlackRNChatAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A4AD70B8437CA36086273B /* libPods-SlackRNChatApp-SlackRNChatAppTests.a */; };
 		38F756006DDA4FC298059738 /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 87DAD9E2710B4FEDAEFD21F8 /* Lato-Black.ttf */; };
-		F58D7B75E3AA48B8829CE2CE /* Lato-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FBF99B6F85541068F66A27C /* Lato-BlackItalic.ttf */; };
-		0C5BA0277CBE4A83BA9C0E85 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E1EBA83AC9CF426C8A66E423 /* Lato-Bold.ttf */; };
 		4966C547CD9E4938A842A851 /* Lato-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38D9D4D315CA4966BBA4A3B6 /* Lato-BoldItalic.ttf */; };
-		C80B51F74CC249C2BBE89224 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C70419D0C1E491D80E2DBE3 /* Lato-Italic.ttf */; };
+		4B4130578E25434086A260CF /* Lato-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E98CED2CA2554C0B9C22AE36 /* Lato-Thin.ttf */; };
+		4FD4A3D6B47F2092911B157B /* libPods-SlackRNChatApp-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E088A29603A6C433A61AD5 /* libPods-SlackRNChatApp-tvOSTests.a */; };
 		54F7403582314F44A72B4FF3 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 56FE0D26CD2F4169806F57B9 /* Lato-Light.ttf */; };
 		69782A6048594140B3FC3B4F /* Lato-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CBACC9E9FB77484D803FFCE5 /* Lato-LightItalic.ttf */; };
 		7137645C4CA44E42AF18C435 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DACDFB9F0762493090278122 /* Lato-Regular.ttf */; };
-		4B4130578E25434086A260CF /* Lato-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E98CED2CA2554C0B9C22AE36 /* Lato-Thin.ttf */; };
+		7E636278D5F4E31DA27B2FD4 /* libPods-SlackRNChatApp-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D53B593C50A3B2B55D9B7BA /* libPods-SlackRNChatApp-tvOS.a */; };
+		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		BA1D890F5EDD40CA966D4F8D /* Lato-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FC3EEDD1410C4006884D7BF1 /* Lato-ThinItalic.ttf */; };
+		C80B51F74CC249C2BBE89224 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C70419D0C1E491D80E2DBE3 /* Lato-Italic.ttf */; };
+		F58D7B75E3AA48B8829CE2CE /* Lato-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FBF99B6F85541068F66A27C /* Lato-BlackItalic.ttf */; };
+		FFF5508D1A092395C7C46CFA /* libPods-SlackRNChatApp-SlackRNChatAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A4AD70B8437CA36086273B /* libPods-SlackRNChatApp-SlackRNChatAppTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,27 +66,27 @@
 		2D02E4901E0B4A5D006451C7 /* SlackRNChatApp-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SlackRNChatApp-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F252DDD675D9BB2DBAEAF48 /* Pods-SlackRNChatApp-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SlackRNChatApp-tvOS.release.xcconfig"; path = "Target Support Files/Pods-SlackRNChatApp-tvOS/Pods-SlackRNChatApp-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		34D7AF02ABF9FCC58C012D7B /* Pods-SlackRNChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SlackRNChatApp.release.xcconfig"; path = "Target Support Files/Pods-SlackRNChatApp/Pods-SlackRNChatApp.release.xcconfig"; sourceTree = "<group>"; };
+		38D9D4D315CA4966BBA4A3B6 /* Lato-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-BoldItalic.ttf"; path = "../src/fonts/Lato-BoldItalic.ttf"; sourceTree = "<group>"; };
+		3FBF99B6F85541068F66A27C /* Lato-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-BlackItalic.ttf"; path = "../src/fonts/Lato-BlackItalic.ttf"; sourceTree = "<group>"; };
 		41A4AD70B8437CA36086273B /* libPods-SlackRNChatApp-SlackRNChatAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SlackRNChatApp-SlackRNChatAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D53B593C50A3B2B55D9B7BA /* libPods-SlackRNChatApp-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SlackRNChatApp-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		56FE0D26CD2F4169806F57B9 /* Lato-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Light.ttf"; path = "../src/fonts/Lato-Light.ttf"; sourceTree = "<group>"; };
 		67C3D9C8BA617370024A5334 /* Pods-SlackRNChatApp-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SlackRNChatApp-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-SlackRNChatApp-tvOS/Pods-SlackRNChatApp-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		7BEEABF30005927E51926C63 /* Pods-SlackRNChatApp-SlackRNChatAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SlackRNChatApp-SlackRNChatAppTests.release.xcconfig"; path = "Target Support Files/Pods-SlackRNChatApp-SlackRNChatAppTests/Pods-SlackRNChatApp-SlackRNChatAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		7C70419D0C1E491D80E2DBE3 /* Lato-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Italic.ttf"; path = "../src/fonts/Lato-Italic.ttf"; sourceTree = "<group>"; };
 		8091554AB35F326205861B10 /* Pods-SlackRNChatApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SlackRNChatApp.debug.xcconfig"; path = "Target Support Files/Pods-SlackRNChatApp/Pods-SlackRNChatApp.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = SlackRNChatApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		87DAD9E2710B4FEDAEFD21F8 /* Lato-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Black.ttf"; path = "../src/fonts/Lato-Black.ttf"; sourceTree = "<group>"; };
 		B0E088A29603A6C433A61AD5 /* libPods-SlackRNChatApp-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SlackRNChatApp-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBACC9E9FB77484D803FFCE5 /* Lato-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-LightItalic.ttf"; path = "../src/fonts/Lato-LightItalic.ttf"; sourceTree = "<group>"; };
+		DACDFB9F0762493090278122 /* Lato-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Regular.ttf"; path = "../src/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; };
 		DEFEF3100B0E3D99F4C5E0DD /* Pods-SlackRNChatApp-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SlackRNChatApp-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-SlackRNChatApp-tvOSTests/Pods-SlackRNChatApp-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		E1EBA83AC9CF426C8A66E423 /* Lato-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Bold.ttf"; path = "../src/fonts/Lato-Bold.ttf"; sourceTree = "<group>"; };
+		E98CED2CA2554C0B9C22AE36 /* Lato-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Thin.ttf"; path = "../src/fonts/Lato-Thin.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F494D1E1AB8F6D5A6AC1BDD6 /* Pods-SlackRNChatApp-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SlackRNChatApp-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-SlackRNChatApp-tvOSTests/Pods-SlackRNChatApp-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		87DAD9E2710B4FEDAEFD21F8 /* Lato-Black.ttf */ = {isa = PBXFileReference; name = "Lato-Black.ttf"; path = "../src/fonts/Lato-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		3FBF99B6F85541068F66A27C /* Lato-BlackItalic.ttf */ = {isa = PBXFileReference; name = "Lato-BlackItalic.ttf"; path = "../src/fonts/Lato-BlackItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		E1EBA83AC9CF426C8A66E423 /* Lato-Bold.ttf */ = {isa = PBXFileReference; name = "Lato-Bold.ttf"; path = "../src/fonts/Lato-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		38D9D4D315CA4966BBA4A3B6 /* Lato-BoldItalic.ttf */ = {isa = PBXFileReference; name = "Lato-BoldItalic.ttf"; path = "../src/fonts/Lato-BoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		7C70419D0C1E491D80E2DBE3 /* Lato-Italic.ttf */ = {isa = PBXFileReference; name = "Lato-Italic.ttf"; path = "../src/fonts/Lato-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		56FE0D26CD2F4169806F57B9 /* Lato-Light.ttf */ = {isa = PBXFileReference; name = "Lato-Light.ttf"; path = "../src/fonts/Lato-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		CBACC9E9FB77484D803FFCE5 /* Lato-LightItalic.ttf */ = {isa = PBXFileReference; name = "Lato-LightItalic.ttf"; path = "../src/fonts/Lato-LightItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		DACDFB9F0762493090278122 /* Lato-Regular.ttf */ = {isa = PBXFileReference; name = "Lato-Regular.ttf"; path = "../src/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		E98CED2CA2554C0B9C22AE36 /* Lato-Thin.ttf */ = {isa = PBXFileReference; name = "Lato-Thin.ttf"; path = "../src/fonts/Lato-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		FC3EEDD1410C4006884D7BF1 /* Lato-ThinItalic.ttf */ = {isa = PBXFileReference; name = "Lato-ThinItalic.ttf"; path = "../src/fonts/Lato-ThinItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FC3EEDD1410C4006884D7BF1 /* Lato-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-ThinItalic.ttf"; path = "../src/fonts/Lato-ThinItalic.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +169,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		30B37134062C4B90BCF01DDB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				87DAD9E2710B4FEDAEFD21F8 /* Lato-Black.ttf */,
+				3FBF99B6F85541068F66A27C /* Lato-BlackItalic.ttf */,
+				E1EBA83AC9CF426C8A66E423 /* Lato-Bold.ttf */,
+				38D9D4D315CA4966BBA4A3B6 /* Lato-BoldItalic.ttf */,
+				7C70419D0C1E491D80E2DBE3 /* Lato-Italic.ttf */,
+				56FE0D26CD2F4169806F57B9 /* Lato-Light.ttf */,
+				CBACC9E9FB77484D803FFCE5 /* Lato-LightItalic.ttf */,
+				DACDFB9F0762493090278122 /* Lato-Regular.ttf */,
+				E98CED2CA2554C0B9C22AE36 /* Lato-Thin.ttf */,
+				FC3EEDD1410C4006884D7BF1 /* Lato-ThinItalic.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -215,27 +232,8 @@
 				DEFEF3100B0E3D99F4C5E0DD /* Pods-SlackRNChatApp-tvOSTests.debug.xcconfig */,
 				F494D1E1AB8F6D5A6AC1BDD6 /* Pods-SlackRNChatApp-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
-		};
-		30B37134062C4B90BCF01DDB /* Resources */ = {
-			isa = "PBXGroup";
-			children = (
-				87DAD9E2710B4FEDAEFD21F8 /* Lato-Black.ttf */,
-				3FBF99B6F85541068F66A27C /* Lato-BlackItalic.ttf */,
-				E1EBA83AC9CF426C8A66E423 /* Lato-Bold.ttf */,
-				38D9D4D315CA4966BBA4A3B6 /* Lato-BoldItalic.ttf */,
-				7C70419D0C1E491D80E2DBE3 /* Lato-Italic.ttf */,
-				56FE0D26CD2F4169806F57B9 /* Lato-Light.ttf */,
-				CBACC9E9FB77484D803FFCE5 /* Lato-LightItalic.ttf */,
-				DACDFB9F0762493090278122 /* Lato-Regular.ttf */,
-				E98CED2CA2554C0B9C22AE36 /* Lato-Thin.ttf */,
-				FC3EEDD1410C4006884D7BF1 /* Lato-ThinItalic.ttf */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-			path = "";
 		};
 /* End PBXGroup section */
 
@@ -330,9 +328,11 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = EHV7XZLAHA;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = EHV7XZLAHA;
 						LastSwiftMigration = 1120;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -660,6 +660,7 @@
 			baseConfigurationReference = 1C133D7A18628B8F2DEE4167 /* Pods-SlackRNChatApp-SlackRNChatAppTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = EHV7XZLAHA;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -684,6 +685,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = EHV7XZLAHA;
 				INFOPLIST_FILE = SlackRNChatAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -705,6 +707,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = EHV7XZLAHA;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SlackRNChatApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -728,6 +731,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = EHV7XZLAHA;
 				INFOPLIST_FILE = SlackRNChatApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (

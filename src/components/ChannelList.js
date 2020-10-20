@@ -7,10 +7,12 @@ import {
   StyleSheet,
   SectionList,
 } from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {CacheService} from '../utils';
 
 import {ChannelListItem} from './ChannelListItem';
-
-export const ChannelList = ({client, changeChannel}) => {
+import ThreadsIcon from '../images/channel-list/threads.svg';
+export const ChannelList = ({client, changeChannel, navigation}) => {
   const {
     activeChannelId,
     setActiveChannelId,
@@ -39,64 +41,96 @@ export const ChannelList = ({client, changeChannel}) => {
   };
 
   return (
-    <>
-      <View
-        style={{
-          height: 70,
-          backgroundColor: '#3F0E40',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 17,
-            fontWeight: '600',
-            textAlignVertical: 'center',
-          }}>
-          getstream
-        </Text>
-      </View>
-      <SafeAreaView>
-        <View style={styles.container}>
-          <View style={styles.headerContainer}>
-            <TextInput
-              style={styles.inputSearchBox}
-              placeholderTextColor="grey"
-              placeholder="Jump to"
-            />
-          </View>
+    <View style={styles.container}>
+      <SectionList
+        style={styles.sectionList}
+        sections={[
+          {
+            title: '',
+            id: 'menu',
+            data: [
+              {
+                id: 'threads',
+                title: 'Threads',
+                icon: <ThreadsIcon height="16" width="16" />,
+                handler: () => null,
+              },
+              {
+                id: 'drafts',
+                title: 'Drafts',
+                handler: () => navigation.navigate('DraftsScreen'),
+              },
+            ],
+          },
+          {
+            title: 'Unread',
+            id: 'unread',
+            data: unreadChannels || [],
+          },
+          {
+            title: 'Channels',
+            data: readChannels || [],
+            clickHandler: () => {
+              navigation.navigate('ChannelSearchScreen', {
+                channelsOnly: true,
+              });
+            },
+          },
+          {
+            title: 'Direct Messages',
+            data: oneOnOneConversations || [],
+            clickHandler: () => {
+              navigation.navigate('NewMessageSearchScreen');
+            },
+          },
+        ]}
+        keyExtractor={(item, index) => item.id + index}
+        renderItem={({item, section}) => {
+          if (section.id === 'menu') {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  item.handler && item.handler();
+                }}
+                style={{
+                  ...styles.channelRow,
+                }}>
+                <View style={styles.channelTitleContainer}>
+                  {item.icon ? (
+                    item.icon
+                  ) : (
+                    <Text style={styles.channelTitlePrefix}>✎</Text>
+                  )}
+                  <Text style={styles.channelTitle}>{item.title}</Text>
+                </View>
+              </TouchableOpacity>
+            );
+          }
+          return renderChannelRow(item, section.id === 'unread');
+        }}
+        renderSectionHeader={({section: {title, data, id, clickHandler}}) => {
+          if (data.length === 0 || id === 'menu') {
+            return null;
+          }
 
-          <SectionList
-            style={styles.sectionList}
-            sections={[
-              {
-                title: 'Unread',
-                id: 'unread',
-                data: unreadChannels || [],
-              },
-              {
-                title: 'Channels',
-                data: readChannels || [],
-              },
-              {
-                title: 'Direct Messages',
-                data: oneOnOneConversations || [],
-              },
-            ]}
-            keyExtractor={(item, index) => item.id + index}
-            renderItem={({item, section}) => {
-              return renderChannelRow(item, section.id === 'unread');
-            }}
-            renderSectionHeader={({section: {title}}) => (
-              <View style={styles.groupTitleContainer}>
-                <Text style={styles.groupTitle}>{title}</Text>
-              </View>
-            )}
-          />
-        </View>
-      </SafeAreaView>
-    </>
+          return (
+            <View style={styles.groupTitleContainer}>
+              <Text style={styles.groupTitle}>{title}</Text>
+              <Text
+                onPress={() => {
+                  clickHandler && clickHandler();
+                }}
+                style={{
+                  textAlignVertical: 'center',
+                  fontSize: 20,
+                }}>
+                +
+              </Text>
+            </View>
+          );
+        }}
+      />
+    </View>
   );
 };
 
@@ -156,12 +190,18 @@ const useWatchedChannels = (client, changeChannel) => {
       setReadChannels([..._readChannels]);
       setOneOnOneConversations([..._oneOnOneConversations]);
 
+      CacheService.initCache(
+        client.user,
+        [..._readChannels],
+        [..._oneOnOneConversations],
+      );
+
       if (channels.length === options.limit) {
         fetchChannels();
       } else {
         setHasMoreChannels(false);
         setActiveChannelId(_readChannels[0].id);
-        changeChannel(_readChannels[0].id);
+        // changeChannel(_readChannels[0].id);
       }
     }
 
@@ -229,7 +269,7 @@ const useWatchedChannels = (client, changeChannel) => {
         unreadChannels.splice(channelIndex, 1);
         setUnreadChannels([...unreadChannels]);
 
-        if (Object.keys(channel.state.members).length === 2) {
+        if (!channel.data.name) {
           setOneOnOneConversations([channel, ...oneOnOneConversations]);
         } else {
           setReadChannels([channel, ...readChannels]);
@@ -255,18 +295,22 @@ const useWatchedChannels = (client, changeChannel) => {
     setOneOnOneConversations,
   };
 };
-
+const textStyles = {
+  fontFamily: 'Lato-Regular',
+  color: 'black',
+  fontSize: 16,
+};
 const styles = StyleSheet.create({
   container: {
     paddingLeft: 5,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    height: '100%',
+    backgroundColor: 'white',
   },
   headerContainer: {
     margin: 10,
-    borderColor: 'grey',
-    borderWidth: 0.3,
+    borderColor: '#D3D3D3',
+    borderWidth: 0.5,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -285,15 +329,43 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   groupTitleContainer: {
-    padding: 10,
+    paddingTop: 14,
+    marginLeft: 10,
+    marginRight: 10,
     // borderBottomColor: '#995d9a',
     // borderBottomWidth: 0.3,
-    marginBottom: 7,
+    backgroundColor: 'white',
+    marginBottom: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   groupTitle: {
     color: 'black',
     fontWeight: '600',
     fontSize: 14,
     fontFamily: 'Lato-Regular',
+  },
+  channelRow: {
+    padding: 3,
+    paddingLeft: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderRadius: 6,
+    marginRight: 5,
+  },
+  channelTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  channelTitle: {
+    padding: 5,
+    fontWeight: '300',
+    paddingLeft: 10,
+    ...textStyles,
+  },
+  channelTitlePrefix: {
+    fontWeight: '300',
+    padding: 1,
+    ...textStyles,
   },
 });

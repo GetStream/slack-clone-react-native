@@ -1,11 +1,12 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {getChannelDisplayName} from '../utils';
 export const ChannelListItem = ({
   channel,
   setActiveChannelId,
+  presenceIndicator = true,
+  avatar = false,
   changeChannel,
-  isOneOnOneConversation,
   isUnread,
   activeChannelId,
   currentUserId,
@@ -33,29 +34,61 @@ export const ChannelListItem = ({
    */
   let countUnreadMentions = channel.countUnreadMentions();
 
+  const isDirectMessaging = !channel.data.name;
+  const isOneOnOneConversation =
+    Object.keys(channel.state.members).length === 2;
+
   if (isOneOnOneConversation) {
     // If its a oneOnOneConversation, then we need to display the name of the other user.
     // For this purpose, we need to find out, among two members of this channel,
     // which one is current user and which one is the other one.
     const memberIds = Object.keys(channel.state.members);
     otherUserId = memberIds[0] === currentUserId ? memberIds[1] : memberIds[0];
-    ChannelPrefix = channel.state.members[otherUserId].user.online ? (
-      // If the other user is online, then show the green presence indicator next to his name
-      <PresenceIndicator online={true} />
-    ) : (
-      <PresenceIndicator online={false} />
-    );
+
+    if (presenceIndicator) {
+      ChannelPrefix = channel.state.members[otherUserId].user.online ? (
+        // If the other user is online, then show the green presence indicator next to his name
+        <PresenceIndicator online={true} />
+      ) : (
+        <PresenceIndicator online={false} />
+      );
+    }
+
+    if (avatar) {
+      ChannelPrefix = (
+        <Image
+          style={{
+            height: 20,
+            width: 20,
+            borderRadius: 5,
+          }}
+          source={{
+            uri: channel.state.members[otherUserId].user.image,
+          }}
+        />
+      );
+    }
 
     ChannelTitle = (
       <Text style={isUnread ? styles.unreadChannelTitle : styles.channelTitle}>
-        {channel.state.members[otherUserId].user.name}
+        {getChannelDisplayName(channel)}
+      </Text>
+    );
+  } else if (isDirectMessaging) {
+    ChannelPrefix = <Text style={styles.channelTitlePrefix}>#</Text>;
+    ChannelTitle = (
+      <Text style={isUnread ? styles.unreadChannelTitle : styles.channelTitle}>
+        {Object.values(channel.state.members)
+          .filter(m => m.user.id !== currentUserId)
+          .map(m => m.user.name)
+          .join(', ')}
       </Text>
     );
   } else {
     ChannelPrefix = <Text style={styles.channelTitlePrefix}>#</Text>;
     ChannelTitle = (
       <Text style={isUnread ? styles.unreadChannelTitle : styles.channelTitle}>
-        {channel.data.name && channel.data.name.toLowerCase().replace(' ', '_')}
+        {getChannelDisplayName(channel)}
       </Text>
     );
   }
@@ -64,7 +97,7 @@ export const ChannelListItem = ({
     <TouchableOpacity
       key={channel.id}
       onPress={() => {
-        setActiveChannelId(channel.id);
+        setActiveChannelId && setActiveChannelId(channel.id);
         changeChannel(channel.id);
       }}
       style={{
@@ -135,6 +168,7 @@ const styles = StyleSheet.create({
   },
   channelTitlePrefix: {
     fontWeight: '300',
+    padding: 5,
     ...textStyles,
   },
   unreadMentionsContainer: {

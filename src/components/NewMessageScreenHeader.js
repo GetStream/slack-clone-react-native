@@ -2,9 +2,8 @@ import React from 'react';
 import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
 import iconSearch from '../images/icon-search.png';
 import iconThreeDots from '../images/icon-3-dots.png';
-import {getChannelDisplayName} from '../utils';
 
-export const ChannelHeader = ({goBack, channel}) => {
+export const NewMessageScreenHeader = ({goBack, channel, client}) => {
   return (
     <View style={styles.container}>
       <View style={styles.leftContent}>
@@ -12,27 +11,10 @@ export const ChannelHeader = ({goBack, channel}) => {
           onPress={() => {
             goBack && goBack();
           }}>
-          <Text style={styles.hamburgerIcon}>{'‹'}</Text>
+          <Text style={styles.hamburgerIcon}>x</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.centerContent}>
-        <Text style={styles.channelTitle}>
-          {getChannelDisplayName(channel, true)}
-        </Text>
-        {channel && channel.state && (
-          <Text style={styles.channelSubTitle}>
-            {Object.keys(channel.state.members).length} Members
-          </Text>
-        )}
-      </View>
-      <View style={styles.rightContent}>
-        <TouchableOpacity style={styles.searchIconContainer}>
-          <Image source={iconSearch} style={styles.searchIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuIconContainer}>
-          <Image source={iconThreeDots} style={styles.menuIcon} />
-        </TouchableOpacity>
-      </View>
+      <Text style={styles.channelTitle}>New Message</Text>
     </View>
   );
 };
@@ -40,32 +22,39 @@ export const ChannelHeader = ({goBack, channel}) => {
 export const styles = StyleSheet.create({
   container: {
     padding: 15,
+    marginTop: 10,
+    borderColor: '#D3D3D3',
+    borderWidth: 1,
     flexDirection: 'row',
     backgroundColor: 'white',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderBottomWidth: 0.5,
     borderBottomColor: 'grey',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   leftContent: {
-    flexDirection: 'row',
+    position: 'absolute',
+    left: 20,
   },
   hamburgerIcon: {
-    fontSize: 35,
-    textAlign: 'left',
+    fontSize: 27,
   },
   channelTitle: {
     color: 'black',
+    textAlign: 'center',
+    alignContent: 'center',
     marginLeft: 10,
     fontWeight: '900',
     fontSize: 17,
     fontFamily: 'Lato-Regular',
-    alignSelf: 'center',
-  },
-  channelSubTitle: {},
-  centerContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   rightContent: {
     flexDirection: 'row',

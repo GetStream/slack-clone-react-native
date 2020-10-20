@@ -7,6 +7,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  TextInput,
+  LogBox,
 } from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
@@ -14,11 +16,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import {ChannelList} from './src/components/ChannelList';
-import {DateSeparator} from './src/components/DateSeparator';
-import {MessageSlack} from './src/components/MessageSlack';
-import {InputBox} from './src/components/InputBox';
-import streamChatTheme from './src/stream-chat-theme.js';
 import {KeyboardCompatibleView} from 'stream-chat-react-native';
 import {StreamChat} from 'stream-chat';
 import {
@@ -27,8 +24,32 @@ import {
   MessageInput,
   Channel,
 } from 'stream-chat-react-native';
+import {NewMessageScreenHeader} from './src/components/NewMessageScreenHeader';
+import {ChannelScreen} from './src/screens/ChannelScreen';
+import {NewMessageScreen} from './src/screens/NewMessageScreen';
+import {ChannelSearchScreen} from './src/screens/ChannelSearchScreen';
+import {ChatClientService} from './src/utils';
+import {ChannelListScreen} from './src/screens/ChannelListScreen';
+import {DraftsScreen} from './src/screens/DraftsScreen';
+import {MentionsScreen} from './src/screens/MentionsSearch';
+import {DirectMessagesScreen} from './src/screens/DirectMessagesScreen';
+import {TargettedMessageChannelScreen} from './src/screens/TargettedMessageChannelScreen';
 
-const chatClient = new StreamChat('q95x9hkbyd6p');
+import DMTabIcon from './src/images/tab-bar/dm.svg';
+import DMTabIconActive from './src/images/tab-bar/dm-selected.svg';
+import HomeTabIcon from './src/images/tab-bar/home.svg';
+import HomeTabIconActive from './src/images/tab-bar/home-selected.svg';
+import MentionsTabIcon from './src/images/tab-bar/mentions.svg';
+import MentionsTabIconActive from './src/images/tab-bar/mentions-selected.svg';
+import YouTabIcon from './src/images/tab-bar/you.svg';
+import YouTabIconActive from './src/images/tab-bar/you-selected.svg';
+import { MessageSearchScreen } from './src/screens/MessageSearchScreen';
+
+LogBox.ignoreAllLogs(true);
+
+const chatClient = new StreamChat('q95x9hkbyd6p', {
+  timeout: 10000
+});
 const userToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk';
 const user = {
@@ -37,104 +58,47 @@ const user = {
 };
 
 chatClient.setUser(user, userToken);
-const CustomKeyboardCompatibleView = ({children}) => (
-  <KeyboardCompatibleView
-    keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : -200}
-    behavior={Platform.OS === 'ios' ? 'padding' : 'position'}>
-    {children}
-  </KeyboardCompatibleView>
-);
+ChatClientService.setClient(chatClient);
 
-function ChannelScreen({navigation, route}) {
-  const [channel, setChannel] = useState(null);
-  useEffect(() => {
-    const channelId = route.params ? route.params.channelId : null;
-    if (!channelId) {
-      navigation.goBack();
-    } else {
-      const _channel = chatClient.channel('messaging', channelId);
-      setChannel(_channel);
-    }
-  }, [route.params]);
-
-  return (
-    <SafeAreaView style={styles.channelScreenSaveAreaView}>
-      <View style={styles.channelScreenContainer}>
-        <ChannelHeader
-          navigation={navigation}
-          channel={channel}
-          client={chatClient}
-        />
-        <View style={styles.chatContainer}>
-          <Chat client={chatClient} style={streamChatTheme}>
-            <Channel
-              channel={channel}
-              KeyboardCompatibleView={CustomKeyboardCompatibleView}>
-              <MessageList
-                Message={MessageSlack}
-                DateSeparator={DateSeparator}
-              />
-              <MessageInput
-                Input={InputBox}
-                additionalTextInputProps={{
-                  placeholderTextColor: '#979A9A',
-                  placeholder:
-                    channel && channel.data.name
-                      ? 'Message #' +
-                        channel.data.name.toLowerCase().replace(' ', '_')
-                      : 'Message',
-                }}
-              />
-            </Channel>
-          </Chat>
-        </View>
-      </View>
-    </SafeAreaView>
-  );
-}
-
-const ChannelListDrawer = props => {
-  return (
-    <ChannelList
-      client={chatClient}
-      changeChannel={channelId => {
-        props.navigation.navigate('ChannelScreen', {
-          channelId,
-        });
-      }}
-    />
-  );
-};
-
-const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 function MyTabBar({state, descriptors, navigation}) {
   const getTitle = key => {
     switch (key) {
       case 'home':
         return {
-          title: '🏠',
+          icon: <HomeTabIcon width={25} height={25} />,
+          iconActive: <HomeTabIconActive width={25} height={25} />,
           subtitle: 'Home',
         };
       case 'dms':
         return {
-          title: '💬',
+          icon: <DMTabIcon width={25} height={25} />,
+          iconActive: <DMTabIconActive width={25} height={25} />,
           subtitle: 'DMs',
         };
       case 'mentions':
         return {
-          title: 'ⓐ',
+          icon: <MentionsTabIcon width={25} height={25} />,
+          iconActive: <MentionsTabIconActive width={25} height={25} />,
           subtitle: 'Mention',
         };
       case 'you':
         return {
-          title: '〄',
+          icon: <YouTabIcon width={25} height={25} />,
+          iconActive: <YouTabIconActive width={25} height={25} />,
           subtitle: 'You',
         };
     }
   };
   return (
-    <View style={{flexDirection: 'row'}}>
+    <View
+      style={{
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        borderTopColor: '#D3D3D3',
+        borderTopWidth: 0.5,
+        paddingBottom: 10
+      }}>
       {state.routes.map((route, index) => {
         const tab = getTitle(route.name);
 
@@ -160,9 +124,7 @@ function MyTabBar({state, descriptors, navigation}) {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Text style={{color: isFocused ? '#673ab7' : '#222'}}>
-              {tab.title}
-            </Text>
+            <Text style={{  }}>{isFocused ? tab.iconActive : tab.icon}</Text>
             <Text style={{fontSize: 12}}>{tab.subtitle}</Text>
           </TouchableOpacity>
         );
@@ -171,24 +133,84 @@ function MyTabBar({state, descriptors, navigation}) {
   );
 }
 
-const Stack = createStackNavigator();
+const HomeStack = createStackNavigator();
+const ModalStack = createStackNavigator();
 
-const HomeScreen = props => {
+const ModalStackNavigator = props => {
   return (
-    <Stack.Navigator initialRouteName="Home" mode="modal">
-      <Stack.Screen
-        name="getstream"
+    <ModalStack.Navigator initialRouteName="Home" mode="modal">
+      <ModalStack.Screen
+        name="Tabs"
         component={MyTabs}
-        options={{
-          headerShown: false,
+        initialParams={{
+          chatClient,
         }}
-      />
-      <Stack.Screen
-        name="ChannelScreen"
-        component={ChannelScreen}
         options={{headerShown: false, tabBarVisible: false}}
       />
-    </Stack.Navigator>
+      <ModalStack.Screen
+        name="NewMessageScreen"
+        component={NewMessageScreen}
+        initialParams={{
+          chatClient,
+        }}
+        options={{headerShown: false, tabBarVisible: false}}
+      />
+      <ModalStack.Screen
+        name="ChannelSearchScreen"
+        component={ChannelSearchScreen}
+        initialParams={{
+          chatClient,
+        }}
+        options={{headerShown: false, tabBarVisible: false}}
+      />
+      <ModalStack.Screen
+        name="MessageSearchScreen"
+        component={MessageSearchScreen}
+        initialParams={{
+          chatClient,
+        }}
+        options={{headerShown: false, tabBarVisible: false}}
+      />
+      <ModalStack.Screen
+        name="TargettedMessageChannelScreen"
+        component={TargettedMessageChannelScreen}
+        initialParams={{
+          chatClient,
+        }}
+        options={{headerShown: false, tabBarVisible: false}}
+      />
+    </ModalStack.Navigator>
+  );
+};
+
+const HomeStackNavigator = props => {
+  return (
+    <HomeStack.Navigator initialRouteName="ModalStack">
+      <HomeStack.Screen
+        name="ModalStack"
+        component={ModalStackNavigator}
+        initialParams={{
+          chatClient,
+        }}
+        options={{headerShown: false, tabBarVisible: false}}
+      />
+      <HomeStack.Screen
+        name="ChannelScreen"
+        component={ChannelScreen}
+        initialParams={{
+          chatClient,
+        }}
+        options={{headerShown: false, tabBarVisible: false}}
+      />
+      <HomeStack.Screen
+        name="DraftsScreen"
+        component={DraftsScreen}
+        initialParams={{
+          chatClient,
+        }}
+        options={{headerShown: false, tabBarVisible: false}}
+      />
+    </HomeStack.Navigator>
   );
 };
 
@@ -198,21 +220,10 @@ function MyTabs() {
       <Tab.Screen
         // name="🏠"
         name="home"
-        subTitle={'ChannelList'}
-        component={ChannelListDrawer}
-        options={{
-          title: 'My home',
-          headerStyle: {
-            backgroundColor: '#f4511e',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }}
+        component={ChannelListScreen}
       />
-      <Tab.Screen name={'dms'} component={() => null} />
-      <Tab.Screen name={'mentions'} component={() => null} />
+      <Tab.Screen name={'dms'} component={DirectMessagesScreen} />
+      <Tab.Screen name={'mentions'} component={MentionsScreen} />
       <Tab.Screen name={'you'} component={() => null} />
     </Tab.Navigator>
   );
@@ -221,7 +232,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <View style={styles.container}>
-        <HomeScreen />
+        <HomeStackNavigator />
       </View>
     </NavigationContainer>
   );
@@ -234,6 +245,7 @@ const styles = StyleSheet.create({
   channelScreenContainer: {flexDirection: 'column', height: '100%'},
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   drawerNavigator: {
     backgroundColor: '#3F0E40',

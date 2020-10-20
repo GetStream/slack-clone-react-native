@@ -1,7 +1,11 @@
+const {getDefaultConfig} = require('metro-config');
+
 /* eslint-env node */
 function resolvePath(...parts) {
   const thisPath = PATH.resolve.apply(PATH, parts);
-  if (!FS.existsSync(thisPath)) return;
+  if (!FS.existsSync(thisPath)) {
+    return;
+  }
 
   return FS.realpathSync(thisPath);
 }
@@ -12,7 +16,9 @@ function isExternalModule(modulePath) {
 
 function listDirectories(rootPath, cb) {
   FS.readdirSync(rootPath).forEach(fileName => {
-    if (fileName.charAt(0) === '.') return;
+    if (fileName.charAt(0) === '.') {
+      return;
+    }
 
     let fullFileName = PATH.join(rootPath, fileName),
       stats = FS.lstatSync(fullFileName),
@@ -20,14 +26,18 @@ function listDirectories(rootPath, cb) {
 
     if (stats.isSymbolicLink()) {
       fullFileName = resolvePath(fullFileName);
-      if (!fullFileName) return;
+      if (!fullFileName) {
+        return;
+      }
 
       stats = FS.lstatSync(fullFileName);
 
       symbolic = true;
     }
 
-    if (!stats.isDirectory()) return;
+    if (!stats.isDirectory()) {
+      return;
+    }
 
     const external = isExternalModule(fullFileName);
     cb({rootPath, symbolic, external, fullFileName, fileName});
@@ -41,31 +51,37 @@ function buildFullModuleMap(
   _alreadyVisited,
   _prefix,
 ) {
-  if (!moduleRoot) return;
+  if (!moduleRoot) {
+    return;
+  }
 
   const alreadyVisited = _alreadyVisited || {},
     prefix = _prefix;
 
-  if (alreadyVisited && alreadyVisited.hasOwnProperty(moduleRoot)) return;
+  if (alreadyVisited && alreadyVisited.hasOwnProperty(moduleRoot)) {
+    return;
+  }
 
   alreadyVisited[moduleRoot] = true;
 
   listDirectories(
     moduleRoot,
     ({fileName, fullFileName, symbolic, external}) => {
-      if (symbolic)
+      if (symbolic) {
         return buildFullModuleMap(
           resolvePath(fullFileName, 'node_modules'),
           mainModuleMap,
           externalModuleMap,
           alreadyVisited,
         );
+      }
 
       const moduleMap = external ? externalModuleMap : mainModuleMap,
         moduleName = prefix ? PATH.join(prefix, fileName) : fileName;
 
-      if (fileName.charAt(0) !== '@') moduleMap[moduleName] = fullFileName;
-      else
+      if (fileName.charAt(0) !== '@') {
+        moduleMap[moduleName] = fullFileName;
+      } else {
         return buildFullModuleMap(
           fullFileName,
           mainModuleMap,
@@ -73,6 +89,7 @@ function buildFullModuleMap(
           alreadyVisited,
           fileName,
         );
+      }
     },
   );
 }
@@ -93,13 +110,17 @@ function findAlernateRoots(
   _alreadyVisited,
 ) {
   const alreadyVisited = _alreadyVisited || {};
-  if (alreadyVisited && alreadyVisited.hasOwnProperty(moduleRoot)) return;
+  if (alreadyVisited && alreadyVisited.hasOwnProperty(moduleRoot)) {
+    return;
+  }
 
   alreadyVisited[moduleRoot] = true;
 
   listDirectories(moduleRoot, ({fullFileName, fileName, external}) => {
     if (fileName.charAt(0) !== '@') {
-      if (external) alternateRoots.push(fullFileName);
+      if (external) {
+        alternateRoots.push(fullFileName);
+      }
     } else {
       findAlernateRoots(fullFileName, alternateRoots, alreadyVisited);
     }
@@ -138,12 +159,20 @@ const FS = require('fs'),
 const repoDir = PATH.dirname(PATH.dirname(__dirname));
 
 const moduleBlacklist = [
-  new RegExp(repoDir + '/projects/stream-chat-react-native/examples/NativeMessaging/.*'),
-  new RegExp(repoDir + '/projects/stream-chat-react-native/examples/ExpoMessaging/.*'),
-  //   new RegExp(repoDir + '/native-example/(.*)'),
-  new RegExp(repoDir + '/projects/stream-chat-react-native/native-package/node_modules/.*'),
-  new RegExp(repoDir + '/projects/stream-chat-react-native/expo-package/.*'),
-  new RegExp(repoDir + '/projects/stream-chat-react-native/node_modules/.*'),
+    new RegExp(
+      repoDir +
+        '/projects/stream-chat-react-native/examples/NativeMessaging/.*',
+    ),
+    new RegExp(
+      repoDir + '/projects/stream-chat-react-native/examples/ExpoMessaging/.*',
+    ),
+    //   new RegExp(repoDir + '/native-example/(.*)'),
+    new RegExp(
+      repoDir +
+        '/projects/stream-chat-react-native/native-package/node_modules/.*',
+    ),
+    new RegExp(repoDir + '/projects/stream-chat-react-native/expo-package/.*'),
+    new RegExp(repoDir + '/projects/stream-chat-react-native/node_modules/.*'),
   ],
   baseModulePath = resolvePath(__dirname, 'node_modules'),
   // watch alternate roots (outside of project root)
@@ -152,20 +181,31 @@ const moduleBlacklist = [
   // resolution of modules in external roots
   extraNodeModules = buildModuleResolutionMap();
 
-if (alternateRoots && alternateRoots.length)
+if (alternateRoots && alternateRoots.length) {
   console.log('Found alternate project roots: ', alternateRoots);
+}
 
-module.exports = {
-  resolver: {
-    blacklistRE: blacklist(moduleBlacklist),
-    extraNodeModules,
-    useWatchman: false,
-  },
-  watchFolders: [PATH.resolve(__dirname)].concat(alternateRoots),
-  // transformer: {
-  //   babelTransformerPath: require.resolve('./compiler/transformer'),
-  // },
-  serializer: {
-    getPolyfills: getPolyfillHelper(),
-  },
-};
+module.exports = (async () => {
+  const {
+    resolver: {sourceExts, assetExts},
+  } = await getDefaultConfig();
+  return {
+    resolver: {
+      blacklistRE: blacklist(moduleBlacklist),
+      extraNodeModules,
+      useWatchman: false,
+      assetExts: assetExts.filter(ext => ext !== 'svg'),
+      sourceExts: [...sourceExts, 'svg'],
+    },
+    watchFolders: [PATH.resolve(__dirname)].concat(alternateRoots),
+    // transformer: {
+    //   babelTransformerPath: require.resolve('./compiler/transformer'),
+    // },
+    serializer: {
+      getPolyfills: getPolyfillHelper(),
+    },
+    transformer: {
+      babelTransformerPath: require.resolve('react-native-svg-transformer'),
+    },
+  };
+})();
