@@ -7,13 +7,21 @@ import {
   MessageInput,
   KeyboardCompatibleView,
 } from 'stream-chat-react-native';
+import {useTheme} from '@react-navigation/native';
+
 import {ChannelHeader} from '../components/ChannelHeader';
 import {DateSeparator} from '../components/DateSeparator';
 import {InputBox} from '../components/InputBox';
 import {MessageSlack} from '../components/MessageSlack';
 import streamChatTheme from '../stream-chat-theme';
 import AsyncStorage from '@react-native-community/async-storage';
-import {getChannelDisplayImage, getChannelDisplayName} from '../utils';
+import {
+  getChannelDisplayImage,
+  getChannelDisplayName,
+  theme,
+  isDark,
+  useStreamChatTheme,
+} from '../utils';
 
 const CustomKeyboardCompatibleView = ({children}) => (
   <KeyboardCompatibleView
@@ -28,14 +36,18 @@ export function ChannelScreen({
     params: {chatClient, channelId = null},
   },
 }) {
+  const {colors} = useTheme();
+  const chatStyles = useStreamChatTheme();
+
   const [channel, setChannel] = useState(null);
   const [initialValue, setInitialValue] = useState('');
   const [isReady, setIsReady] = useState(false);
   const [text, setText] = useState('');
   const goBack = () => {
     const storeObject = {
+      channelId: channel.id,
       image: getChannelDisplayImage(channel),
-      title: getChannelDisplayName(channel),
+      title: getChannelDisplayName(channel, true),
       text,
     };
     AsyncStorage.setItem(
@@ -74,11 +86,24 @@ export function ChannelScreen({
     return null;
   }
   return (
-    <SafeAreaView style={styles.channelScreenSaveAreaView}>
+    <SafeAreaView
+      style={{
+        backgroundColor: colors.background,
+      }}>
       <View style={styles.channelScreenContainer}>
-        <ChannelHeader goBack={goBack} channel={channel} client={chatClient} />
-        <View style={styles.chatContainer}>
-          <Chat client={chatClient} style={streamChatTheme}>
+        <ChannelHeader
+          goBack={goBack}
+          channel={channel}
+          navigation={navigation}
+        />
+        <View
+          style={[
+            styles.chatContainer,
+            {
+              backgroundColor: colors.background,
+            },
+          ]}>
+          <Chat client={chatClient} style={chatStyles}>
             <Channel
               channel={channel}
               doSendMessageRequest={async (cid, message) => {
@@ -115,9 +140,6 @@ export function ChannelScreen({
 }
 
 const styles = StyleSheet.create({
-  channelScreenSaveAreaView: {
-    backgroundColor: 'white',
-  },
   channelScreenContainer: {flexDirection: 'column', height: '100%'},
   container: {
     flex: 1,
@@ -128,7 +150,6 @@ const styles = StyleSheet.create({
     width: 350,
   },
   chatContainer: {
-    backgroundColor: 'white',
     flexGrow: 1,
     flexShrink: 1,
   },

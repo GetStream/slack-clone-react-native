@@ -1,36 +1,36 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TextInput,
-  StyleSheet,
-  SectionList,
-} from 'react-native';
+import {View, StyleSheet, SectionList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {CacheService} from '../utils';
+import {CacheService, ChatClientService, SCText, theme, isDark, notImplemented} from '../utils';
 
 import {ChannelListItem} from './ChannelListItem';
-import ThreadsIcon from '../images/channel-list/threads.svg';
-export const ChannelList = ({client, changeChannel, navigation}) => {
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {SVGIcon} from './SVGIcon';
+
+export const ChannelList = () => {
+  const client = ChatClientService.getClient();
+  const navigation = useNavigation();
+  const {colors} = useTheme();
+
+  const changeChannel = channelId => {
+    navigation.navigate('ChannelScreen', {
+      channelId,
+    });
+  };
   const {
     activeChannelId,
     setActiveChannelId,
     unreadChannels,
     readChannels,
     oneOnOneConversations,
-  } = useWatchedChannels(client, changeChannel);
+  } = useWatchedChannels(client);
 
   const renderChannelRow = (channel, isUnread) => {
-    const isOneOnOneConversation =
-      Object.keys(channel.state.members).length === 2;
-
     return (
       <ChannelListItem
         activeChannelId={activeChannelId}
         setActiveChannelId={setActiveChannelId}
         changeChannel={changeChannel}
-        isOneOnOneConversation={isOneOnOneConversation}
         isUnread={isUnread}
         channel={channel}
         client={client}
@@ -43,6 +43,8 @@ export const ChannelList = ({client, changeChannel, navigation}) => {
   return (
     <View style={styles.container}>
       <SectionList
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         style={styles.sectionList}
         sections={[
           {
@@ -52,12 +54,13 @@ export const ChannelList = ({client, changeChannel, navigation}) => {
               {
                 id: 'threads',
                 title: 'Threads',
-                icon: <ThreadsIcon height="16" width="16" />,
-                handler: () => null,
+                icon: <SVGIcon height="14" width="14" type="threads" />,
+                handler: notImplemented,
               },
               {
                 id: 'drafts',
                 title: 'Drafts',
+                icon: <SVGIcon height="14" width="14" type="drafts" />,
                 handler: () => navigation.navigate('DraftsScreen'),
               },
             ],
@@ -85,6 +88,9 @@ export const ChannelList = ({client, changeChannel, navigation}) => {
           },
         ]}
         keyExtractor={(item, index) => item.id + index}
+        SectionSeparatorComponent={props => {
+          return <View style={{height: 5}} />;
+        }}
         renderItem={({item, section}) => {
           if (section.id === 'menu') {
             return (
@@ -92,40 +98,42 @@ export const ChannelList = ({client, changeChannel, navigation}) => {
                 onPress={() => {
                   item.handler && item.handler();
                 }}
-                style={{
-                  ...styles.channelRow,
-                }}>
+                style={styles.channelRow}>
                 <View style={styles.channelTitleContainer}>
-                  {item.icon ? (
-                    item.icon
-                  ) : (
-                    <Text style={styles.channelTitlePrefix}>✎</Text>
-                  )}
-                  <Text style={styles.channelTitle}>{item.title}</Text>
+                  {item.icon}
+                  <SCText style={styles.channelTitle}>{item.title}</SCText>
                 </View>
               </TouchableOpacity>
             );
           }
           return renderChannelRow(item, section.id === 'unread');
         }}
+        stickySectionHeadersEnabled
         renderSectionHeader={({section: {title, data, id, clickHandler}}) => {
           if (data.length === 0 || id === 'menu') {
             return null;
           }
 
           return (
-            <View style={styles.groupTitleContainer}>
-              <Text style={styles.groupTitle}>{title}</Text>
-              <Text
-                onPress={() => {
-                  clickHandler && clickHandler();
-                }}
-                style={{
-                  textAlignVertical: 'center',
-                  fontSize: 20,
-                }}>
-                +
-              </Text>
+            <View
+              style={[
+                styles.groupTitleContainer,
+                {
+                  backgroundColor: colors.background,
+                  borderTopColor: colors.border,
+                  borderTopWidth: 1,
+                },
+              ]}>
+              <SCText style={styles.groupTitle}>{title}</SCText>
+              {clickHandler && (
+                <TouchableOpacity
+                  onPress={() => {
+                    clickHandler && clickHandler();
+                  }}
+                  style={styles.groupTitleRightButton}>
+                  <SCText style={styles.groupTitleRightButtonText}>+</SCText>
+                </TouchableOpacity>
+              )}
             </View>
           );
         }}
@@ -134,12 +142,12 @@ export const ChannelList = ({client, changeChannel, navigation}) => {
   );
 };
 
-const useWatchedChannels = (client, changeChannel) => {
+const useWatchedChannels = client => {
   const [activeChannelId, setActiveChannelId] = useState(null);
   const [unreadChannels, setUnreadChannels] = useState([]);
   const [readChannels, setReadChannels] = useState([]);
   const [oneOnOneConversations, setOneOnOneConversations] = useState([]);
-  const [hasMoreChannels, setHasMoreChannels] = useState(true);
+
   const filters = {
     type: 'messaging',
     example: 'slack-demo',
@@ -149,14 +157,9 @@ const useWatchedChannels = (client, changeChannel) => {
   };
 
   const sort = {has_unread: -1, cid: -1};
-  const options = {limit: 30, state: true};
+  const options = {limit: 30, offset: 0, state: true};
 
   useEffect(() => {
-    if (!hasMoreChannels) {
-      return;
-    }
-
-    let offset = 0;
     const _unreadChannels = [];
     const _readChannels = [];
     const _oneOnOneConversations = [];
@@ -169,18 +172,21 @@ const useWatchedChannels = (client, changeChannel) => {
      * - Channels (read channels)
      * - Direct conversations/messages
      */
-    async function fetchChannels() {
-      const channels = await client.queryChannels(filters, sort, {
-        ...options,
-        offset,
-      });
+    const fetchChannels = async () => {
+      const channels = await client.queryChannels(
+        {
+          ...filters,
+          name: {
+            $ne: '',
+          },
+        },
+        sort,
+        options,
+      );
 
-      offset = offset + channels.length;
       channels.forEach(c => {
         if (c.countUnread() > 0) {
           _unreadChannels.push(c);
-        } else if (Object.keys(c.state.members).length === 2) {
-          _oneOnOneConversations.push(c);
         } else {
           _readChannels.push(c);
         }
@@ -189,23 +195,42 @@ const useWatchedChannels = (client, changeChannel) => {
       setUnreadChannels([..._unreadChannels]);
       setReadChannels([..._readChannels]);
       setOneOnOneConversations([..._oneOnOneConversations]);
+    };
+
+    const fetchDirectMessagingConversations = async () => {
+      const directMessagingChannels = await client.queryChannels(
+        {
+          ...filters,
+          name: '',
+        },
+        sort,
+        options,
+      );
+
+      directMessagingChannels.forEach(c => {
+        if (c.countUnread() > 0) {
+          _unreadChannels.push(c);
+        } else {
+          _oneOnOneConversations.push(c);
+        }
+      });
+      setUnreadChannels([..._unreadChannels]);
+      setReadChannels([..._readChannels]);
+      setOneOnOneConversations([..._oneOnOneConversations]);
+    };
+
+    async function init() {
+      await fetchChannels();
+      await fetchDirectMessagingConversations();
 
       CacheService.initCache(
         client.user,
         [..._readChannels],
         [..._oneOnOneConversations],
       );
-
-      if (channels.length === options.limit) {
-        fetchChannels();
-      } else {
-        setHasMoreChannels(false);
-        setActiveChannelId(_readChannels[0].id);
-        // changeChannel(_readChannels[0].id);
-      }
     }
 
-    fetchChannels();
+    init();
   }, [client]);
 
   useEffect(() => {
@@ -295,17 +320,13 @@ const useWatchedChannels = (client, changeChannel) => {
     setOneOnOneConversations,
   };
 };
-const textStyles = {
-  fontFamily: 'Lato-Regular',
-  color: 'black',
-  fontSize: 16,
-};
+
 const styles = StyleSheet.create({
   container: {
     paddingLeft: 5,
+    paddingRight: 5,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    backgroundColor: 'white',
   },
   headerContainer: {
     margin: 10,
@@ -321,7 +342,6 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   inputSearchBox: {
-    backgroundColor: 'white',
     padding: 10,
   },
   sectionList: {
@@ -332,22 +352,23 @@ const styles = StyleSheet.create({
     paddingTop: 14,
     marginLeft: 10,
     marginRight: 10,
-    // borderBottomColor: '#995d9a',
-    // borderBottomWidth: 0.3,
-    backgroundColor: 'white',
-    marginBottom: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   groupTitle: {
-    color: 'black',
-    fontWeight: '600',
     fontSize: 14,
-    fontFamily: 'Lato-Regular',
+  },
+  groupTitleRightButton: {
+    textAlignVertical: 'center',
+  },
+  groupTitleRightButtonText: {
+    fontSize: 25,
   },
   channelRow: {
-    padding: 3,
     paddingLeft: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderRadius: 6,
@@ -359,13 +380,10 @@ const styles = StyleSheet.create({
   },
   channelTitle: {
     padding: 5,
-    fontWeight: '300',
     paddingLeft: 10,
-    ...textStyles,
   },
   channelTitlePrefix: {
     fontWeight: '300',
     padding: 1,
-    ...textStyles,
   },
 });

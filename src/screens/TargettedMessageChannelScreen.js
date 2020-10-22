@@ -60,7 +60,7 @@ export function TargettedMessageChannelScreen({
           client={chatClient}
         />
         <View style={styles.chatContainer}>
-          <Chat client={chatClient} style={streamChatTheme}>
+          <Chat client={chatClient} style={streamChatTheme()}>
             <Channel
               channel={channel}
               KeyboardCompatibleView={CustomKeyboardCompatibleView}>

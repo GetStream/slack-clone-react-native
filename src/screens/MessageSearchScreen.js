@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Image, Text, Button} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {
   FlatList,
   TextInput,
@@ -8,32 +8,37 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
-  addBorder,
   AsyncStore,
-  CacheService,
   ChatClientService,
   getChannelDisplayName,
   SCText,
+  theme,
+  isDark,
+  useStreamChatTheme,
 } from '../utils';
 import {
   Message as DefaultMessage,
   ThemeProvider,
 } from 'stream-chat-react-native';
 import {MessageSlack} from '../components/MessageSlack';
-import AsyncStorage from '@react-native-community/async-storage';
+import {useTheme} from '@react-navigation/native';
 
 import streamChatTheme from '../stream-chat-theme.js';
+import {ListItemSeparator} from '../components/ListItemSeparator';
 export const MessageSearchScreen = ({
   navigation,
   route: {
     params: {chatClient},
   },
 }) => {
+  const {colors, dark} = useTheme();
+  const chatStyle = useStreamChatTheme();
   const inputRef = useRef(null);
   const [results, setResults] = useState(null);
   const [recentSearches, setRecentSearches] = useState([]);
   const [loadingResults, setLoadingResults] = useState(false);
   const [searchText, setSearchText] = useState('');
+
   const addToRecentSearches = async q => {
     const _recentSearches = [...recentSearches];
     _recentSearches.unshift(q);
@@ -56,6 +61,7 @@ export const MessageSearchScreen = ({
 
     await AsyncStore.setItem('@slack-clone-recent-searches', _recentSearches);
   };
+
   const search = async q => {
     if (!q) {
       setLoadingResults(false);
@@ -100,9 +106,21 @@ export const MessageSearchScreen = ({
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1, height: '100%'}}>
-      <View style={{flexDirection: 'column', height: '100%'}}>
-        <View style={{flexDirection: 'row', width: '100%', padding: 10}}>
+    <SafeAreaView
+      style={[
+        styles.safeAreaView,
+        {
+          backgroundColor: colors.background,
+        },
+      ]}>
+      <View style={styles.container}>
+        <View
+          style={[
+            styles.headerContainer,
+            {
+              backgroundColor: colors.backgroundSecondary,
+            },
+          ]}>
           <TextInput
             ref={ref => {
               inputRef.current = ref;
@@ -119,40 +137,58 @@ export const MessageSearchScreen = ({
               search(text);
             }}
             placeholder="Search"
+            placeholderTextColor={colors.text}
             inlineImageLeft="search_icon"
-            style={{
-              flex: 1,
-              margin: 3,
-              padding: 10,
-              backgroundColor: '#E9E9E9',
-              borderColor: '#D3D3D3',
-              borderWidth: 0.5,
-              borderRadius: 5,
-            }}
+            style={[
+              styles.inputBox,
+              {
+                backgroundColor: dark ? '#363639' : '#dcdcdc',
+                borderColor: dark ? '#212527' : '#D3D3D3',
+                color: colors.text,
+              },
+            ]}
           />
           <TouchableOpacity
-            style={{justifyContent: 'center', padding: 5}}
+            style={styles.cancelButton}
             onPress={() => {
               navigation.goBack();
             }}>
-            <Text>Cancel</Text>
+            <SCText>Cancel</SCText>
           </TouchableOpacity>
         </View>
+        {results && results.length > 0 && (
+          <View
+            style={[
+              styles.resultCountContainer,
+              {
+                backgroundColor: colors.background,
+                borderColor: colors.border,
+              },
+            ]}>
+            <SCText>{results.length} Results</SCText>
+          </View>
+        )}
         <View
-          style={{
-            marginTop: 10,
-            marginBottom: 10,
-            flexGrow: 1,
-            flexShrink: 1,
-            backgroundColor: 'white', // #F5F5F5
-          }}>
+          style={[
+            styles.recentSearchesContainer,
+            {
+              backgroundColor: colors.background,
+            },
+          ]}>
           {!results && !loadingResults && (
             <>
-              <SCText style={{padding: 5, backgroundColor: '#E9E9E9'}}>
+              <SCText
+                style={[
+                  styles.recentSearchesTitle,
+                  {
+                    backgroundColor: colors.backgroundSecondary,
+                  },
+                ]}>
                 Recent searches
               </SCText>
               <FlatList
                 keyboardShouldPersistTaps="always"
+                ItemSeparatorComponent={ListItemSeparator}
                 data={recentSearches}
                 renderItem={({item, index}) => {
                   return (
@@ -160,14 +196,8 @@ export const MessageSearchScreen = ({
                       onPress={() => {
                         setSearchText(item);
                       }}
-                      style={{
-                        padding: 10,
-                        justifyContent: 'space-between',
-                        flexDirection: 'row',
-                        borderBottomColor: '#F5F5F5',
-                        borderBottomWidth: 0.5,
-                      }}>
-                      <SCText>{item}</SCText>
+                      style={styles.recentSearchItemContainer}>
+                      <SCText style={styles.recentSearchText}>{item}</SCText>
                       <SCText
                         onPress={() => {
                           removeFromRecentSearches(index);
@@ -181,42 +211,23 @@ export const MessageSearchScreen = ({
             </>
           )}
           {loadingResults && (
-            <View
-              style={{
-                flexGrow: 1,
-                flexShrink: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
+            <View style={styles.loadingIndicatorContainer}>
               <ActivityIndicator size="small" color="black" />
             </View>
           )}
           {results && (
-            <View style={{flexGrow: 1, flexShrink: 1}}>
+            <View style={styles.resultsContainer}>
               <FlatList
                 keyboardShouldPersistTaps="always"
                 contentContainerStyle={{flexGrow: 1}}
                 ListEmptyComponent={() => {
                   return (
-                    <View
-                      style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                      <Text>No results for "{searchText}"</Text>
+                    <View style={styles.listEmptyContainer}>
+                      <SCText>No results for "{searchText}"</SCText>
                       <TouchableOpacity
                         onPress={startNewSearch}
-                        style={{
-                          padding: 15,
-                          paddingTop: 10,
-                          paddingBottom: 10,
-                          marginTop: 10,
-                          borderColor: '#696969',
-                          borderWidth: 0.5,
-                          borderRadius: 5,
-                        }}>
-                        <Text>Start a new search</Text>
+                        style={styles.resetButton}>
+                        <SCText>Start a new search</SCText>
                       </TouchableOpacity>
                     </View>
                   );
@@ -225,15 +236,16 @@ export const MessageSearchScreen = ({
                 renderItem={({item}) => {
                   return (
                     <View
-                      style={{
-                        backgroundColor: 'white',
-                        padding: 10,
-                        marginTop: 3,
-                      }}>
-                      <Text style={{paddingTop: 10, paddingBottom: 10}}>
+                      style={[
+                        styles.resultItemContainer,
+                        {
+                          backgroundColor: colors.background,
+                        },
+                      ]}>
+                      <SCText style={styles.resultChannelTitle}>
                         {getChannelDisplayName(item.channel, true)}
-                      </Text>
-                      <ThemeProvider style={streamChatTheme}>
+                      </SCText>
+                      <ThemeProvider style={chatStyle}>
                         <DefaultMessage
                           Message={MessageSlack}
                           message={item}
@@ -251,3 +263,78 @@ export const MessageSearchScreen = ({
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    height: '100%',
+  },
+  container: {
+    flexDirection: 'column',
+    height: '100%',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    padding: 10,
+  },
+  inputBox: {
+    color: isDark() ? 'white' : 'black',
+    flex: 1,
+    margin: 3,
+    padding: 10,
+    borderWidth: 0.5,
+    borderRadius: 10,
+  },
+  cancelButton: {justifyContent: 'center', padding: 5},
+  resultCountContainer: {
+    padding: 15,
+    borderBottomWidth: 0.5,
+  },
+  recentSearchesContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+    flexGrow: 1,
+    flexShrink: 1,
+  },
+  recentSearchesTitle: {
+    padding: 5,
+    fontSize: 13,
+  },
+  recentSearchItemContainer: {
+    padding: 10,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  recentSearchText: {fontSize: 14},
+  loadingIndicatorContainer: {
+    flexGrow: 1,
+    flexShrink: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  resultsContainer: {flexGrow: 1, flexShrink: 1},
+  listEmptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  resetButton: {
+    padding: 15,
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginTop: 10,
+    borderColor: '#696969',
+    borderWidth: 0.5,
+    borderRadius: 5,
+  },
+  resultItemContainer: {
+    padding: 10,
+  },
+  resultChannelTitle: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    fontWeight: '700',
+    color: '#8b8b8b',
+  },
+});

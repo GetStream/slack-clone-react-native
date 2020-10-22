@@ -1,23 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
-  SafeAreaView,
-  Platform,
   StyleSheet,
   TouchableOpacity,
-  Text,
-  LogBox,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 
-import {ChannelList} from '../components/ChannelList';
-import {FlatList, TextInput} from 'react-native-gesture-handler';
+import {FlatList} from 'react-native-gesture-handler';
 import {ChatClientService, SCText} from '../utils';
 import {NewMessageBubble} from '../components/NewMessageBubble';
+import {ScreenHeader} from './ScreenHeader';
+import {useTheme, useNavigation} from '@react-navigation/native';
 
 export const MentionsScreen = props => {
   const chatClient = ChatClientService.getClient();
   const [results, setResults] = useState([]);
+  const [loadingResults, setLoadingResults] = useState(true);
+  const navigation = useNavigation();
+  const {colors} = useTheme();
 
   useState(() => {
     const getMessages = async () => {
@@ -29,133 +30,138 @@ export const MentionsScreen = props => {
         },
         `@${chatClient.user.name}`,
       );
-
       setResults(res.results);
+      setLoadingResults(false);
     };
 
     getMessages();
   }, []);
 
   return (
-    <View style={{backgroundColor: 'white', flex: 1}}>
-      <View
-        style={{
-          height: 70,
-          paddingTop: 30,
-          backgroundColor: '#3F0E40',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <SCText
-          style={{
-            color: 'white',
-            fontSize: 17,
-            fontWeight: '600',
-            textAlignVertical: 'center',
-          }}>
-          Mentions
-        </SCText>
-      </View>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.background,
+        },
+      ]}>
+      <ScreenHeader title="Mentions" />
 
-      <View style={{flex: 1}}>
-        <FlatList
-          data={results}
-          renderItem={({item}) => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate('TargettedMessageChannelScreen', {
-                    message: item.message,
-                  });
-                }}
-                style={{
-                  marginLeft: 10,
-                }}>
-                <View
-                  style={{
-                    padding: 20,
-                    paddingLeft: 40,
-                    paddingBottom: 10,
-                    borderTopColor: '#DCDCDC',
-                    borderTopWidth: 0.5,
-                  }}>
-                  <SCText style={{fontSize: 13, color: '#696969'}}>
-                    <SCText style={{ fontWeight: '600', fontSize: 13, color: '#696969' }}>
-                      {item.message.user.name} {' '}
+      {loadingResults && (
+        <View style={styles.loadingIndicatorContainer}>
+          <ActivityIndicator size="small" color={colors.text} />
+        </View>
+      )}
+      {!loadingResults && (
+        <View style={styles.resultsContainer}>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={results}
+            renderItem={({item}) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('TargettedMessageChannelScreen', {
+                      message: item.message,
+                    });
+                  }}
+                  style={styles.resulItemContainer}>
+                  <View
+                    style={[
+                      styles.mentionDetails,
+                      {
+                        borderTopColor: colors.border,
+                      },
+                    ]}>
+                    <SCText style={styles.mentionerName}>
+                      {item.message.user.name}{' '}
                     </SCText>
-                     mentioned you in #
-                    {item.message.channel.name &&
-                      item.message.channel.name.toLowerCase().replace(' ', '_')}
-                  </SCText>
-                </View>
-                <View
-                  style={{flexDirection: 'row', marginTop: 5, marginBottom: 5}}>
-                  <Image
-                    style={{
-                      height: 30,
-                      width: 30,
-                      borderRadius: 5,
-                    }}
-                    source={{
-                      uri: item.message.user.image,
-                    }}
-                  />
-                  <View style={{marginLeft: 10, marginBottom: 15}}>
-                    <SCText
-                      style={{
-                        fontWeight: '900',
-                      }}>
-                      {item.message.user.name}
+                    <SCText style={styles.mentionActivity}>
+                      mentioned you in #
+                      {item.message.channel.name &&
+                        item.message.channel.name
+                          .toLowerCase()
+                          .replace(' ', '_')}
                     </SCText>
-                    <SCText>{item.message.text}</SCText>
                   </View>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View>
-      <NewMessageBubble
-        onPress={() => {
-          props.navigation.navigate('NewMessageScreen');
-        }}
-      />
+                  <View style={styles.messageContainer}>
+                    <Image
+                      style={styles.messageUserImage}
+                      source={{
+                        uri: item.message.user.image,
+                      }}
+                    />
+                    <View style={styles.messageDetailsContainer}>
+                      <SCText
+                        style={[
+                          styles.messageUserName,
+                          {
+                            color: colors.boldText,
+                          },
+                        ]}>
+                        {item.message.user.name}
+                      </SCText>
+                      <SCText>{item.message.text}</SCText>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+      )}
+      <NewMessageBubble />
     </View>
   );
 };
-const textStyles = {
-  fontFamily: 'Lato-Regular',
-  color: 'black',
-  fontSize: 16,
-};
 const styles = StyleSheet.create({
-  channelRow: {
-    padding: 3,
-    paddingLeft: 10,
+  container: {
+    flex: 1,
+  },
+  loadingIndicatorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  resultsContainer: {
+    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
+  },
+  resulItemContainer: {
+    marginLeft: 10,
+  },
+  mentionDetails: {
+    padding: 20,
+    paddingLeft: 40,
+    paddingBottom: 10,
+    borderTopWidth: 0.5,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderRadius: 6,
-    marginRight: 5,
   },
-  channelTitleContainer: {
+  mentionerName: {
+    fontWeight: '700',
+    fontSize: 13,
+    color: '#696969',
+  },
+  mentionActivity: {
+    fontSize: 13,
+    color: '#696969',
+  },
+  messageContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    marginTop: 5,
+    marginBottom: 5,
   },
-  unreadChannelTitle: {
-    marginLeft: 3,
-    fontWeight: 'bold',
-    padding: 5,
-    ...textStyles,
+  messageUserImage: {
+    height: 30,
+    width: 30,
+    borderRadius: 5,
   },
-  channelTitle: {
-    padding: 5,
-    fontWeight: '300',
-    paddingLeft: 10,
-    ...textStyles,
+  messageDetailsContainer: {
+    marginLeft: 10,
+    marginBottom: 15,
   },
-  channelTitlePrefix: {
-    fontWeight: '300',
-    padding: 5,
-    ...textStyles,
+  messageUserName: {
+    fontWeight: '900',
   },
 });

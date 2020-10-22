@@ -1,36 +1,60 @@
 import React from 'react';
 import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
-import iconSearch from '../images/icon-search.png';
-import iconThreeDots from '../images/icon-3-dots.png';
-import {getChannelDisplayName} from '../utils';
+import {getChannelDisplayName, SCText, theme, isDark} from '../utils';
+import {useTheme, useNavigation} from '@react-navigation/native';
+import { SVGIcon } from './SVGIcon';
 
 export const ChannelHeader = ({goBack, channel}) => {
+  const {colors} = useTheme();
+  const navigation = useNavigation();
+
+  const isDirectMessagingConversation = !channel.data.name;
+  const isOneOnOneConversation =
+    isDirectMessagingConversation &&
+    Object.keys(channel.state.members).length === 2;
+
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.background,
+        },
+      ]}>
       <View style={styles.leftContent}>
         <TouchableOpacity
           onPress={() => {
             goBack && goBack();
           }}>
-          <Text style={styles.hamburgerIcon}>{'‹'}</Text>
+          <SCText style={styles.hamburgerIcon}>{'‹'}</SCText>
         </TouchableOpacity>
       </View>
       <View style={styles.centerContent}>
-        <Text style={styles.channelTitle}>
+        <SCText
+          style={[
+            styles.channelTitle,
+            {
+              color: colors.boldText,
+            },
+          ]}>
           {getChannelDisplayName(channel, true)}
-        </Text>
-        {channel && channel.state && (
-          <Text style={styles.channelSubTitle}>
+        </SCText>
+        {!isOneOnOneConversation && (
+          <SCText style={styles.channelSubTitle}>
             {Object.keys(channel.state.members).length} Members
-          </Text>
+          </SCText>
         )}
       </View>
       <View style={styles.rightContent}>
-        <TouchableOpacity style={styles.searchIconContainer}>
-          <Image source={iconSearch} style={styles.searchIcon} />
+        <TouchableOpacity
+          style={styles.searchIconContainer}
+          onPress={() => {
+            navigation.navigate('MessageSearchScreen');
+          }}>
+          <SVGIcon height="20" width="20" type="search" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuIconContainer}>
-          <Image source={iconThreeDots} style={styles.menuIcon} />
+          <SVGIcon height="20" width="20" type="info" />
         </TouchableOpacity>
       </View>
     </View>
@@ -41,7 +65,6 @@ export const styles = StyleSheet.create({
   container: {
     padding: 15,
     flexDirection: 'row',
-    backgroundColor: 'white',
     justifyContent: 'space-between',
     borderBottomWidth: 0.5,
     borderBottomColor: 'grey',
@@ -54,7 +77,6 @@ export const styles = StyleSheet.create({
     textAlign: 'left',
   },
   channelTitle: {
-    color: 'black',
     marginLeft: 10,
     fontWeight: '900',
     fontSize: 17,

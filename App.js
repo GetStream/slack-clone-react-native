@@ -1,91 +1,76 @@
-import {ChannelHeader} from './src/components/ChannelHeader';
-import React, {useEffect, useState} from 'react';
-import {
-  View,
-  SafeAreaView,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  TextInput,
-  LogBox,
-} from 'react-native';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import React from 'react';
+import {View, StyleSheet, TouchableOpacity, LogBox} from 'react-native';
+import {AppearanceProvider, useColorScheme} from 'react-native-appearance';
+import {useTheme} from '@react-navigation/native';
+
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import {KeyboardCompatibleView} from 'stream-chat-react-native';
 import {StreamChat} from 'stream-chat';
-import {
-  Chat,
-  MessageList,
-  MessageInput,
-  Channel,
-} from 'stream-chat-react-native';
-import {NewMessageScreenHeader} from './src/components/NewMessageScreenHeader';
+
 import {ChannelScreen} from './src/screens/ChannelScreen';
 import {NewMessageScreen} from './src/screens/NewMessageScreen';
 import {ChannelSearchScreen} from './src/screens/ChannelSearchScreen';
-import {ChatClientService} from './src/utils';
+import {ChatClientService, SCText, theme} from './src/utils';
 import {ChannelListScreen} from './src/screens/ChannelListScreen';
 import {DraftsScreen} from './src/screens/DraftsScreen';
 import {MentionsScreen} from './src/screens/MentionsSearch';
 import {DirectMessagesScreen} from './src/screens/DirectMessagesScreen';
 import {TargettedMessageChannelScreen} from './src/screens/TargettedMessageChannelScreen';
+import {MessageSearchScreen} from './src/screens/MessageSearchScreen';
+import {ProfileScreen} from './src/screens/ProfileScreen';
 
-import DMTabIcon from './src/images/tab-bar/dm.svg';
-import DMTabIconActive from './src/images/tab-bar/dm-selected.svg';
-import HomeTabIcon from './src/images/tab-bar/home.svg';
-import HomeTabIconActive from './src/images/tab-bar/home-selected.svg';
-import MentionsTabIcon from './src/images/tab-bar/mentions.svg';
-import MentionsTabIconActive from './src/images/tab-bar/mentions-selected.svg';
-import YouTabIcon from './src/images/tab-bar/you.svg';
-import YouTabIconActive from './src/images/tab-bar/you-selected.svg';
-import { MessageSearchScreen } from './src/screens/MessageSearchScreen';
+import {SVGIcon} from './src/components/SVGIcon';
 
 LogBox.ignoreAllLogs(true);
 
 const chatClient = new StreamChat('q95x9hkbyd6p', {
-  timeout: 10000
+  timeout: 10000,
 });
 const userToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk';
 const user = {
   id: 'vishal',
-  name: 'Vishal',
+  name: 'Vishal Narkhede',
+  image: 'https://ca.slack-edge.com/T02RM6X6B-UHGDQJ8A0-31658896398c-512',
+  status: '🍺',
 };
 
 chatClient.setUser(user, userToken);
 ChatClientService.setClient(chatClient);
 
 const Tab = createBottomTabNavigator();
+
 function MyTabBar({state, descriptors, navigation}) {
+  const {colors} = useTheme();
   const getTitle = key => {
     switch (key) {
       case 'home':
         return {
-          icon: <HomeTabIcon width={25} height={25} />,
-          iconActive: <HomeTabIconActive width={25} height={25} />,
+          icon: <SVGIcon type="home-tab" width={25} height={25} />,
+          iconActive: <SVGIcon type="home-tab-active" width={25} height={25} />,
           subtitle: 'Home',
         };
       case 'dms':
         return {
-          icon: <DMTabIcon width={25} height={25} />,
-          iconActive: <DMTabIconActive width={25} height={25} />,
+          icon: <SVGIcon type="dm-tab" width={25} height={25} />,
+          iconActive: <SVGIcon type="dm-tab-active" width={25} height={25} />,
           subtitle: 'DMs',
         };
       case 'mentions':
         return {
-          icon: <MentionsTabIcon width={25} height={25} />,
-          iconActive: <MentionsTabIconActive width={25} height={25} />,
+          icon: <SVGIcon type="mentions-tab" width={25} height={25} />,
+          iconActive: (
+            <SVGIcon type="mentions-tab-active" width={25} height={25} />
+          ),
           subtitle: 'Mention',
         };
       case 'you':
         return {
-          icon: <YouTabIcon width={25} height={25} />,
-          iconActive: <YouTabIconActive width={25} height={25} />,
+          icon: <SVGIcon type="you-tab" width={25} height={25} />,
+          iconActive: <SVGIcon type="you-tab-active" width={25} height={25} />,
           subtitle: 'You',
         };
     }
@@ -94,10 +79,10 @@ function MyTabBar({state, descriptors, navigation}) {
     <View
       style={{
         flexDirection: 'row',
-        backgroundColor: 'white',
-        borderTopColor: '#D3D3D3',
+        backgroundColor: colors.background,
+        borderTopColor: colors.border,
         borderTopWidth: 0.5,
-        paddingBottom: 10
+        paddingBottom: 20,
       }}>
       {state.routes.map((route, index) => {
         const tab = getTitle(route.name);
@@ -124,8 +109,8 @@ function MyTabBar({state, descriptors, navigation}) {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Text style={{  }}>{isFocused ? tab.iconActive : tab.icon}</Text>
-            <Text style={{fontSize: 12}}>{tab.subtitle}</Text>
+            {isFocused ? tab.iconActive : tab.icon}
+            <SCText style={{fontSize: 12}}>{tab.subtitle}</SCText>
           </TouchableOpacity>
         );
       })}
@@ -217,24 +202,57 @@ const HomeStackNavigator = props => {
 function MyTabs() {
   return (
     <Tab.Navigator tabBar={props => <MyTabBar {...props} />}>
-      <Tab.Screen
-        // name="🏠"
-        name="home"
-        component={ChannelListScreen}
-      />
+      <Tab.Screen name="home" component={ChannelListScreen} />
       <Tab.Screen name={'dms'} component={DirectMessagesScreen} />
       <Tab.Screen name={'mentions'} component={MentionsScreen} />
-      <Tab.Screen name={'you'} component={() => null} />
+      <Tab.Screen name={'you'} component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
+
+const MyDarkTheme = {
+  dark: true,
+  colors: {
+    primary: '#121115',
+    background: '#19181c',
+    backgroundSecondary: '#212527',
+    card: 'rgb(255, 255, 255)',
+    text: '#d8d8d9',
+    dimmedText: '#303236',
+    boldText: '#D0D0D0',
+    shadow: '#232327',
+    border: '#252529',
+    notification: 'rgb(255, 69, 58)',
+  },
+};
+const MyLightTheme = {
+  dark: false,
+  colors: {
+    primary: '#3E3139',
+    background: 'white',
+    backgroundSecondary: '#E9E9E9',
+    card: 'rgb(255, 255, 255)',
+    text: 'black',
+    dimmedText: '#979A9A',
+    boldText: 'black',
+    shadow: '#000',
+    border: '#D3D3D3',
+    notification: 'rgb(255, 69, 58)',
+  },
+};
+
 export default function App() {
+  const scheme = useColorScheme();
+
   return (
-    <NavigationContainer>
-      <View style={styles.container}>
-        <HomeStackNavigator />
-      </View>
-    </NavigationContainer>
+    <AppearanceProvider>
+      <NavigationContainer
+        theme={scheme === 'dark' ? MyDarkTheme : MyLightTheme}>
+        <View style={styles.container}>
+          <HomeStackNavigator />
+        </View>
+      </NavigationContainer>
+    </AppearanceProvider>
   );
 }
 

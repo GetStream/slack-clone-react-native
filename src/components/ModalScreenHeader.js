@@ -2,19 +2,24 @@ import React from 'react';
 import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
 import iconSearch from '../images/icon-search.png';
 import iconThreeDots from '../images/icon-3-dots.png';
+import {SCText, theme, isDark} from '../utils';
+import {useTheme} from '@react-navigation/native';
 
-export const NewMessageScreenHeader = ({goBack, channel, client}) => {
+export const ModalScreenHeader = ({goBack, title}) => {
+  const {colors} = useTheme();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: colors.background}]}>
       <View style={styles.leftContent}>
         <TouchableOpacity
           onPress={() => {
             goBack && goBack();
           }}>
-          <Text style={styles.hamburgerIcon}>x</Text>
+          <SCText style={styles.hamburgerIcon}>x</SCText>
         </TouchableOpacity>
       </View>
-      <Text style={styles.channelTitle}>New Message</Text>
+      <SCText style={[styles.channelTitle, {color: colors.boldText}]}>
+        {title}
+      </SCText>
     </View>
   );
 };
@@ -23,22 +28,11 @@ export const styles = StyleSheet.create({
   container: {
     padding: 15,
     marginTop: 10,
-    borderColor: '#D3D3D3',
-    borderWidth: 1,
     flexDirection: 'row',
-    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 0.5,
     borderBottomColor: 'grey',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
   },
   leftContent: {
     position: 'absolute',
@@ -48,13 +42,11 @@ export const styles = StyleSheet.create({
     fontSize: 27,
   },
   channelTitle: {
-    color: 'black',
     textAlign: 'center',
     alignContent: 'center',
     marginLeft: 10,
     fontWeight: '900',
     fontSize: 17,
-    fontFamily: 'Lato-Regular',
   },
   rightContent: {
     flexDirection: 'row',

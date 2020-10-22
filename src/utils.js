@@ -1,5 +1,6 @@
-import React from 'react';
-import {Text} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Alert, Text, Appearance} from 'react-native';
+import {useTheme} from '@react-navigation/native';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -37,7 +38,7 @@ export const CacheService = {
 
         if (memberIds.indexOf(otherMember.user.id) === -1) {
           memberIds.push(otherMember.user.id);
-          this.members.push(otherMember.user);
+          this.members.push({...otherMember.user, channelId: c.id});
         }
 
         return true;
@@ -78,6 +79,11 @@ export const getChannelDisplayName = (channel, includePrefix = false) => {
     m => m.user.id !== chatClient.user.id,
   );
 
+  if (otherMembers.length === 1) {
+    return `${otherMembers[0].user.name}  ${
+      otherMembers[0].user.status ? otherMembers[0].user.status : ''
+    }`;
+  }
   return otherMembers.map(m => m.user.name).join(', ');
 };
 
@@ -121,15 +127,79 @@ export const addBorder = color => {
 };
 
 export const SCText = props => {
-  return (
-    <Text
-      style={{
+  const {colors} = useTheme();
+  const style = Array.isArray(props.style)
+    ? [
+        {
+          fontFamily: 'Lato-Regular',
+          color: colors.text,
+          fontSize: 16,
+        },
+        ...props.style,
+      ]
+    : {
         fontFamily: 'Lato-Regular',
-        color: 'black',
+        color: colors.text,
         fontSize: 16,
         ...props.style,
-      }}>
-      {props.children}
-    </Text>
-  );
+      };
+  return <Text style={style}>{props.children}</Text>;
+};
+
+const colorScheme = Appearance.getColorScheme();
+
+export const theme = {
+  dark: Appearance.getColorScheme() === 'dark',
+};
+export const isDark = () => Appearance.getColorScheme() === 'dark';
+
+export const useStreamChatTheme = () => {
+  const {colors} = useTheme();
+  const getChatStyle = () => {
+    return {
+      'messageList.dateSeparator.date': 'color: black;',
+      'messageInput.container': `border-top-color: #979A9A; border-top-width: 0.4px; backgroundColor: ${
+        colors.background
+      }; margin: 0; border-radius: 0;`,
+      'messageInput.sendButtonIcon': 'height: 20px; width: 20px;',
+      'messageInput.attachButtonIcon': 'height: 20px; width: 20px;',
+      'messageInput.inputBox': `font-size: 15px; color: ${colors.text}`,
+      'messageList.dateSeparator.container':
+        'margin-top: 10; margin-bottom: 5;',
+      'typingIndicator.text': `color: ${colors.text};`,
+      'message.avatarWrapper.spacer': 'height: 0;',
+      'message.content.container':
+        'flex: 1; align-items: stretch; max-width: 320px; padding-top: 0; border-radius: 0;',
+      'message.content.textContainer':
+        'align-self: stretch; padding-top: 0;margin-top: 0;border-color: transparent;width: 100%',
+      'message.container': 'margin-bottom: 0; margin-top: 0',
+      'message.avatarWrapper.container': 'align-self: flex-start',
+      'avatar.image': 'border-radius: 5px;',
+      'message.card.container':
+        'border-top-left-radius: 8px; border-top-right-radius: 8px;border-bottom-left-radius: 8px; border-bottom-right-radius: 8px',
+      'message.gallery.single':
+        'border-top-left-radius: 8px;border-top-right-radius: 8px;border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; margin-left: 5px; width: 95%',
+      'message.gallery.galleryContainer':
+        'border-top-left-radius: 8px;border-top-right-radius: 8px;border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; margin-left: 5px; width: 95%',
+      'message.replies.messageRepliesText': 'color: #0064c2',
+      'message.content.markdown': {
+        text: {
+          fontSize: 16,
+          fontFamily: 'Lato-Regular',
+          color: colors.text,
+        },
+      },
+    };
+  };
+  const [chatStyle, setChatStyle] = useState(getChatStyle());
+
+  useEffect(() => {
+    setChatStyle(getChatStyle());
+  }, [colors]);
+
+  return chatStyle;
+};
+
+export const notImplemented = () => {
+  Alert.alert('This feature has not been implementd');
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import { SCText, theme , isDark} from '../utils';
 
 export const UrlPreview = props => {
   const getDomain = url => {
@@ -18,9 +19,9 @@ export const UrlPreview = props => {
   return (
     <TouchableOpacity style={styles.container}>
       <View style={styles.detailsContainer}>
-        <Text style={styles.titleUrl}>{getDomain(props.title_link)}</Text>
-        <Text style={styles.title}>{props.title}</Text>
-        <Text style={styles.description}>{props.text}</Text>
+        <SCText style={styles.titleUrl}>{getDomain(props.title_link)}</SCText>
+        <SCText style={styles.title}>{props.title}</SCText>
+        <SCText style={styles.description}>{props.text}</SCText>
       </View>
       <View style={styles.thumbnailContainer}>
         <Image

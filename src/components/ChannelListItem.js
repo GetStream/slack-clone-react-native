@@ -1,14 +1,15 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
-import {getChannelDisplayName} from '../utils';
+import {View, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {useTheme} from '@react-navigation/native';
+
+import {getChannelDisplayName, SCText, theme, isDark} from '../utils';
 export const ChannelListItem = ({
   channel,
   setActiveChannelId,
   presenceIndicator = true,
-  avatar = false,
+  showAvatar = false,
   changeChannel,
   isUnread,
-  activeChannelId,
   currentUserId,
 }) => {
   /**
@@ -33,10 +34,21 @@ export const ChannelListItem = ({
    * Number of unread mentions (@vishal) in channel
    */
   let countUnreadMentions = channel.countUnreadMentions();
+  const {colors} = useTheme();
 
-  const isDirectMessaging = !channel.data.name;
+  const isDirectMessagingConversation = !channel.data.name;
   const isOneOnOneConversation =
+    isDirectMessagingConversation &&
     Object.keys(channel.state.members).length === 2;
+
+  const channelTitleStyle = isUnread
+    ? [
+        {
+          color: colors.boldText,
+        },
+        styles.unreadChannelTitle,
+      ]
+    : styles.channelTitle;
 
   if (isOneOnOneConversation) {
     // If its a oneOnOneConversation, then we need to display the name of the other user.
@@ -54,14 +66,10 @@ export const ChannelListItem = ({
       );
     }
 
-    if (avatar) {
+    if (showAvatar) {
       ChannelPrefix = (
         <Image
-          style={{
-            height: 20,
-            width: 20,
-            borderRadius: 5,
-          }}
+          style={styles.oneOnOneConversationImage}
           source={{
             uri: channel.state.members[otherUserId].user.image,
           }}
@@ -70,26 +78,27 @@ export const ChannelListItem = ({
     }
 
     ChannelTitle = (
-      <Text style={isUnread ? styles.unreadChannelTitle : styles.channelTitle}>
+      <SCText style={channelTitleStyle}>
         {getChannelDisplayName(channel)}
-      </Text>
+      </SCText>
     );
-  } else if (isDirectMessaging) {
-    ChannelPrefix = <Text style={styles.channelTitlePrefix}>#</Text>;
+  } else if (isDirectMessagingConversation) {
+    ChannelPrefix = (
+      <SCText style={styles.directMessagingConversationPrefix}>
+        {channel.data.member_count - 1}
+      </SCText>
+    );
     ChannelTitle = (
-      <Text style={isUnread ? styles.unreadChannelTitle : styles.channelTitle}>
-        {Object.values(channel.state.members)
-          .filter(m => m.user.id !== currentUserId)
-          .map(m => m.user.name)
-          .join(', ')}
-      </Text>
+      <SCText style={channelTitleStyle}>
+        {getChannelDisplayName(channel)}
+      </SCText>
     );
   } else {
-    ChannelPrefix = <Text style={styles.channelTitlePrefix}>#</Text>;
+    ChannelPrefix = <SCText style={styles.channelTitlePrefix}>#</SCText>;
     ChannelTitle = (
-      <Text style={isUnread ? styles.unreadChannelTitle : styles.channelTitle}>
+      <SCText style={channelTitleStyle}>
         {getChannelDisplayName(channel)}
-      </Text>
+      </SCText>
     );
   }
 
@@ -100,17 +109,23 @@ export const ChannelListItem = ({
         setActiveChannelId && setActiveChannelId(channel.id);
         changeChannel(channel.id);
       }}
-      style={{
-        ...styles.channelRow,
-        // backgroundColor: activeChannelId === channel.id ? '#0676db' : undefined,
-      }}>
+      style={styles.channelRow}>
       <View style={styles.channelTitleContainer}>
         {ChannelPrefix}
         {ChannelTitle}
       </View>
-      {countUnreadMentions > 0 && (
+      {isDirectMessagingConversation && isUnread && (
         <View style={styles.unreadMentionsContainer}>
-          <Text style={styles.unreadMentionsText}>{countUnreadMentions}</Text>
+          <SCText style={styles.unreadMentionsText}>
+            {channel.countUnread()}
+          </SCText>
+        </View>
+      )}
+      {(!isDirectMessagingConversation && countUnreadMentions) > 0 && (
+        <View style={styles.unreadMentionsContainer}>
+          <SCText style={styles.unreadMentionsText}>
+            {countUnreadMentions}
+          </SCText>
         </View>
       )}
     </TouchableOpacity>
@@ -118,13 +133,22 @@ export const ChannelListItem = ({
 };
 
 const PresenceIndicator = ({online}) => {
-  return <View style={online ? styles.onlineCircle : styles.offlineCircle} />;
-};
-
-const textStyles = {
-  fontFamily: 'Lato-Regular',
-  color: 'black',
-  fontSize: 18,
+  const {colors} = useTheme();
+  return (
+    <View
+      style={
+        online
+          ? styles.onlineCircle
+          : [
+              styles.offlineCircle,
+              {
+                borderColor: colors.text,
+                borderWidth: 1,
+              },
+            ]
+      }
+    />
+  );
 };
 
 const styles = StyleSheet.create({
@@ -132,18 +156,18 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 100 / 2,
-    backgroundColor: 'green',
+    backgroundColor: '#117A58',
   },
   offlineCircle: {
     width: 10,
     height: 10,
     borderRadius: 100 / 2,
-    borderColor: 'black',
-    borderWidth: 0.3,
     backgroundColor: 'transparent',
   },
   channelRow: {
     padding: 3,
+    paddingTop: 5,
+    paddingBottom: 5,
     paddingLeft: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -156,34 +180,45 @@ const styles = StyleSheet.create({
   },
   unreadChannelTitle: {
     marginLeft: 3,
-    fontWeight: 'bold',
+    fontWeight: '900',
     padding: 5,
-    ...textStyles,
   },
   channelTitle: {
     padding: 5,
-    fontWeight: '300',
     paddingLeft: 10,
-    ...textStyles,
   },
   channelTitlePrefix: {
     fontWeight: '300',
-    padding: 5,
-    ...textStyles,
+    padding: 0,
+  },
+  oneOnOneConversationImage: {
+    height: 20,
+    width: 20,
+    borderRadius: 5,
+  },
+  directMessagingConversationPrefix: {
+    height: 13,
+    width: 13,
+    backgroundColor: 'grey',
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
+    alignItems: 'center',
+    textAlign: 'center',
+    borderRadius: 10,
   },
   unreadMentionsContainer: {
     backgroundColor: 'red',
     borderRadius: 20,
     alignSelf: 'center',
-    marginRight: 20,
+    marginRight: 0,
   },
   unreadMentionsText: {
-    color: 'black',
+    color: 'white',
     padding: 3,
     paddingRight: 6,
     paddingLeft: 6,
     fontSize: 15,
     fontWeight: '900',
-    fontFamily: 'Lato-Regular',
   },
 });
