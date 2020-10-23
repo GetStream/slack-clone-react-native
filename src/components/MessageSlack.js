@@ -6,6 +6,7 @@ import {MessageAvatar} from './MessageAvatar';
 import {MessageHeader} from './MessageHeader';
 import {UrlPreview} from './UrlPreview';
 import {Giphy} from './Giphy';
+import {MessageActionSheet} from './MessageActionSheet';
 
 export const MessageSlack = props => {
   if (props.message.deleted_at) {
@@ -16,6 +17,7 @@ export const MessageSlack = props => {
       {...props}
       forceAlign="left"
       ReactionList={null}
+      ActionSheet={MessageActionSheet}
       MessageAvatar={MessageAvatar}
       MessageHeader={MessageHeader}
       MessageFooter={MessageFooter}

@@ -1,8 +1,6 @@
 import React from 'react';
 import {ReactionPickerWrapper} from 'stream-chat-react-native';
-import {StyleSheet, Image, View, TouchableOpacity, Text} from 'react-native';
-import iconEmoticon from '../images/icon-emoticon.png';
-import {theme, isDark} from '../utils';
+import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
 import {SVGIcon} from './SVGIcon';
 import {useTheme} from '@react-navigation/native';
 
@@ -27,11 +25,12 @@ export const MessageFooter = props => {
         }}>
         {props.message.latest_reactions &&
           props.message.latest_reactions.length > 0 && (
-            <View style={[
-              styles.reactionPickerContainer,
-              {
-                backgroundColor: dark ? '#6A6E70' : '#F0F0F0',
-              }
+            <View
+              style={[
+                styles.reactionPickerContainer,
+                {
+                  backgroundColor: dark ? '#313538' : '#F0F0F0',
+                },
               ]}>
               <SVGIcon height="18" width="18" type="emoji" />
             </View>
@@ -94,7 +93,7 @@ const ReactionItem = ({
         styles.reactionItemContainer,
         {
           borderColor: dark ? '#1E1D21' : '#0064c2',
-          backgroundColor: dark ? '#6A6E70' : '#d6ebff',
+          backgroundColor: dark ? '#313538' : '#d6ebff',
         },
       ]}>
       <Text

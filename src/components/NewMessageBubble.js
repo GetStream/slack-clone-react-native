@@ -4,6 +4,7 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 import NewMessageBubbleIcon from '../images/channel-list/new-message.svg';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {theme, isDark} from '../utils';
+import { SVGIcon } from './SVGIcon';
 
 export const NewMessageBubble = () => {
   const navigation = useNavigation();
@@ -19,7 +20,7 @@ export const NewMessageBubble = () => {
           backgroundColor: colors.primary,
         },
       ]}>
-      <NewMessageBubbleIcon height={51} width={51} />
+      <SVGIcon type="new-message" height={51} width={51} />
     </TouchableOpacity>
   );
 };

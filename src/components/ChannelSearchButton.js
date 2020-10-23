@@ -11,7 +11,7 @@ export const ChannelSearchButton = () => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('ChannelSearchScreen');
+        navigation.navigate('ChannelSearchScreen', {channelsOnly: false});
       }}
       style={[
         styles.container,

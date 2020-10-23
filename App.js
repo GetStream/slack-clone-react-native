@@ -20,7 +20,14 @@ import {StreamChat} from 'stream-chat';
 import {ChannelScreen} from './src/screens/ChannelScreen';
 import {NewMessageScreen} from './src/screens/NewMessageScreen';
 import {ChannelSearchScreen} from './src/screens/ChannelSearchScreen';
-import {ChatUserContext, ChatClientService, SCText, theme} from './src/utils';
+import {
+  ChatUserContext,
+  ChatClientService,
+  SCText,
+  theme,
+  USER_TOKENS,
+  USERS,
+} from './src/utils';
 import {ChannelListScreen} from './src/screens/ChannelListScreen';
 import {DraftsScreen} from './src/screens/DraftsScreen';
 import {MentionsScreen} from './src/screens/MentionsSearch';
@@ -32,7 +39,7 @@ import {ProfileScreen} from './src/screens/ProfileScreen';
 import {SVGIcon} from './src/components/SVGIcon';
 import {ThreadScreen} from './src/screens/ThreadScreen';
 
-// LogBox.ignoreAllLogs(true);
+LogBox.ignoreAllLogs(true);
 
 const Tab = createBottomTabNavigator();
 
@@ -219,22 +226,6 @@ const MyLightTheme = {
   },
 };
 
-const USER_TOKENS = {
-  vishal:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk',
-  thierry:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidGhpZXJyeSJ9.iyGzbWInSA6B-0CE1Q9_lPOWjHvrWX3ypDhLYAL1UUs',
-};
-const USERS = {
-  vishal: {
-    id: 'vishal',
-    name: 'Vishal',
-  },
-  thierry: {
-    id: 'thierry',
-    name: 'Thierry',
-  },
-};
 export default function App() {
   const scheme = useColorScheme();
   const [connecting, setConnecting] = useState(true);

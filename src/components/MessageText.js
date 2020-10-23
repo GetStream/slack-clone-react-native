@@ -2,8 +2,8 @@ import React from 'react';
 import {theme, isDark, SCText, truncate} from '../utils';
 import {MessageUserBar} from './MessageHeader';
 import {useNavigation, useTheme} from '@react-navigation/native';
-import { useChannelContext, useThreadContext } from 'stream-chat-react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {useChannelContext, useThreadContext} from 'stream-chat-react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export const MessageText = props => {
   const {colors} = useTheme();
@@ -24,7 +24,7 @@ export const MessageText = props => {
             });
           }}
           style={{
-            marginBottom: 10
+            marginBottom: 10,
           }}>
           <SCText
             style={{
@@ -35,7 +35,9 @@ export const MessageText = props => {
               style={{
                 color: colors.linkText,
               }}>
-              {message.parentMessageText ? truncate(message.parentMessageText, 70, '...') : 'click to go'}
+              {message.parentMessageText
+                ? truncate(message.parentMessageText, 70, '...')
+                : 'click to go'}
             </SCText>
           </SCText>
         </TouchableOpacity>

@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
-import {ChannelList} from '../components/ChannelList';
+import {ChannelList} from '../components/ChannelList/ChannelList';
 import {ChatClientService, theme, isDark} from '../utils';
 import {NewMessageBubble} from '../components/NewMessageBubble';
 

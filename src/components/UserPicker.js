@@ -8,7 +8,7 @@ import {
   StyleSheet,
   FlatList,
 } from 'react-native';
-import {ChatUserContext, SCText} from '../utils';
+import {ChatUserContext, SCText, USERS} from '../utils';
 import {useTheme} from '@react-navigation/native';
 
 export const UserPicker = props => {
@@ -43,34 +43,18 @@ export const UserPicker = props => {
             props.onRequestClose();
           }}
           underlayColor={'#333333cc'}>
-          <View style={{backgroundColor: colors.backgroundSecondary}}>
-            <SCText style={{padding: 20, backgroundColor: colors.primary}}>
-              Select a User
+          <View>
+            <SCText
+              style={{
+                padding: 20,
+                backgroundColor: colors.primary,
+                color: colors.textInverted,
+                fontWeight: '900',
+              }}>
+              Switch User
             </SCText>
             <FlatList
-              data={[
-                {
-                  id: 'vishal',
-                  name: 'Vishal Narkhede',
-                  image:
-                    'https://ca.slack-edge.com/T02RM6X6B-UHGDQJ8A0-31658896398c-512',
-                  value: 'vishal',
-                },
-                {
-                  id: 'thierry',
-                  name: 'Thierry',
-                  image:
-                    'https://ca.slack-edge.com/T02RM6X6B-UHGDQJ8A0-31658896398c-512',
-                  value: 'thierry',
-                },
-                {
-                  id: 'jaap',
-                  name: 'Jaap Baker',
-                  image:
-                    'https://ca.slack-edge.com/T02RM6X6B-UHGDQJ8A0-31658896398c-512',
-                  value: 'jaap',
-                },
-              ]}
+              data={Object.values(USERS)}
               keyExtractor={(_, index) => index.toString()}
               renderItem={({item, index}) => {
                 return (
@@ -102,9 +86,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#333333cc',
     padding: 16,
-    borderColor: 'blue',
-    borderWidth: 2,
-
   },
   itemText: {
     backgroundColor: '#fff',

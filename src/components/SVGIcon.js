@@ -9,6 +9,9 @@ import ImageAttachmentIcon from '../images/channel/picture.svg';
 import FileAttachmentIconDark from '../images/channel/attachment-copy.svg';
 import ImageAttachmentIconDark from '../images/channel/picture-copy.svg';
 
+import NewMessageBubbleIcon from '../images/channel-list/new-message.svg';
+import NewMessageBubbleIconDark from '../images/channel-list/new-message-copy.svg';
+
 import SearchIcon from '../images/channel/search.svg';
 import SearchIconDark from '../images/channel/search-copy.svg';
 import InfoIcon from '../images/channel/info.svg';
@@ -53,10 +56,20 @@ import PreferencesIconDark from '../images/profile/preferences-copy.svg';
 import SavedItemsIconDark from '../images/profile/saved-items-copy.svg';
 import ViewProfileIconDark from '../images/profile/view-profile-copy.svg';
 
+import CopyTextIcon from '../images/message/copy-text.svg';
+import DeleteTextIcon from '../images/message/delete.svg';
+import EditTextIcon from '../images/message/edit.svg';
+import CopyTextIconDark from '../images/message/copy-text-copy.svg';
+import DeleteTextIconDark from '../images/message/delete-copy.svg';
+import EditTextIconDark from '../images/message/edit-copy.svg';
+
 export const SVGIcon = ({type, height, width}) => {
   const {dark} = useTheme();
   let Component;
   switch (type) {
+    case 'new-message':
+      Component = dark ? NewMessageBubbleIconDark : NewMessageBubbleIcon;
+      break;
     case 'file-attachment':
       Component = dark ? FileAttachmentIconDark : FileAttachmentIcon;
       break;
@@ -122,6 +135,15 @@ export const SVGIcon = ({type, height, width}) => {
       break;
     case 'view-profile':
       Component = dark ? ViewProfileIconDark : ViewProfileIcon;
+      break;
+    case 'copy-text':
+      Component = dark ? CopyTextIconDark : CopyTextIcon;
+      break;
+    case 'delete-text':
+      Component = dark ? DeleteTextIconDark : DeleteTextIcon;
+      break;
+    case 'edit-text':
+      Component = dark ? EditTextIconDark : EditTextIcon;
       break;
   }
   return <Component height={height} width={width} />;
