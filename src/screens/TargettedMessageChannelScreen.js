@@ -1,22 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  SafeAreaView,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import {View, SafeAreaView, Platform, StyleSheet, Text} from 'react-native';
 import {
   Chat,
   Channel,
   MessageList,
-  MessageInput,
   KeyboardCompatibleView,
 } from 'stream-chat-react-native';
 import {ChannelHeader} from '../components/ChannelHeader';
 import {DateSeparator} from '../components/DateSeparator';
-import {InputBox} from '../components/InputBox';
 import {MessageSlack} from '../components/MessageSlack';
 import streamChatTheme from '../stream-chat-theme';
 
@@ -85,7 +76,7 @@ export function TargettedMessageChannelScreen({
           <Text
             style={{alignSelf: 'center', color: '#1E90FF', fontSize: 15}}
             onPress={() => {
-                channel.initialized = false;
+              channel.initialized = false;
               navigation.navigate('ChannelScreen', {
                 channelId: channel.id,
               });

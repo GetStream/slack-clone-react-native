@@ -1,30 +1,19 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {
-  TouchableOpacity,
-  Animated,
-  View,
-  Text,
-  StyleSheet,
-  LayoutAnimation,
-} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {TouchableOpacity, Animated, View, StyleSheet} from 'react-native';
 import {
   AutoCompleteInput,
-  AttachButton,
   SendButton,
-  ThemeProvider,
   useChannelContext,
 } from 'stream-chat-react-native';
-import {SCText, isDark, getChannelDisplayName} from '../utils';
+import {SCText, getChannelDisplayName} from '../utils';
 
 import {useTheme} from '@react-navigation/native';
-import {useNavigation} from '@react-navigation/native';
 import {SVGIcon} from './SVGIcon';
 import CheckBox from '@react-native-community/checkbox';
 
 export const InputBoxThread = props => {
   const {colors} = useTheme();
   const [leftMenuActive, setLeftMenuActive] = useState(true);
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const {channel} = useChannelContext();
   const transform = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
   const translateMenuLeft = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
@@ -33,7 +22,6 @@ export const InputBoxThread = props => {
   const opacityMenuRight = useRef(new Animated.Value(0)).current;
   const isDirectMessagingConversation = !channel.data.name;
 
-  // console.warn(translateMenuLeft);
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
       <AutoCompleteInput {...props} />
@@ -41,13 +29,21 @@ export const InputBoxThread = props => {
         style={[styles.actionsContainer, {backgroundColor: colors.background}]}>
         <Animated.View // Special animatable View
           style={{
-            transform: [{rotate: transform}, {perspective: 1000}], // Bind opacity to animated value
+            transform: [
+              {
+                rotate: transform.interpolate({
+                  inputRange: [0, 180],
+                  outputRange: ['0deg', '180deg'],
+                }),
+              },
+              {perspective: 1000},
+            ], // Bind opacity to animated value
           }}>
           <TouchableOpacity
             onPress={() => {
               Animated.parallel([
                 Animated.timing(transform, {
-                  toValue: leftMenuActive ? 3.15 : 0,
+                  toValue: leftMenuActive ? 180 : 0,
                   duration: 200,
                   useNativeDriver: false,
                 }),
@@ -105,7 +101,6 @@ export const InputBoxThread = props => {
               boxType="square"
               disabled={false}
               style={{width: 15, height: 15}}
-              value={toggleCheckBox}
               onValueChange={newValue =>
                 props.setSendMessageInChannel(newValue)
               }

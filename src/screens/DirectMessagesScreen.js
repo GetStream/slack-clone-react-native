@@ -10,11 +10,9 @@ import {
 import {
   CacheService,
   ChatClientService,
-  getChannelDisplayImage,
   getChannelDisplayName,
   SCText,
-  theme,
-  isDark, truncate
+  truncate,
 } from '../utils';
 import {useTheme} from '@react-navigation/native';
 
@@ -23,53 +21,6 @@ import {ScreenHeader} from './ScreenHeader';
 import {ChannelSearchButton} from '../components/ChannelSearchButton';
 import {useNavigation} from '@react-navigation/native';
 
-const ChannelAvatar = ({channel}) => {
-  const chatClient = ChatClientService.getClient();
-  const {colors} = useTheme();
-  const otherMembers = Object.values(channel.state.members).filter(
-    m => m.user.id !== chatClient.user.id,
-  );
-  if (otherMembers.length >= 2) {
-    return (
-      <View
-        style={{
-          height: 40,
-          width: 40,
-          marginTop: 5,
-        }}>
-        <Image
-          style={styles.messageUserImage}
-          source={{
-            uri: otherMembers[0].user.image,
-          }}
-        />
-        <Image
-          style={[
-            styles.messageUserImage,
-            {
-              position: 'absolute',
-              borderColor: colors.background,
-              borderWidth: 3,
-              bottom: 0,
-              right: 0,
-            },
-          ]}
-          source={{
-            uri: otherMembers[1].user.image,
-          }}
-        />
-      </View>
-    );
-  }
-  return (
-    <Image
-      style={{height: 40, width: 40, borderRadius: 5,}}
-      source={{
-        uri: otherMembers[0].user.image,
-      }}
-    />
-  );
-};
 export const DirectMessagesScreen = props => {
   const chatClient = ChatClientService.getClient();
   const navigation = useNavigation();
@@ -122,6 +73,46 @@ export const DirectMessagesScreen = props => {
   );
 };
 
+const ChannelAvatar = ({channel}) => {
+  const chatClient = ChatClientService.getClient();
+  const {colors} = useTheme();
+  const otherMembers = Object.values(channel.state.members).filter(
+    m => m.user.id !== chatClient.user.id,
+  );
+  if (otherMembers.length >= 2) {
+    return (
+      <View style={styles.stackedAvatarContainer}>
+        <Image
+          style={styles.stackedAvatarImage}
+          source={{
+            uri: otherMembers[0].user.image,
+          }}
+        />
+        <Image
+          style={[
+            styles.stackedAvatarImage,
+            styles.stackedAvatarTopImage,
+            {
+              borderColor: colors.background,
+            },
+          ]}
+          source={{
+            uri: otherMembers[1].user.image,
+          }}
+        />
+      </View>
+    );
+  }
+  return (
+    <Image
+      style={styles.avatarImage}
+      source={{
+        uri: otherMembers[0].user.image,
+      }}
+    />
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -132,12 +123,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.5,
     paddingTop: 10,
   },
-  messageUserImage: {
-    height: 28,
-    width: 28,
-    borderRadius: 5,
-    // marginTop: 5,
-  },
   messageDetailsContainer: {
     flex: 1,
     marginLeft: 25,
@@ -147,4 +132,23 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginTop: 5,
   },
+
+  stackedAvatarContainer: {
+    height: 40,
+    width: 40,
+    marginTop: 5,
+  },
+  stackedAvatarTopImage: {
+    position: 'absolute',
+    borderWidth: 3,
+    bottom: 0,
+    right: 0,
+  },
+  stackedAvatarImage: {
+    height: 28,
+    width: 28,
+    borderRadius: 5,
+    // marginTop: 5,
+  },
+  avatarImage: {height: 40, width: 40, borderRadius: 5}
 });

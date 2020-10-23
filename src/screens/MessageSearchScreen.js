@@ -12,8 +12,6 @@ import {
   ChatClientService,
   getChannelDisplayName,
   SCText,
-  theme,
-  isDark,
   useStreamChatTheme,
 } from '../utils';
 import {

@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import {View, Image, Text, StyleSheet} from 'react-native';
+import {View, Image, StyleSheet} from 'react-native';
 import {FlatList, TextInput, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ChannelListItem} from '../components/ChannelListItem';
 import {ModalScreenHeader} from '../components/ModalScreenHeader';
-import {CacheService, ChatClientService, SCText, theme, isDark} from '../utils';
+import {CacheService, ChatClientService, SCText} from '../utils';
 import {useTheme} from '@react-navigation/native';
 
 export const ChannelSearchScreen = ({

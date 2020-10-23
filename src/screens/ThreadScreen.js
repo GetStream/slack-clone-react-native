@@ -3,8 +3,6 @@ import {View, SafeAreaView, Platform, StyleSheet} from 'react-native';
 import {
   Chat,
   Channel,
-  MessageList,
-  MessageInput,
   KeyboardCompatibleView,
   Thread,
   Message as DefaultMessage,
@@ -12,23 +10,14 @@ import {
 
 import {useNavigation, useTheme} from '@react-navigation/native';
 
-import {ChannelHeader} from '../components/ChannelHeader';
-import {DateSeparator} from '../components/DateSeparator';
-import {InputBox} from '../components/InputBox';
 import {MessageSlack} from '../components/MessageSlack';
-import streamChatTheme from '../stream-chat-theme';
-import AsyncStorage from '@react-native-community/async-storage';
 import {
-  getChannelDisplayImage,
   getChannelDisplayName,
-  theme,
-  isDark,
   useStreamChatTheme,
   ChatClientService,
   SCText,
   truncate,
 } from '../utils';
-import {ScreenHeader} from './ScreenHeader';
 import {ModalScreenHeader} from '../components/ModalScreenHeader';
 import {InputBoxThread} from '../components/InputBoxThread';
 import {SVGIcon} from '../components/SVGIcon';
@@ -52,22 +41,10 @@ export function ThreadScreen({
 
   const [channel, setChannel] = useState(null);
   const [thread, setThread] = useState();
-  const [initialValue, setInitialValue] = useState('');
   const [sendMessageInChannel, setSendMessageInChannel] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [text, setText] = useState('');
-  const goBack = () => {
-    // const storeObject = {
-    //   channelId: channel.id,
-    //   image: getChannelDisplayImage(channel),
-    //   title: getChannelDisplayName(channel, true),
-    //   text,
-    // };
-    // AsyncStorage.setItem(
-    //   `@slack-clone-draft-${channelId}`,
-    //   JSON.stringify(storeObject),
-    // );
 
+  const goBack = () => {
     navigation.goBack();
   };
 
@@ -81,26 +58,12 @@ export function ThreadScreen({
   }, [chatClient, threadId]);
 
   useEffect(() => {
-    const setDraftMessage = async () => {
-      const draftStr = await AsyncStorage.getItem(
-        `@slack-clone-draft-${channelId}-${threadId}`,
-      );
-      if (!draftStr) {
-        setIsReady(true);
-        return;
-      }
-      const draft = JSON.parse(draftStr);
-      setInitialValue(draft.text);
-      setText(draft.text);
-      setIsReady(true);
-    };
-
     if (!channelId) {
       navigation.goBack();
     } else {
       const _channel = chatClient.channel('messaging', channelId);
       setChannel(_channel);
-      setDraftMessage();
+      setIsReady(true);
     }
   }, [chatClient, channelId, threadId]);
 
@@ -137,10 +100,6 @@ export function ThreadScreen({
                     ? thread.text
                     : undefined,
                 };
-                AsyncStorage.removeItem(
-                  `@slack-clone-draft-${channelId}-${thread.id}`,
-                );
-                setText('');
                 return channel.sendMessage(newMessage);
               }}
               KeyboardCompatibleView={CustomKeyboardCompatibleView}>
@@ -174,21 +133,23 @@ export function ThreadScreen({
                           threadList
                         />
                         <View
-                          style={{
-                            padding: 10,
-                            backgroundColor: colors.background,
-                            borderTopColor: colors.border,
-                            borderBottomColor: colors.border,
-                            borderTopWidth: 1,
-                            borderBottomWidth: 1,
-                            marginBottom: 20,
-                          }}>
+                          style={[
+                            styles.threadHeaderSeparator,
+                            {
+                              backgroundColor: colors.background,
+                              borderTopColor: colors.border,
+                              borderBottomColor: colors.border,
+                            },
+                          ]}>
                           {thread.reply_count > 0 ? (
                             <SCText>{thread.reply_count} replies</SCText>
                           ) : (
-                            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                            <View
+                              style={styles.emptyThreadHeaderSeparatorContent}>
                               <SVGIcon type="threads" height="15" width="15" />
-                              <SCText style={{ marginLeft: 10 }}>reply in thread</SCText>
+                              <SCText style={{marginLeft: 10}}>
+                                reply in thread
+                              </SCText>
                             </View>
                           )}
                         </View>
@@ -219,17 +180,14 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
   },
-  touchableOpacityStyle: {
-    position: 'absolute',
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 30,
-    backgroundColor: '#3F0E40',
-    width: 50,
-    height: 50,
+  threadHeaderSeparator: {
+    padding: 10,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginBottom: 20,
+  },
+  emptyThreadHeaderSeparatorContent: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    right: 20,
-    bottom: 80,
   },
 });

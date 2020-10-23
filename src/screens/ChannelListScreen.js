@@ -3,7 +3,7 @@ import {View, StyleSheet} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
 import {ChannelList} from '../components/ChannelList/ChannelList';
-import {ChatClientService, theme, isDark} from '../utils';
+import {ChatClientService} from '../utils';
 import {NewMessageBubble} from '../components/NewMessageBubble';
 
 import {ScreenHeader} from './ScreenHeader';

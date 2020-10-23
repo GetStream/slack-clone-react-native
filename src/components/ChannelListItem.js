@@ -2,7 +2,7 @@ import React from 'react';
 import {View, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
-import {getChannelDisplayName, SCText, theme, isDark, truncate} from '../utils';
+import {getChannelDisplayName, SCText, truncate} from '../utils';
 export const ChannelListItem = ({
   channel,
   setActiveChannelId,

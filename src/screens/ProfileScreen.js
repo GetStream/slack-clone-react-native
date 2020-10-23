@@ -1,10 +1,10 @@
 import React from 'react';
-import {Alert, Image, View, StyleSheet} from 'react-native';
+import {Image, View, StyleSheet} from 'react-native';
 
 import {ScreenHeader} from './ScreenHeader';
 import {useTheme} from '@react-navigation/native';
 import {ChatClientService, SCText, notImplemented} from '../utils';
-import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {SVGIcon} from '../components/SVGIcon';
 
 export const ProfileScreen = props => {

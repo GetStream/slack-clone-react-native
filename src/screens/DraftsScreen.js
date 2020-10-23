@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
-import {SCText, theme, isDark} from '../utils';
+import {ChatClientService, SCText} from '../utils';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NewMessageBubble} from '../components/NewMessageBubble';
 
@@ -10,6 +10,7 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 
 export const DraftsScreen = () => {
   const [results, setResults] = useState([]);
+  const chatClient = ChatClientService.getClient();
   const navigation = useNavigation();
   const {colors} = useTheme();
 
@@ -17,7 +18,7 @@ export const DraftsScreen = () => {
     const getDraftMessages = async () => {
       const keys = await AsyncStorage.getAllKeys();
       const draftKeys = keys.filter(k => {
-        return k.indexOf('@slack-clone-draft') === 0;
+        return k.indexOf(`@slack-clone-draft-${chatClient.user.id}`) === 0;
       });
 
       const items = await AsyncStorage.multiGet(draftKeys);
@@ -57,8 +58,8 @@ export const DraftsScreen = () => {
                 style={[
                   styles.draftItemContainer,
                   {
-                      borderBottomColor: colors.border,
-                  }
+                    borderBottomColor: colors.border,
+                  },
                 ]}
                 onPress={() => {
                   navigation.navigate('ChannelScreen', {

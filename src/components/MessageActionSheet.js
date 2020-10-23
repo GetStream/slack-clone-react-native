@@ -58,7 +58,10 @@ export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
 
   return (
     <ActionSheet
-      title={renderReactions(props.supportedReactions, props.handleReaction)}
+      title={renderReactions(props.supportedReactions, type => {
+        props.handleReaction(type);
+        props.setActionSheetVisible(false);
+      })}
       cancelButtonIndex={0}
       destructiveButtonIndex={0}
       onPress={index => onActionPress(options[index].id)}
@@ -185,7 +188,7 @@ const styles = StyleSheet.create({
     paddingLeft: 6,
     paddingRight: 6,
     borderRadius: 40,
-    marginRight: 20,
+    marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },

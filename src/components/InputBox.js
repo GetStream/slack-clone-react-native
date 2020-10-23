@@ -1,15 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
-import {
-  AutoCompleteInput,
-  AttachButton,
-  SendButton,
-  ThemeProvider,
-} from 'stream-chat-react-native';
-import {SCText, isDark} from '../utils';
+import React from 'react';
+import {TouchableOpacity, View, StyleSheet} from 'react-native';
+import {AutoCompleteInput, SendButton} from 'stream-chat-react-native';
+import {SCText} from '../utils';
 
 import {useTheme} from '@react-navigation/native';
-import {useNavigation} from '@react-navigation/native';
 import {SVGIcon} from './SVGIcon';
 
 export const InputBox = props => {

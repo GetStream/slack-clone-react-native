@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {View, SafeAreaView, Platform, StyleSheet} from 'react-native';
+import {View, SafeAreaView, StyleSheet} from 'react-native';
 import {
   Chat,
   Channel,
   MessageList,
   MessageInput,
-  KeyboardCompatibleView,
 } from 'stream-chat-react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 
@@ -13,23 +12,15 @@ import {ChannelHeader} from '../components/ChannelHeader';
 import {DateSeparator} from '../components/DateSeparator';
 import {InputBox} from '../components/InputBox';
 import {MessageSlack} from '../components/MessageSlack';
-import streamChatTheme from '../stream-chat-theme';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   getChannelDisplayImage,
   getChannelDisplayName,
-  theme,
-  isDark,
-  useStreamChatTheme, ChatClientService
+  useStreamChatTheme,
+  ChatClientService,
 } from '../utils';
+import {CustomKeyboardCompatibleView} from '../components/CustomKeyboardCompatibleView';
 
-const CustomKeyboardCompatibleView = ({children}) => (
-  <KeyboardCompatibleView
-    keyboardVerticalOffset={Platform.OS === 'ios' ? 120 : -200}
-    behavior={Platform.OS === 'ios' ? 'padding' : 'position'}>
-    {children}
-  </KeyboardCompatibleView>
-);
 export function ChannelScreen({
   route: {
     params: {channelId = null},
@@ -51,7 +42,7 @@ export function ChannelScreen({
       text,
     };
     AsyncStorage.setItem(
-      `@slack-clone-draft-${channelId}`,
+      `@slack-clone-draft-${chatClient.user.id}-${channelId}`,
       JSON.stringify(storeObject),
     );
 
@@ -61,7 +52,8 @@ export function ChannelScreen({
   useEffect(() => {
     const setDraftMessage = async () => {
       const draftStr = await AsyncStorage.getItem(
-        `@slack-clone-draft-${channelId}`,
+        `@slack-clone-draft-${chatClient.user.id}-
+        ${channelId}`,
       );
       if (!draftStr) {
         setIsReady(true);

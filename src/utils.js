@@ -223,10 +223,19 @@ export const useStreamChatTheme = () => {
       'messageInput.sendButtonIcon': 'height: 20px; width: 20px;',
       'messageInput.attachButtonIcon': 'height: 20px; width: 20px;',
       'messageInput.inputBox': `font-size: 15px; color: ${colors.text}`,
+      'messageInput.fileUploadPreview.filenameText': `color: ${colors.text}`,
+      'messageInput.fileUploadPreview.attachmentContainerView': `border-color: ${
+        colors.border
+      }`,
       'thread.newThread': 'display: none',
       'messageList.dateSeparator.container':
         'margin-top: 10; margin-bottom: 5;',
       'typingIndicator.text': `color: ${colors.text};`,
+      'message.file.container': `background-color: ${
+        colors.background
+      }; border-color: ${colors.border}; border-width: 1px`,
+      'message.file.title': `color: ${colors.text}`,
+      'message.file.size': `color: ${colors.text}`,
       'message.avatarWrapper.spacer': 'height: 0;',
       'message.content.container':
         'flex: 1; align-items: stretch; max-width: 320px; padding-top: 0; border-radius: 0;',

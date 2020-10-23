@@ -6,7 +6,6 @@ import {
   MessageList,
   MessageInput,
   KeyboardCompatibleView,
-  ThemeProvider,
 } from 'stream-chat-react-native';
 import {useTheme} from '@react-navigation/native';
 
@@ -14,13 +13,11 @@ import {DateSeparator} from '../components/DateSeparator';
 import {InputBox} from '../components/InputBox';
 import {MessageSlack} from '../components/MessageSlack';
 import {ModalScreenHeader} from '../components/ModalScreenHeader';
-import streamChatTheme from '../stream-chat-theme';
+
 import {
   ChatClientService,
   getChannelDisplayImage,
   getChannelDisplayName,
-  theme,
-  isDark,
   useStreamChatTheme,
 } from '../utils';
 import AsyncStorage from '@react-native-community/async-storage';

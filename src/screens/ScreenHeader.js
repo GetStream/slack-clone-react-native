@@ -1,7 +1,7 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {Image, StyleSheet, View, TouchableOpacity} from 'react-native';
 
-import {SCText, theme, isDark} from '../utils';
+import {SCText} from '../utils';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '@react-navigation/native';
 import {SVGIcon} from '../components/SVGIcon';
@@ -10,7 +10,6 @@ import {UserPicker} from '../components/UserPicker';
 export const ScreenHeader = ({title, showLogo = false}) => {
   const navigation = useNavigation();
   const {colors} = useTheme();
-  const [selectedUser, setSelectedUser] = useState();
   const [pickerVisible, setPickerVisible] = useState(false);
   return (
     <>

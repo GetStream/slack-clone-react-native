@@ -1,8 +1,8 @@
 import React from 'react';
-import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
-import {getChannelDisplayName, SCText, theme, isDark, truncate} from '../utils';
+import {TouchableOpacity, View, StyleSheet} from 'react-native';
+import {getChannelDisplayName, SCText, truncate} from '../utils';
 import {useTheme, useNavigation} from '@react-navigation/native';
-import { SVGIcon } from './SVGIcon';
+import {SVGIcon} from './SVGIcon';
 
 export const ChannelHeader = ({goBack, channel}) => {
   const {colors} = useTheme();
