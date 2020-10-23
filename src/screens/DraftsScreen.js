@@ -2,11 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {View, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
-import {ChatClientService, SCText} from '../utils';
+import {ChatClientService} from '../utils';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NewMessageBubble} from '../components/NewMessageBubble';
 
 import {useNavigation, useTheme} from '@react-navigation/native';
+import {SCText} from '../components/SCText';
 
 export const DraftsScreen = () => {
   const [results, setResults] = useState([]);

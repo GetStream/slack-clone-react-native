@@ -3,9 +3,10 @@ import {Image, View, StyleSheet} from 'react-native';
 
 import {ScreenHeader} from './ScreenHeader';
 import {useTheme} from '@react-navigation/native';
-import {ChatClientService, SCText, notImplemented} from '../utils';
+import {ChatClientService, notImplemented} from '../utils';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {SVGIcon} from '../components/SVGIcon';
+import {SCText} from '../components/SCText';
 
 export const ProfileScreen = props => {
   const {colors} = useTheme();
@@ -44,7 +45,7 @@ export const ProfileScreen = props => {
                 borderWidth: 1,
                 marginTop: 20,
                 paddingLeft: 20,
-                borderRadius: 10
+                borderRadius: 10,
               },
               {
                 borderColor: colors.border,

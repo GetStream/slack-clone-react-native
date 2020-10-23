@@ -8,10 +8,11 @@ import {
 } from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
-import {ChatClientService, SCText} from '../utils';
+import {ChatClientService} from '../utils';
 import {NewMessageBubble} from '../components/NewMessageBubble';
 import {ScreenHeader} from './ScreenHeader';
 import {useTheme, useNavigation} from '@react-navigation/native';
+import {SCText} from '../components/SCText';
 
 export const MentionsScreen = props => {
   const chatClient = ChatClientService.getClient();

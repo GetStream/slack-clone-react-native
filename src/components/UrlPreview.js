@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
-import { SCText, theme , isDark} from '../utils';
+import {SCText} from './SCText';
 
 export const UrlPreview = props => {
   const getDomain = url => {

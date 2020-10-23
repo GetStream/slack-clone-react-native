@@ -11,7 +11,6 @@ import {
   CacheService,
   ChatClientService,
   getChannelDisplayName,
-  SCText,
   truncate,
 } from '../utils';
 import {useTheme} from '@react-navigation/native';
@@ -20,6 +19,7 @@ import {NewMessageBubble} from '../components/NewMessageBubble';
 import {ScreenHeader} from './ScreenHeader';
 import {ChannelSearchButton} from '../components/ChannelSearchButton';
 import {useNavigation} from '@react-navigation/native';
+import {SCText} from '../components/SCText';
 
 export const DirectMessagesScreen = props => {
   const chatClient = ChatClientService.getClient();
@@ -150,5 +150,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     // marginTop: 5,
   },
-  avatarImage: {height: 40, width: 40, borderRadius: 5}
+  avatarImage: {height: 40, width: 40, borderRadius: 5},
 });

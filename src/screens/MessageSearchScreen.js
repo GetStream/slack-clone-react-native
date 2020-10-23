@@ -11,7 +11,6 @@ import {
   AsyncStore,
   ChatClientService,
   getChannelDisplayName,
-  SCText,
   useStreamChatTheme,
 } from '../utils';
 import {
@@ -20,6 +19,7 @@ import {
 } from 'stream-chat-react-native';
 import {MessageSlack} from '../components/MessageSlack';
 import {useNavigation, useTheme} from '@react-navigation/native';
+import {SCText} from '../components/SCText';
 
 import {ListItemSeparator} from '../components/ListItemSeparator';
 export const MessageSearchScreen = () => {

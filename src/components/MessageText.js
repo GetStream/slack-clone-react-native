@@ -1,9 +1,10 @@
 import React from 'react';
-import {theme, isDark, SCText, truncate} from '../utils';
+import {truncate} from '../utils';
 import {MessageUserBar} from './MessageHeader';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {useChannelContext, useThreadContext} from 'stream-chat-react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {SCText} from './SCText';
 
 export const MessageText = props => {
   const {colors} = useTheme();

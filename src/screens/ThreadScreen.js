@@ -15,12 +15,12 @@ import {
   getChannelDisplayName,
   useStreamChatTheme,
   ChatClientService,
-  SCText,
   truncate,
 } from '../utils';
 import {ModalScreenHeader} from '../components/ModalScreenHeader';
 import {InputBoxThread} from '../components/InputBoxThread';
 import {SVGIcon} from '../components/SVGIcon';
+import {SCText} from '../components/SCText';
 
 const CustomKeyboardCompatibleView = ({children}) => (
   <KeyboardCompatibleView

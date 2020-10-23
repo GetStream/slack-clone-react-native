@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
+import {SCText} from './SCText';
 
-import {SCText} from '../utils';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '@react-navigation/native';
 

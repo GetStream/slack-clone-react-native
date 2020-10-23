@@ -1,19 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {View, StyleSheet, SectionList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {
-  CacheService,
-  ChatClientService,
-  SCText,
-  theme,
-  isDark,
-  notImplemented,
-} from '../../utils';
+import {ChatClientService, notImplemented} from '../../utils';
 
 import {ChannelListItem} from '../ChannelListItem';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {SVGIcon} from '../SVGIcon';
 import {useWatchedChannels} from './hooks/useWatchedChannels';
+import {SCText} from '../SCText';
 
 export const ChannelList = () => {
   const client = ChatClientService.getClient();

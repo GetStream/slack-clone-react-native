@@ -8,8 +8,9 @@ import {
   StyleSheet,
   FlatList,
 } from 'react-native';
-import {ChatUserContext, SCText, USERS} from '../utils';
+import {ChatUserContext, USERS} from '../utils';
 import {useTheme} from '@react-navigation/native';
+import {SCText} from './SCText';
 
 export const UserPicker = props => {
   const [modalVisible, setModalVisible] = useState(props.modalVisible);
@@ -24,8 +25,6 @@ export const UserPicker = props => {
     <View
       style={{
         backgroundColor: 'transparent',
-        // height: '100%',
-        // width: '100%',
         flex: 1,
         position: 'absolute',
       }}>

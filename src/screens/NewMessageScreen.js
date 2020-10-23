@@ -23,14 +23,8 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {UserSearch} from '../components/UserSearch';
+import { CustomKeyboardCompatibleView } from '../components/CustomKeyboardCompatibleView';
 
-const CustomKeyboardCompatibleView = ({children}) => (
-  <KeyboardCompatibleView
-    keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : -200}
-    behavior={Platform.OS === 'ios' ? 'padding' : 'position'}>
-    {children}
-  </KeyboardCompatibleView>
-);
 export function NewMessageScreen() {
   const chatStyles = useStreamChatTheme();
 
@@ -55,7 +49,6 @@ export function NewMessageScreen() {
 
     navigation.goBack();
   };
-
 
   useEffect(() => {
     const dummyChannel = chatClient.channel(

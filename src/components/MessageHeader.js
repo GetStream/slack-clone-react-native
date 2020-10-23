@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Moment from 'moment';
-import { SCText} from '../utils';
 import {useTheme} from '@react-navigation/native';
+import {SCText} from './SCText';
 
 export const MessageHeader = props => {
   return (

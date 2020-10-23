@@ -3,14 +3,11 @@ import {
   ActivityIndicator,
   View,
   StyleSheet,
-  TouchableOpacity,
   SafeAreaView,
   LogBox,
 } from 'react-native';
 import {AppearanceProvider, useColorScheme} from 'react-native-appearance';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {useTheme} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -26,8 +23,6 @@ import {ChannelSearchScreen} from './src/screens/ChannelSearchScreen';
 import {
   ChatUserContext,
   ChatClientService,
-  SCText,
-  theme,
   USER_TOKENS,
   USERS,
 } from './src/utils';
@@ -39,100 +34,86 @@ import {TargettedMessageChannelScreen} from './src/screens/TargettedMessageChann
 import {MessageSearchScreen} from './src/screens/MessageSearchScreen';
 import {ProfileScreen} from './src/screens/ProfileScreen';
 
-import {SVGIcon} from './src/components/SVGIcon';
 import {ThreadScreen} from './src/screens/ThreadScreen';
 
-import {ifIphoneX} from 'react-native-iphone-x-helper';
+import {BottomTabs} from './src/components/BottomTabs';
+import {DarkTheme, LightTheme} from './src/appTheme';
 
 LogBox.ignoreAllLogs(true);
 
 const Tab = createBottomTabNavigator();
 
-function MyTabBar({state, descriptors, navigation}) {
-  const {colors} = useTheme();
-  const insets = useSafeAreaInsets();
-  const getTitle = key => {
-    switch (key) {
-      case 'home':
-        return {
-          icon: <SVGIcon type="home-tab" width={25} height={25} />,
-          iconActive: <SVGIcon type="home-tab-active" width={25} height={25} />,
-          subtitle: 'Home',
-        };
-      case 'dms':
-        return {
-          icon: <SVGIcon type="dm-tab" width={25} height={25} />,
-          iconActive: <SVGIcon type="dm-tab-active" width={25} height={25} />,
-          subtitle: 'DMs',
-        };
-      case 'mentions':
-        return {
-          icon: <SVGIcon type="mentions-tab" width={25} height={25} />,
-          iconActive: (
-            <SVGIcon type="mentions-tab-active" width={25} height={25} />
-          ),
-          subtitle: 'Mention',
-        };
-      case 'you':
-        return {
-          icon: <SVGIcon type="you-tab" width={25} height={25} />,
-          iconActive: <SVGIcon type="you-tab-active" width={25} height={25} />,
-          subtitle: 'You',
-        };
-    }
-  };
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        backgroundColor: colors.background,
-        borderTopColor: colors.border,
-        borderTopWidth: 0.5,
-        paddingBottom: insets.bottom,
-      }}>
-      {state.routes.map((route, index) => {
-        const tab = getTitle(route.name);
-
-        const isFocused = state.index === index;
-
-        const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-          });
-
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
-          }
-        };
-
-        return (
-          <TouchableOpacity
-            onPress={onPress}
-            style={{
-              flex: 1,
-              padding: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            {isFocused ? tab.iconActive : tab.icon}
-            <SCText style={{fontSize: 12}}>{tab.subtitle}</SCText>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
-  );
-}
-
 const HomeStack = createStackNavigator();
 const ModalStack = createStackNavigator();
+
+export default () => {
+  const scheme = useColorScheme();
+  const [connecting, setConnecting] = useState(true);
+  const [chatClient, setChatClient] = useState(null);
+  const [user, setUser] = useState(USERS.vishal);
+
+  useEffect(() => {
+    let client;
+
+    const initChat = async () => {
+      client = new StreamChat('q95x9hkbyd6p', {
+        timeout: 10000,
+      });
+
+      await client.setUser(user, USER_TOKENS[user.id]);
+      setChatClient(client);
+      ChatClientService.setClient(client);
+      setConnecting(false);
+    };
+
+    setConnecting(true);
+    initChat();
+
+    return () => {
+      chatClient && chatClient.disconnect();
+    };
+  }, [user]);
+
+  if (connecting) {
+    return (
+      <SafeAreaView>
+        <View
+          style={{
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size="small" color="black" />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaProvider>
+      <AppearanceProvider>
+        <NavigationContainer theme={scheme === 'dark' ? DarkTheme : LightTheme}>
+          <View style={styles.container}>
+            <ChatUserContext.Provider
+              value={{
+                chatClient,
+                switchUser: userId => setUser(USERS[userId]),
+              }}>
+              <HomeStackNavigator />
+            </ChatUserContext.Provider>
+          </View>
+        </NavigationContainer>
+      </AppearanceProvider>
+    </SafeAreaProvider>
+  );
+};
 
 const ModalStackNavigator = props => {
   return (
     <ModalStack.Navigator initialRouteName="Home" mode="modal">
       <ModalStack.Screen
         name="Tabs"
-        component={MyTabs}
+        component={TabNavigation}
         options={{headerShown: false, tabBarVisible: false}}
       />
       <ModalStack.Screen
@@ -186,114 +167,17 @@ const HomeStackNavigator = props => {
   );
 };
 
-function MyTabs() {
+const TabNavigation = () => {
   return (
-    <Tab.Navigator tabBar={props => <MyTabBar {...props} />}>
+    <Tab.Navigator tabBar={props => <BottomTabs {...props} />}>
       <Tab.Screen name="home" component={ChannelListScreen} />
       <Tab.Screen name={'dms'} component={DirectMessagesScreen} />
       <Tab.Screen name={'mentions'} component={MentionsScreen} />
       <Tab.Screen name={'you'} component={ProfileScreen} />
     </Tab.Navigator>
   );
-}
-
-const MyDarkTheme = {
-  dark: true,
-  colors: {
-    primary: '#121115',
-    background: '#19181c',
-    backgroundSecondary: '#212527',
-    card: 'rgb(255, 255, 255)',
-    text: '#d8d8d9',
-    textInverted: '#d8d8d9',
-    dimmedText: '#303236',
-    boldText: '#D0D0D0',
-    linkText: '#1E75BE',
-    shadow: '#232327',
-    border: '#252529',
-    notification: 'rgb(255, 69, 58)',
-  },
-};
-const MyLightTheme = {
-  dark: false,
-  colors: {
-    primary: '#3E3139',
-    background: 'white',
-    backgroundSecondary: '#E9E9E9',
-    card: 'rgb(255, 255, 255)',
-    text: 'black',
-    textInverted: 'white',
-    dimmedText: '#979A9A',
-    boldText: 'black',
-    linkText: '#1E75BE',
-    shadow: '#000',
-    border: '#D3D3D3',
-    notification: 'rgb(255, 69, 58)',
-  },
 };
 
-export default function App() {
-  const scheme = useColorScheme();
-  const [connecting, setConnecting] = useState(true);
-  const [chatClient, setChatClient] = useState(null);
-  const [user, setUser] = useState(USERS.vishal);
-
-  useEffect(() => {
-    let client;
-
-    const initChat = async () => {
-      client = new StreamChat('q95x9hkbyd6p', {
-        timeout: 10000,
-      });
-
-      await client.setUser(user, USER_TOKENS[user.id]);
-      setChatClient(client);
-      ChatClientService.setClient(client);
-      setConnecting(false);
-    };
-
-    setConnecting(true);
-    initChat();
-
-    return () => {
-      chatClient && chatClient.disconnect();
-    };
-  }, [user]);
-
-  if (connecting) {
-    return (
-      <SafeAreaView>
-        <View
-          style={{
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <ActivityIndicator size="small" color="black" />
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  return (
-    <SafeAreaProvider>
-      <AppearanceProvider>
-        <NavigationContainer
-          theme={scheme === 'dark' ? MyDarkTheme : MyLightTheme}>
-          <View style={styles.container}>
-            <ChatUserContext.Provider
-              value={{
-                chatClient,
-                switchUser: userId => setUser(USERS[userId]),
-              }}>
-              <HomeStackNavigator />
-            </ChatUserContext.Provider>
-          </View>
-        </NavigationContainer>
-      </AppearanceProvider>
-    </SafeAreaProvider>
-  );
-}
 
 const styles = StyleSheet.create({
   channelScreenSaveAreaView: {

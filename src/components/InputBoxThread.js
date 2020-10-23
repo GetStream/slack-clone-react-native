@@ -5,11 +5,12 @@ import {
   SendButton,
   useChannelContext,
 } from 'stream-chat-react-native';
-import {SCText, getChannelDisplayName} from '../utils';
+import {getChannelDisplayName} from '../utils';
 
 import {useTheme} from '@react-navigation/native';
 import {SVGIcon} from './SVGIcon';
 import CheckBox from '@react-native-community/checkbox';
+import {SCText} from './SCText';
 
 export const InputBoxThread = props => {
   const {colors} = useTheme();

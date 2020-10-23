@@ -2,12 +2,11 @@ import React, {useState} from 'react';
 import {Image, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {SCText} from '../utils';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '@react-navigation/native';
 import {SVGIcon} from '../components/SVGIcon';
 import {UserPicker} from '../components/UserPicker';
-import {ifIphoneX} from 'react-native-iphone-x-helper';
+import {SCText} from '../components/SCText';
 
 export const ScreenHeader = ({title, showLogo = false}) => {
   const navigation = useNavigation();

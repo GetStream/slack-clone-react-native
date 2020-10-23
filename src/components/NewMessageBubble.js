@@ -1,10 +1,8 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 
-import NewMessageBubbleIcon from '../images/channel-list/new-message.svg';
 import {useNavigation, useTheme} from '@react-navigation/native';
-import {theme, isDark} from '../utils';
-import { SVGIcon } from './SVGIcon';
+import {SVGIcon} from './SVGIcon';
 
 export const NewMessageBubble = () => {
   const navigation = useNavigation();

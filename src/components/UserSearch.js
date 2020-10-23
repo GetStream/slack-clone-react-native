@@ -7,8 +7,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {CacheService, ChatClientService, SCText, theme, isDark} from '../utils';
+import {CacheService, ChatClientService} from '../utils';
 import {useTheme} from '@react-navigation/native';
+import {SCText} from './SCText';
 
 export const UserSearch = ({onChangeTags, onFocus}) => {
   const {colors} = useTheme();

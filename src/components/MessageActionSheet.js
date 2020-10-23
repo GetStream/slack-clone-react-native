@@ -3,7 +3,8 @@ import {ActionSheetCustom as ActionSheet} from 'react-native-actionsheet';
 
 import {View, Text, StyleSheet} from 'react-native';
 
-import {ChatClientService, SCText} from '../utils';
+import {SCText} from './SCText';
+import {ChatClientService} from '../utils';
 import {useTheme} from '@react-navigation/native';
 import {SVGIcon} from './SVGIcon';
 import {TouchableOpacity} from 'react-native-gesture-handler';

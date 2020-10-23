@@ -1,8 +1,9 @@
 import React from 'react';
 import {TouchableOpacity, View, StyleSheet} from 'react-native';
-import {getChannelDisplayName, SCText, truncate} from '../utils';
+import {getChannelDisplayName, truncate} from '../utils';
 import {useTheme, useNavigation} from '@react-navigation/native';
 import {SVGIcon} from './SVGIcon';
+import {SCText} from './SCText';
 
 export const ChannelHeader = ({goBack, channel}) => {
   const {colors} = useTheme();

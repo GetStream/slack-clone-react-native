@@ -1,7 +1,8 @@
 import React from 'react';
 import {TouchableOpacity, View, StyleSheet} from 'react-native';
 import {AutoCompleteInput, SendButton} from 'stream-chat-react-native';
-import {SCText} from '../utils';
+import {SCText} from './SCText';
+
 
 import {useTheme} from '@react-navigation/native';
 import {SVGIcon} from './SVGIcon';

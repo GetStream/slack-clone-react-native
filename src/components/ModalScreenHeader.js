@@ -1,8 +1,9 @@
 import React from 'react';
 import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
-import {SCText} from '../utils';
+  
 import {useTheme} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {SCText} from './SCText';
 
 export const ModalScreenHeader = ({goBack, title, subTitle}) => {
   const {colors} = useTheme();

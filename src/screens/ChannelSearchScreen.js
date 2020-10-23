@@ -4,8 +4,9 @@ import {FlatList, TextInput, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ChannelListItem} from '../components/ChannelListItem';
 import {ModalScreenHeader} from '../components/ModalScreenHeader';
-import {CacheService, ChatClientService, SCText} from '../utils';
+import {CacheService, ChatClientService} from '../utils';
 import {useTheme} from '@react-navigation/native';
+import {SCText} from '../components/SCText';
 
 export const ChannelSearchScreen = ({
   navigation,

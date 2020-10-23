@@ -1,8 +1,9 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import moment from 'moment';
-import {SCText} from '../utils';
+
 import {useTheme} from '@react-navigation/native';
+import {SCText} from './SCText';
 
 export const DateSeparator = ({message}) => {
   const {colors} = useTheme();
@@ -41,5 +42,4 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     fontSize: 12,
   },
-
 });
