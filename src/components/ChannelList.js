@@ -83,7 +83,7 @@ export const ChannelList = () => {
             title: 'Direct Messages',
             data: oneOnOneConversations || [],
             clickHandler: () => {
-              navigation.navigate('NewMessageSearchScreen');
+              navigation.navigate('NewMessageScreen');
             },
           },
         ]}
@@ -156,7 +156,7 @@ const useWatchedChannels = client => {
     },
   };
 
-  const sort = {has_unread: -1, cid: -1};
+  const sort = {has_unread: -1, last_message_at: -1};
   const options = {limit: 30, offset: 0, state: true};
 
   useEffect(() => {

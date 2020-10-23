@@ -2,7 +2,7 @@ import React from 'react';
 import {View, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
-import {getChannelDisplayName, SCText, theme, isDark} from '../utils';
+import {getChannelDisplayName, SCText, theme, isDark, truncate} from '../utils';
 export const ChannelListItem = ({
   channel,
   setActiveChannelId,
@@ -79,7 +79,7 @@ export const ChannelListItem = ({
 
     ChannelTitle = (
       <SCText style={channelTitleStyle}>
-        {getChannelDisplayName(channel)}
+        {truncate(getChannelDisplayName(channel), 40)}
       </SCText>
     );
   } else if (isDirectMessagingConversation) {
@@ -90,14 +90,14 @@ export const ChannelListItem = ({
     );
     ChannelTitle = (
       <SCText style={channelTitleStyle}>
-        {getChannelDisplayName(channel)}
+        {truncate(getChannelDisplayName(channel), 40)}
       </SCText>
     );
   } else {
     ChannelPrefix = <SCText style={styles.channelTitlePrefix}>#</SCText>;
     ChannelTitle = (
       <SCText style={channelTitleStyle}>
-        {getChannelDisplayName(channel)}
+        {truncate(getChannelDisplayName(channel), 40)}
       </SCText>
     );
   }

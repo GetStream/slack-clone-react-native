@@ -279,7 +279,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   inputBox: {
-    color: isDark() ? 'white' : 'black',
     flex: 1,
     margin: 3,
     padding: 10,

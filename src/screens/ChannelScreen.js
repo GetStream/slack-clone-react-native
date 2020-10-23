@@ -7,7 +7,7 @@ import {
   MessageInput,
   KeyboardCompatibleView,
 } from 'stream-chat-react-native';
-import {useTheme} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 
 import {ChannelHeader} from '../components/ChannelHeader';
 import {DateSeparator} from '../components/DateSeparator';
@@ -31,13 +31,13 @@ const CustomKeyboardCompatibleView = ({children}) => (
   </KeyboardCompatibleView>
 );
 export function ChannelScreen({
-  navigation,
   route: {
     params: {chatClient, channelId = null},
   },
 }) {
   const {colors} = useTheme();
   const chatStyles = useStreamChatTheme();
+  const navigation = useNavigation();
 
   const [channel, setChannel] = useState(null);
   const [initialValue, setInitialValue] = useState('');
@@ -91,11 +91,7 @@ export function ChannelScreen({
         backgroundColor: colors.background,
       }}>
       <View style={styles.channelScreenContainer}>
-        <ChannelHeader
-          goBack={goBack}
-          channel={channel}
-          navigation={navigation}
-        />
+        <ChannelHeader goBack={goBack} channel={channel} />
         <View
           style={[
             styles.chatContainer,
@@ -115,6 +111,12 @@ export function ChannelScreen({
               <MessageList
                 Message={MessageSlack}
                 DateSeparator={DateSeparator}
+                onThreadSelect={thread => {
+                  navigation.navigate('ThreadScreen', {
+                    threadId: thread.id,
+                    channelId: channel.id,
+                  });
+                }}
               />
               <MessageInput
                 Input={InputBox}

@@ -23,6 +23,53 @@ import {ScreenHeader} from './ScreenHeader';
 import {ChannelSearchButton} from '../components/ChannelSearchButton';
 import {useNavigation} from '@react-navigation/native';
 
+const ChannelAvatar = ({channel}) => {
+  const chatClient = ChatClientService.getClient();
+  const {colors} = useTheme();
+  const otherMembers = Object.values(channel.state.members).filter(
+    m => m.user.id !== chatClient.user.id,
+  );
+  if (otherMembers.length >= 2) {
+    return (
+      <View
+        style={{
+          height: 40,
+          width: 40,
+          marginTop: 5,
+        }}>
+        <Image
+          style={styles.messageUserImage}
+          source={{
+            uri: otherMembers[0].user.image,
+          }}
+        />
+        <Image
+          style={[
+            styles.messageUserImage,
+            {
+              position: 'absolute',
+              borderColor: colors.background,
+              borderWidth: 3,
+              bottom: 0,
+              right: 0,
+            },
+          ]}
+          source={{
+            uri: otherMembers[1].user.image,
+          }}
+        />
+      </View>
+    );
+  }
+  return (
+    <Image
+      style={{height: 40, width: 40, borderRadius: 5,}}
+      source={{
+        uri: otherMembers[0].user.image,
+      }}
+    />
+  );
+};
 export const DirectMessagesScreen = props => {
   const chatClient = ChatClientService.getClient();
   const navigation = useNavigation();
@@ -35,10 +82,14 @@ export const DirectMessagesScreen = props => {
       <FlatList
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        data={CacheService.getOneToOneConversations()}
+        data={CacheService.getDirectMessagingConversations()}
         renderItem={({item}) => {
           const lastMessage =
             item.state.messages[item.state.messages.length - 1];
+
+          if (!lastMessage) {
+            return null;
+          }
           return (
             <TouchableOpacity
               style={[
@@ -52,16 +103,11 @@ export const DirectMessagesScreen = props => {
                   channelId: item.id,
                 });
               }}>
-              <Image
-                style={styles.messageUserImage}
-                source={{
-                  uri: getChannelDisplayImage(item),
-                }}
-              />
+              <ChannelAvatar channel={item} />
               <View style={styles.messageDetailsContainer}>
                 <SCText>{getChannelDisplayName(item)}</SCText>
                 <SCText style={styles.messagePreview}>
-                  {lastMessage.user.id === chatClient.user.id
+                  {lastMessage && lastMessage.user.id === chatClient.user.id
                     ? 'You:  '
                     : `${lastMessage.user.name}: `}
                   {lastMessage.text}
@@ -87,14 +133,14 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   messageUserImage: {
-    height: 35,
-    width: 35,
+    height: 28,
+    width: 28,
     borderRadius: 5,
-    marginTop: 5,
+    // marginTop: 5,
   },
   messageDetailsContainer: {
     flex: 1,
-    marginLeft: 12,
+    marginLeft: 25,
     marginBottom: 15,
   },
   messagePreview: {

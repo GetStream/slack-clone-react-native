@@ -1,6 +1,6 @@
 import React from 'react';
 import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
-import {getChannelDisplayName, SCText, theme, isDark} from '../utils';
+import {getChannelDisplayName, SCText, theme, isDark, truncate} from '../utils';
 import {useTheme, useNavigation} from '@react-navigation/native';
 import { SVGIcon } from './SVGIcon';
 
@@ -37,7 +37,7 @@ export const ChannelHeader = ({goBack, channel}) => {
               color: colors.boldText,
             },
           ]}>
-          {getChannelDisplayName(channel, true)}
+          {truncate(getChannelDisplayName(channel, true), 33)}
         </SCText>
         {!isOneOnOneConversation && (
           <SCText style={styles.channelSubTitle}>

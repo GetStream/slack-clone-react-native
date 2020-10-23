@@ -53,7 +53,7 @@ export const InputBox = props => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    flex: 1,
+    width: '100%',
     height: 60,
   },
   actionsContainer: {

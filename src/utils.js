@@ -22,7 +22,7 @@ export const CacheService = {
   members: [],
   initCache: (currentUser, channels, directMessagingConversations) => {
     this.channels = channels;
-    this.directMessagingConversations = directMessagingConversations;
+    this.directMessagingConversations = [...directMessagingConversations];
     const memberIds = [];
     this.oneToOneConversations = directMessagingConversations.filter(c => {
       const memberLength = Object.keys(c.state.members).length;
@@ -164,6 +164,7 @@ export const useStreamChatTheme = () => {
       'messageInput.sendButtonIcon': 'height: 20px; width: 20px;',
       'messageInput.attachButtonIcon': 'height: 20px; width: 20px;',
       'messageInput.inputBox': `font-size: 15px; color: ${colors.text}`,
+      'thread.newThread': 'display: none',
       'messageList.dateSeparator.container':
         'margin-top: 10; margin-bottom: 5;',
       'typingIndicator.text': `color: ${colors.text};`,
@@ -202,4 +203,11 @@ export const useStreamChatTheme = () => {
 
 export const notImplemented = () => {
   Alert.alert('This feature has not been implementd');
+};
+
+export const truncate = (input, length, end = '...') => {
+  if (input.length > length) {
+    return `${input.substring(0, length - end.length)}${end}`;
+  }
+  return input;
 };

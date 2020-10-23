@@ -126,7 +126,7 @@ export function NewMessageScreen() {
 
                     setChannel(channel);
                   },
-                  placeholderTextColor: isDark() ? '#656569' : '#979A9A',
+                  placeholderTextColor: colors.dimmedText,
                   placeholder:
                     channel && channel.data.name
                       ? 'Message #' +
@@ -143,13 +143,9 @@ export function NewMessageScreen() {
 }
 
 const styles = StyleSheet.create({
-  channelScreenSaveAreaView: {
-    backgroundColor: isDark() ? '#1E1D21' : 'white',
-  },
   channelScreenContainer: {flexDirection: 'column', height: '100%'},
 
   chatContainer: {
-    backgroundColor: isDark() ? '#1E1D21' : 'white',
     flexGrow: 1,
     flexShrink: 1,
   },

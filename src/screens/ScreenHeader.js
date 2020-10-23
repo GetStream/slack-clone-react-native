@@ -18,7 +18,15 @@ export const ScreenHeader = ({title}) => {
           backgroundColor: colors.primary,
         },
       ]}>
-      <SCText style={styles.title}>{title}</SCText>
+      <SCText
+        style={[
+          styles.title,
+          {
+            color: colors.textInverted,
+          },
+        ]}>
+        {title}
+      </SCText>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('MessageSearchScreen');
@@ -34,13 +42,11 @@ const styles = StyleSheet.create({
   container: {
     height: 92,
     paddingTop: 30,
-    backgroundColor: isDark() ? '#121115' : '#3F0E40',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
   },
   title: {
-    color: isDark() ? '#D3D2D6' : 'white',
     fontSize: 17,
     fontWeight: '600',
   },

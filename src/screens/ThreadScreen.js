@@ -1,0 +1,235 @@
+import React, {useEffect, useState} from 'react';
+import {View, SafeAreaView, Platform, StyleSheet} from 'react-native';
+import {
+  Chat,
+  Channel,
+  MessageList,
+  MessageInput,
+  KeyboardCompatibleView,
+  Thread,
+  Message as DefaultMessage,
+} from 'stream-chat-react-native';
+
+import {useNavigation, useTheme} from '@react-navigation/native';
+
+import {ChannelHeader} from '../components/ChannelHeader';
+import {DateSeparator} from '../components/DateSeparator';
+import {InputBox} from '../components/InputBox';
+import {MessageSlack} from '../components/MessageSlack';
+import streamChatTheme from '../stream-chat-theme';
+import AsyncStorage from '@react-native-community/async-storage';
+import {
+  getChannelDisplayImage,
+  getChannelDisplayName,
+  theme,
+  isDark,
+  useStreamChatTheme,
+  ChatClientService,
+  SCText,
+  truncate,
+} from '../utils';
+import {ScreenHeader} from './ScreenHeader';
+import {ModalScreenHeader} from '../components/ModalScreenHeader';
+import {InputBoxThread} from '../components/InputBoxThread';
+import {SVGIcon} from '../components/SVGIcon';
+
+const CustomKeyboardCompatibleView = ({children}) => (
+  <KeyboardCompatibleView
+    keyboardVerticalOffset={Platform.OS === 'ios' ? 120 : -200}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'position'}>
+    {children}
+  </KeyboardCompatibleView>
+);
+export function ThreadScreen({
+  route: {
+    params: {channelId = null, threadId = null},
+  },
+}) {
+  const {colors} = useTheme();
+  const chatStyles = useStreamChatTheme();
+  const chatClient = ChatClientService.getClient();
+  const navigation = useNavigation();
+
+  const [channel, setChannel] = useState(null);
+  const [thread, setThread] = useState();
+  const [initialValue, setInitialValue] = useState('');
+  const [sendMessageInChannel, setSendMessageInChannel] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+  const [text, setText] = useState('');
+  const goBack = () => {
+    // const storeObject = {
+    //   channelId: channel.id,
+    //   image: getChannelDisplayImage(channel),
+    //   title: getChannelDisplayName(channel, true),
+    //   text,
+    // };
+    // AsyncStorage.setItem(
+    //   `@slack-clone-draft-${channelId}`,
+    //   JSON.stringify(storeObject),
+    // );
+
+    navigation.goBack();
+  };
+
+  useEffect(() => {
+    const getThread = async () => {
+      const res = await chatClient.getMessage(threadId);
+      setThread(res.message);
+    };
+
+    getThread();
+  }, [chatClient, threadId]);
+
+  useEffect(() => {
+    const setDraftMessage = async () => {
+      const draftStr = await AsyncStorage.getItem(
+        `@slack-clone-draft-${channelId}-${threadId}`,
+      );
+      if (!draftStr) {
+        setIsReady(true);
+        return;
+      }
+      const draft = JSON.parse(draftStr);
+      setInitialValue(draft.text);
+      setText(draft.text);
+      setIsReady(true);
+    };
+
+    if (!channelId) {
+      navigation.goBack();
+    } else {
+      const _channel = chatClient.channel('messaging', channelId);
+      setChannel(_channel);
+      setDraftMessage();
+    }
+  }, [chatClient, channelId, threadId]);
+
+  if (!isReady || !thread) {
+    return null;
+  }
+  return (
+    <SafeAreaView
+      style={{
+        backgroundColor: colors.background,
+      }}>
+      <View style={styles.channelScreenContainer}>
+        <ModalScreenHeader
+          title={'Thread'}
+          goBack={goBack}
+          subTitle={truncate(getChannelDisplayName(channel, true), 35)}
+        />
+        <View
+          style={[
+            styles.chatContainer,
+            {
+              backgroundColor: colors.background,
+            },
+          ]}>
+          <Chat client={chatClient} style={chatStyles}>
+            <Channel
+              channel={channel}
+              thread={thread}
+              doSendMessageRequest={async (cid, message) => {
+                const newMessage = {
+                  ...message,
+                  show_in_channel: sendMessageInChannel,
+                  parentMessageText: sendMessageInChannel
+                    ? thread.text
+                    : undefined,
+                };
+                AsyncStorage.removeItem(
+                  `@slack-clone-draft-${channelId}-${thread.id}`,
+                );
+                setText('');
+                return channel.sendMessage(newMessage);
+              }}
+              KeyboardCompatibleView={CustomKeyboardCompatibleView}>
+              <Thread
+                additionalMessageInputProps={{
+                  Input: props => (
+                    <InputBoxThread
+                      {...props}
+                      setSendMessageInChannel={setSendMessageInChannel}
+                    />
+                  ),
+                  additionalTextInputProps: {
+                    placeholderTextColor: '#979A9A',
+                    placeholder:
+                      channel && channel.data.name
+                        ? 'Message #' +
+                          channel.data.name.toLowerCase().replace(' ', '_')
+                        : 'Message',
+                  },
+                }}
+                additionalMessageListProps={{
+                  Message: MessageSlack,
+                  DateSeparator: () => null,
+                  HeaderComponent: () => {
+                    return (
+                      <>
+                        <DefaultMessage
+                          groupStyles={['single']}
+                          message={thread}
+                          Message={MessageSlack}
+                          threadList
+                        />
+                        <View
+                          style={{
+                            padding: 10,
+                            backgroundColor: colors.background,
+                            borderTopColor: colors.border,
+                            borderBottomColor: colors.border,
+                            borderTopWidth: 1,
+                            borderBottomWidth: 1,
+                            marginBottom: 20,
+                          }}>
+                          {thread.reply_count > 0 ? (
+                            <SCText>{thread.reply_count} replies</SCText>
+                          ) : (
+                            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                              <SVGIcon type="threads" height="15" width="15" />
+                              <SCText style={{ marginLeft: 10 }}>reply in thread</SCText>
+                            </View>
+                          )}
+                        </View>
+                      </>
+                    );
+                  },
+                }}
+              />
+            </Channel>
+          </Chat>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  channelScreenContainer: {flexDirection: 'column', height: '100%'},
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  drawerNavigator: {
+    backgroundColor: '#3F0E40',
+    width: 350,
+  },
+  chatContainer: {
+    flexGrow: 1,
+    flexShrink: 1,
+  },
+  touchableOpacityStyle: {
+    position: 'absolute',
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 30,
+    backgroundColor: '#3F0E40',
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 20,
+    bottom: 80,
+  },
+});

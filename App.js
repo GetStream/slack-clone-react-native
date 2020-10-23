@@ -23,6 +23,7 @@ import {MessageSearchScreen} from './src/screens/MessageSearchScreen';
 import {ProfileScreen} from './src/screens/ProfileScreen';
 
 import {SVGIcon} from './src/components/SVGIcon';
+import { ThreadScreen } from './src/screens/ThreadScreen';
 
 LogBox.ignoreAllLogs(true);
 
@@ -195,6 +196,14 @@ const HomeStackNavigator = props => {
         }}
         options={{headerShown: false, tabBarVisible: false}}
       />
+      <HomeStack.Screen
+        name="ThreadScreen"
+        component={ThreadScreen}
+        initialParams={{
+          chatClient,
+        }}
+        options={{headerShown: false, tabBarVisible: false}}
+      />
     </HomeStack.Navigator>
   );
 };
@@ -218,8 +227,10 @@ const MyDarkTheme = {
     backgroundSecondary: '#212527',
     card: 'rgb(255, 255, 255)',
     text: '#d8d8d9',
+    textInverted: '#d8d8d9',
     dimmedText: '#303236',
     boldText: '#D0D0D0',
+    linkText: '#1E75BE',
     shadow: '#232327',
     border: '#252529',
     notification: 'rgb(255, 69, 58)',
@@ -233,8 +244,10 @@ const MyLightTheme = {
     backgroundSecondary: '#E9E9E9',
     card: 'rgb(255, 255, 255)',
     text: 'black',
+    textInverted: 'white',
     dimmedText: '#979A9A',
     boldText: 'black',
+    linkText: '#1E75BE',
     shadow: '#000',
     border: '#D3D3D3',
     notification: 'rgb(255, 69, 58)',

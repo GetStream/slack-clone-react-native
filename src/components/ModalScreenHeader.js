@@ -5,7 +5,7 @@ import iconThreeDots from '../images/icon-3-dots.png';
 import {SCText, theme, isDark} from '../utils';
 import {useTheme} from '@react-navigation/native';
 
-export const ModalScreenHeader = ({goBack, title}) => {
+export const ModalScreenHeader = ({goBack, title, subTitle}) => {
   const {colors} = useTheme();
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
@@ -17,9 +17,16 @@ export const ModalScreenHeader = ({goBack, title}) => {
           <SCText style={styles.hamburgerIcon}>x</SCText>
         </TouchableOpacity>
       </View>
-      <SCText style={[styles.channelTitle, {color: colors.boldText}]}>
-        {title}
-      </SCText>
+      <View>
+        <SCText style={[styles.channelTitle, {color: colors.boldText}]}>
+          {title}
+        </SCText>
+        {subTitle && (
+          <SCText style={[styles.channelSubTitle, {color: colors.linkText}]}>
+            {subTitle}
+          </SCText>
+        )}
+      </View>
     </View>
   );
 };
@@ -47,6 +54,13 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
     fontWeight: '900',
     fontSize: 17,
+  },
+  channelSubTitle: {
+    textAlign: 'center',
+    alignContent: 'center',
+    marginLeft: 10,
+    fontWeight: '900',
+    fontSize: 13,
   },
   rightContent: {
     flexDirection: 'row',

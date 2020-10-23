@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
+    "@react-native-community/checkbox": "^0.5.5",
     "@react-native-community/masked-view": "^0.1.7",
     "@react-native-community/netinfo": "^5.6.2",
+    "@react-native-community/picker": "^1.8.1",
     "@react-navigation/bottom-tabs": "^5.9.2",
     "@react-navigation/drawer": "^5.3.2",
     "@react-navigation/native": "^5.1.1",
@@ -27,7 +29,6 @@
     "react-native-get-random-values": "^1.5.0",
     "react-native-image-crop-picker": "^0.35.0",
     "react-native-image-picker": "^2.3.1",
-    "react-native-reanimated": "^1.7.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.4.0",
     "react-native-svg": "^12.1.0",
