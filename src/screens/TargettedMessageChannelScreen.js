@@ -1,29 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {View, SafeAreaView, Platform, StyleSheet, Text} from 'react-native';
-import {
-  Chat,
-  Channel,
-  MessageList,
-  KeyboardCompatibleView,
-} from 'stream-chat-react-native';
+import {View, SafeAreaView, StyleSheet, Text} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Chat, Channel, MessageList} from 'stream-chat-react-native';
 import {ChannelHeader} from '../components/ChannelHeader';
+import {CustomKeyboardCompatibleView} from '../components/CustomKeyboardCompatibleView';
 import {DateSeparator} from '../components/DateSeparator';
 import {MessageSlack} from '../components/MessageSlack';
-import streamChatTheme from '../stream-chat-theme';
+import {useStreamChatTheme} from '../utils';
 
-const CustomKeyboardCompatibleView = ({children}) => (
-  <KeyboardCompatibleView
-    keyboardVerticalOffset={Platform.OS === 'ios' ? 120 : -200}
-    behavior={Platform.OS === 'ios' ? 'padding' : 'position'}>
-    {children}
-  </KeyboardCompatibleView>
-);
 export function TargettedMessageChannelScreen({
   navigation,
   route: {
     params: {chatClient, message = null},
   },
 }) {
+  const chatTheme = useStreamChatTheme();
   const [channel, setChannel] = useState(null);
   useEffect(() => {
     const initChannel = async () => {
@@ -51,7 +42,7 @@ export function TargettedMessageChannelScreen({
           client={chatClient}
         />
         <View style={styles.chatContainer}>
-          <Chat client={chatClient} style={streamChatTheme()}>
+          <Chat client={chatClient} style={chatTheme}>
             <Channel
               channel={channel}
               KeyboardCompatibleView={CustomKeyboardCompatibleView}>
@@ -65,25 +56,18 @@ export function TargettedMessageChannelScreen({
             </Channel>
           </Chat>
         </View>
-        <View
-          style={{
-            height: 60,
-            alignSelf: 'center',
-            width: '100%',
-            backgroundColor: '#F7F7F7',
-            paddingTop: 20,
+        <TouchableOpacity
+          style={styles.recentMessageLink}
+          onPress={() => {
+            channel.initialized = false;
+            navigation.navigate('ChannelScreen', {
+              channelId: channel.id,
+            });
           }}>
-          <Text
-            style={{alignSelf: 'center', color: '#1E90FF', fontSize: 15}}
-            onPress={() => {
-              channel.initialized = false;
-              navigation.navigate('ChannelScreen', {
-                channelId: channel.id,
-              });
-            }}>
+          <Text style={styles.recentMessageLinkText}>
             Jump to recent message
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -107,17 +91,16 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
   },
-  touchableOpacityStyle: {
-    position: 'absolute',
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 30,
-    backgroundColor: '#3F0E40',
-    width: 50,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    right: 20,
-    bottom: 80,
+  recentMessageLink: {
+    height: 60,
+    alignSelf: 'center',
+    width: '100%',
+    backgroundColor: '#F7F7F7',
+    paddingTop: 20,
+  },
+  recentMessageLinkText: {
+    alignSelf: 'center',
+    color: '#1E90FF',
+    fontSize: 15,
   },
 });

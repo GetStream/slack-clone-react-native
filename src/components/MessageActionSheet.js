@@ -12,6 +12,7 @@ import Clipboard from '@react-native-community/clipboard';
 export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
   const chatClient = ChatClientService.getClient();
   const {colors} = useTheme();
+
   const options = [
     {
       id: 'cancel',
@@ -50,6 +51,7 @@ export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
     icon: 'threads',
     handler: props.openThread,
   });
+
   const onActionPress = actionId => {
     const action = options.find(o => o.id === actionId);
     action.handler && action.handler();
@@ -124,14 +126,7 @@ export const renderReactions = (supportedReactions, handleReaction) => {
   supportedReactions.forEach(e => (emojiDataByType[e.id] = e));
   console.warn(supportedReactions);
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        width: '100%',
-        height: 30,
-        flex: 1,
-        justifyContent: 'center',
-      }}>
+    <View style={styles.reactionListContainer}>
       {supportedReactions.map((r, index) => (
         <ReactionItem
           key={index}
@@ -177,10 +172,10 @@ MessageActionSheet.displayName = 'messageActionSheet';
 const styles = StyleSheet.create({
   reactionListContainer: {
     flexDirection: 'row',
-    alignSelf: 'flex-start',
-    marginTop: 5,
-    marginBottom: 10,
-    marginLeft: 10,
+    width: '100%',
+    height: 30,
+    flex: 1,
+    justifyContent: 'center',
   },
   reactionItemContainer: {
     borderWidth: 1,
