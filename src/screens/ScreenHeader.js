@@ -1,14 +1,18 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, View, TouchableOpacity} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {SCText} from '../utils';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '@react-navigation/native';
 import {SVGIcon} from '../components/SVGIcon';
 import {UserPicker} from '../components/UserPicker';
+import {ifIphoneX} from 'react-native-iphone-x-helper';
 
 export const ScreenHeader = ({title, showLogo = false}) => {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+
   const {colors} = useTheme();
   const [pickerVisible, setPickerVisible] = useState(false);
   return (
@@ -18,6 +22,8 @@ export const ScreenHeader = ({title, showLogo = false}) => {
           styles.container,
           {
             backgroundColor: colors.primary,
+            height: 55 + insets.top,
+            paddingTop: insets.top,
           },
         ]}>
         <TouchableOpacity
@@ -97,8 +103,6 @@ export const ScreenHeader = ({title, showLogo = false}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 92,
-    paddingTop: 30,
     paddingLeft: 20,
     paddingRight: 20,
     justifyContent: 'space-between',

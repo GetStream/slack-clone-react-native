@@ -8,7 +8,10 @@ import {
   LogBox,
 } from 'react-native';
 import {AppearanceProvider, useColorScheme} from 'react-native-appearance';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
 import {useTheme} from '@react-navigation/native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -39,12 +42,15 @@ import {ProfileScreen} from './src/screens/ProfileScreen';
 import {SVGIcon} from './src/components/SVGIcon';
 import {ThreadScreen} from './src/screens/ThreadScreen';
 
+import {ifIphoneX} from 'react-native-iphone-x-helper';
+
 LogBox.ignoreAllLogs(true);
 
 const Tab = createBottomTabNavigator();
 
 function MyTabBar({state, descriptors, navigation}) {
   const {colors} = useTheme();
+  const insets = useSafeAreaInsets();
   const getTitle = key => {
     switch (key) {
       case 'home':
@@ -82,7 +88,7 @@ function MyTabBar({state, descriptors, navigation}) {
         backgroundColor: colors.background,
         borderTopColor: colors.border,
         borderTopWidth: 0.5,
-        paddingBottom: 20,
+        paddingBottom: insets.bottom,
       }}>
       {state.routes.map((route, index) => {
         const tab = getTitle(route.name);
@@ -270,20 +276,22 @@ export default function App() {
   }
 
   return (
-    <AppearanceProvider>
-      <NavigationContainer
-        theme={scheme === 'dark' ? MyDarkTheme : MyLightTheme}>
-        <View style={styles.container}>
-          <ChatUserContext.Provider
-            value={{
-              chatClient,
-              switchUser: userId => setUser(USERS[userId]),
-            }}>
-            <HomeStackNavigator />
-          </ChatUserContext.Provider>
-        </View>
-      </NavigationContainer>
-    </AppearanceProvider>
+    <SafeAreaProvider>
+      <AppearanceProvider>
+        <NavigationContainer
+          theme={scheme === 'dark' ? MyDarkTheme : MyLightTheme}>
+          <View style={styles.container}>
+            <ChatUserContext.Provider
+              value={{
+                chatClient,
+                switchUser: userId => setUser(USERS[userId]),
+              }}>
+              <HomeStackNavigator />
+            </ChatUserContext.Provider>
+          </View>
+        </NavigationContainer>
+      </AppearanceProvider>
+    </SafeAreaProvider>
   );
 }
 

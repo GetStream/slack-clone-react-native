@@ -1,14 +1,22 @@
 import React from 'react';
 import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
-import iconSearch from '../images/icon-search.png';
-import iconThreeDots from '../images/icon-3-dots.png';
-import {SCText, theme, isDark} from '../utils';
+import {SCText} from '../utils';
 import {useTheme} from '@react-navigation/native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export const ModalScreenHeader = ({goBack, title, subTitle}) => {
   const {colors} = useTheme();
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={[styles.container, {backgroundColor: colors.background}]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.background,
+          marginTop: insets.top > 0 ? 10 : 5,
+        },
+      ]}>
       <View style={styles.leftContent}>
         <TouchableOpacity
           onPress={() => {
@@ -34,7 +42,7 @@ export const ModalScreenHeader = ({goBack, title, subTitle}) => {
 export const styles = StyleSheet.create({
   container: {
     padding: 15,
-    marginTop: 10,
+    // marginTop: 10,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
