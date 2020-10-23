@@ -1,5 +1,12 @@
-import React from 'react';
-import {View, StyleSheet, TouchableOpacity, LogBox} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  ActivityIndicator,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  LogBox,
+} from 'react-native';
 import {AppearanceProvider, useColorScheme} from 'react-native-appearance';
 import {useTheme} from '@react-navigation/native';
 
@@ -13,7 +20,7 @@ import {StreamChat} from 'stream-chat';
 import {ChannelScreen} from './src/screens/ChannelScreen';
 import {NewMessageScreen} from './src/screens/NewMessageScreen';
 import {ChannelSearchScreen} from './src/screens/ChannelSearchScreen';
-import {ChatClientService, SCText, theme} from './src/utils';
+import {ChatUserContext, ChatClientService, SCText, theme} from './src/utils';
 import {ChannelListScreen} from './src/screens/ChannelListScreen';
 import {DraftsScreen} from './src/screens/DraftsScreen';
 import {MentionsScreen} from './src/screens/MentionsSearch';
@@ -23,24 +30,9 @@ import {MessageSearchScreen} from './src/screens/MessageSearchScreen';
 import {ProfileScreen} from './src/screens/ProfileScreen';
 
 import {SVGIcon} from './src/components/SVGIcon';
-import { ThreadScreen } from './src/screens/ThreadScreen';
+import {ThreadScreen} from './src/screens/ThreadScreen';
 
-LogBox.ignoreAllLogs(true);
-
-const chatClient = new StreamChat('q95x9hkbyd6p', {
-  timeout: 10000,
-});
-const userToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk';
-const user = {
-  id: 'vishal',
-  name: 'Vishal Narkhede',
-  image: 'https://ca.slack-edge.com/T02RM6X6B-UHGDQJ8A0-31658896398c-512',
-  status: '🍺',
-};
-
-chatClient.setUser(user, userToken);
-ChatClientService.setClient(chatClient);
+// LogBox.ignoreAllLogs(true);
 
 const Tab = createBottomTabNavigator();
 
@@ -128,41 +120,26 @@ const ModalStackNavigator = props => {
       <ModalStack.Screen
         name="Tabs"
         component={MyTabs}
-        initialParams={{
-          chatClient,
-        }}
         options={{headerShown: false, tabBarVisible: false}}
       />
       <ModalStack.Screen
         name="NewMessageScreen"
         component={NewMessageScreen}
-        initialParams={{
-          chatClient,
-        }}
         options={{headerShown: false, tabBarVisible: false}}
       />
       <ModalStack.Screen
         name="ChannelSearchScreen"
         component={ChannelSearchScreen}
-        initialParams={{
-          chatClient,
-        }}
         options={{headerShown: false, tabBarVisible: false}}
       />
       <ModalStack.Screen
         name="MessageSearchScreen"
         component={MessageSearchScreen}
-        initialParams={{
-          chatClient,
-        }}
         options={{headerShown: false, tabBarVisible: false}}
       />
       <ModalStack.Screen
         name="TargettedMessageChannelScreen"
         component={TargettedMessageChannelScreen}
-        initialParams={{
-          chatClient,
-        }}
         options={{headerShown: false, tabBarVisible: false}}
       />
     </ModalStack.Navigator>
@@ -175,33 +152,21 @@ const HomeStackNavigator = props => {
       <HomeStack.Screen
         name="ModalStack"
         component={ModalStackNavigator}
-        initialParams={{
-          chatClient,
-        }}
         options={{headerShown: false, tabBarVisible: false}}
       />
       <HomeStack.Screen
         name="ChannelScreen"
         component={ChannelScreen}
-        initialParams={{
-          chatClient,
-        }}
         options={{headerShown: false, tabBarVisible: false}}
       />
       <HomeStack.Screen
         name="DraftsScreen"
         component={DraftsScreen}
-        initialParams={{
-          chatClient,
-        }}
         options={{headerShown: false, tabBarVisible: false}}
       />
       <HomeStack.Screen
         name="ThreadScreen"
         component={ThreadScreen}
-        initialParams={{
-          chatClient,
-        }}
         options={{headerShown: false, tabBarVisible: false}}
       />
     </HomeStack.Navigator>
@@ -254,15 +219,77 @@ const MyLightTheme = {
   },
 };
 
+const USER_TOKENS = {
+  vishal:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidmlzaGFsIn0.LpDqH6U8V8Qg9sqGjz0bMQvOfWrWKAjPKqeODYM0Elk',
+  thierry:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidGhpZXJyeSJ9.iyGzbWInSA6B-0CE1Q9_lPOWjHvrWX3ypDhLYAL1UUs',
+};
+const USERS = {
+  vishal: {
+    id: 'vishal',
+    name: 'Vishal',
+  },
+  thierry: {
+    id: 'thierry',
+    name: 'Thierry',
+  },
+};
 export default function App() {
   const scheme = useColorScheme();
+  const [connecting, setConnecting] = useState(true);
+  const [chatClient, setChatClient] = useState(null);
+  const [user, setUser] = useState(USERS.vishal);
+
+  useEffect(() => {
+    let client;
+
+    const initChat = async () => {
+      client = new StreamChat('q95x9hkbyd6p', {
+        timeout: 10000,
+      });
+
+      await client.setUser(user, USER_TOKENS[user.id]);
+      setChatClient(client);
+      ChatClientService.setClient(client);
+      setConnecting(false);
+    };
+
+    setConnecting(true);
+    initChat();
+
+    return () => {
+      chatClient && chatClient.disconnect();
+    };
+  }, [user]);
+
+  if (connecting) {
+    return (
+      <SafeAreaView>
+        <View
+          style={{
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size="small" color="black" />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <AppearanceProvider>
       <NavigationContainer
         theme={scheme === 'dark' ? MyDarkTheme : MyLightTheme}>
         <View style={styles.container}>
-          <HomeStackNavigator />
+          <ChatUserContext.Provider
+            value={{
+              chatClient,
+              switchUser: userId => setUser(USERS[userId]),
+            }}>
+            <HomeStackNavigator />
+          </ChatUserContext.Provider>
         </View>
       </NavigationContainer>
     </AppearanceProvider>

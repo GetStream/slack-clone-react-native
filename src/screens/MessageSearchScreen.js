@@ -21,17 +21,12 @@ import {
   ThemeProvider,
 } from 'stream-chat-react-native';
 import {MessageSlack} from '../components/MessageSlack';
-import {useTheme} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 
-import streamChatTheme from '../stream-chat-theme.js';
 import {ListItemSeparator} from '../components/ListItemSeparator';
-export const MessageSearchScreen = ({
-  navigation,
-  route: {
-    params: {chatClient},
-  },
-}) => {
+export const MessageSearchScreen = () => {
   const {colors, dark} = useTheme();
+  const navigation = useNavigation();
   const chatStyle = useStreamChatTheme();
   const inputRef = useRef(null);
   const [results, setResults] = useState(null);

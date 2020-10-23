@@ -22,7 +22,7 @@ export const ChannelListScreen = props => {
             backgroundColor: colors.background,
           },
         ]}>
-        <ScreenHeader title="getstream" />
+        <ScreenHeader title="getstream" showLogo />
         <ChannelSearchButton />
 
         <View style={styles.listContainer}>

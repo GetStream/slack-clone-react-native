@@ -14,7 +14,7 @@ import {
   getChannelDisplayName,
   SCText,
   theme,
-  isDark,
+  isDark, truncate
 } from '../utils';
 import {useTheme} from '@react-navigation/native';
 
@@ -105,7 +105,7 @@ export const DirectMessagesScreen = props => {
               }}>
               <ChannelAvatar channel={item} />
               <View style={styles.messageDetailsContainer}>
-                <SCText>{getChannelDisplayName(item)}</SCText>
+                <SCText>{truncate(getChannelDisplayName(item), 45)}</SCText>
                 <SCText style={styles.messagePreview}>
                   {lastMessage && lastMessage.user.id === chatClient.user.id
                     ? 'You:  '

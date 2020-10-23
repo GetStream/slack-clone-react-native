@@ -20,7 +20,7 @@ import {
   getChannelDisplayName,
   theme,
   isDark,
-  useStreamChatTheme,
+  useStreamChatTheme, ChatClientService
 } from '../utils';
 
 const CustomKeyboardCompatibleView = ({children}) => (
@@ -32,13 +32,13 @@ const CustomKeyboardCompatibleView = ({children}) => (
 );
 export function ChannelScreen({
   route: {
-    params: {chatClient, channelId = null},
+    params: {channelId = null},
   },
 }) {
   const {colors} = useTheme();
   const chatStyles = useStreamChatTheme();
   const navigation = useNavigation();
-
+  const chatClient = ChatClientService.getClient();
   const [channel, setChannel] = useState(null);
   const [initialValue, setInitialValue] = useState('');
   const [isReady, setIsReady] = useState(false);

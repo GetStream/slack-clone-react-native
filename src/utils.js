@@ -211,3 +211,5 @@ export const truncate = (input, length, end = '...') => {
   }
   return input;
 };
+
+export const ChatUserContext = React.createContext();

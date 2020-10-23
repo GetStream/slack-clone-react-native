@@ -1,7 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, SectionList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {CacheService, ChatClientService, SCText, theme, isDark, notImplemented} from '../utils';
+import {
+  CacheService,
+  ChatClientService,
+  SCText,
+  theme,
+  isDark,
+  notImplemented,
+} from '../utils';
 
 import {ChannelListItem} from './ChannelListItem';
 import {useNavigation, useTheme} from '@react-navigation/native';
@@ -22,7 +29,7 @@ export const ChannelList = () => {
     setActiveChannelId,
     unreadChannels,
     readChannels,
-    oneOnOneConversations,
+    directMessagingConversations,
   } = useWatchedChannels(client);
 
   const renderChannelRow = (channel, isUnread) => {
@@ -81,7 +88,7 @@ export const ChannelList = () => {
           },
           {
             title: 'Direct Messages',
-            data: oneOnOneConversations || [],
+            data: directMessagingConversations || [],
             clickHandler: () => {
               navigation.navigate('NewMessageScreen');
             },
@@ -146,8 +153,10 @@ const useWatchedChannels = client => {
   const [activeChannelId, setActiveChannelId] = useState(null);
   const [unreadChannels, setUnreadChannels] = useState([]);
   const [readChannels, setReadChannels] = useState([]);
-  const [oneOnOneConversations, setOneOnOneConversations] = useState([]);
-
+  const [
+    directMessagingConversations,
+    setDirectMessagingConversations,
+  ] = useState([]);
   const filters = {
     type: 'messaging',
     example: 'slack-demo',
@@ -162,7 +171,7 @@ const useWatchedChannels = client => {
   useEffect(() => {
     const _unreadChannels = [];
     const _readChannels = [];
-    const _oneOnOneConversations = [];
+    const _directMessagingConversations = [];
 
     /**
      * fetchChannels simply gets the channels from queryChannels endpoint
@@ -194,7 +203,7 @@ const useWatchedChannels = client => {
 
       setUnreadChannels([..._unreadChannels]);
       setReadChannels([..._readChannels]);
-      setOneOnOneConversations([..._oneOnOneConversations]);
+      setDirectMessagingConversations([..._directMessagingConversations]);
     };
 
     const fetchDirectMessagingConversations = async () => {
@@ -211,12 +220,12 @@ const useWatchedChannels = client => {
         if (c.countUnread() > 0) {
           _unreadChannels.push(c);
         } else {
-          _oneOnOneConversations.push(c);
+          _directMessagingConversations.push(c);
         }
       });
       setUnreadChannels([..._unreadChannels]);
       setReadChannels([..._readChannels]);
-      setOneOnOneConversations([..._oneOnOneConversations]);
+      setDirectMessagingConversations([..._directMessagingConversations]);
     };
 
     async function init() {
@@ -226,7 +235,7 @@ const useWatchedChannels = client => {
       CacheService.initCache(
         client.user,
         [..._readChannels],
-        [..._oneOnOneConversations],
+        [..._directMessagingConversations],
       );
     }
 
@@ -236,6 +245,10 @@ const useWatchedChannels = client => {
   useEffect(() => {
     function handleEvents(e) {
       if (e.type === 'message.new') {
+        if (e.user.id === client.user.id) {
+          return;
+        }
+
         const cid = e.cid;
 
         // Check if the channel (which received new message) exists in group channels.
@@ -251,15 +264,16 @@ const useWatchedChannels = client => {
           setUnreadChannels([channel, ...unreadChannels]);
         }
 
-        // Check if the channel (which received new message) exists in oneOnOneConversations list.
-        const oneOnOneConversationIndex = oneOnOneConversations.findIndex(
+        // Check if the channel (which received new message) exists in directMessagingConversations list.
+        const oneOnOneConversationIndex = directMessagingConversations.findIndex(
           channel => channel.cid === cid,
         );
         if (oneOnOneConversationIndex >= 0) {
-          // If yes, then remove it from oneOnOneConversations list and add it to unreadChannels list
-          const channel = oneOnOneConversations[oneOnOneConversationIndex];
-          oneOnOneConversations.splice(oneOnOneConversationIndex, 1);
-          setOneOnOneConversations([...oneOnOneConversations]);
+          // If yes, then remove it from directMessagingConversations list and add it to unreadChannels list
+          const channel =
+            directMessagingConversations[oneOnOneConversationIndex];
+          directMessagingConversations.splice(oneOnOneConversationIndex, 1);
+          setDirectMessagingConversations([...directMessagingConversations]);
           setUnreadChannels([channel, ...unreadChannels]);
         }
 
@@ -295,7 +309,10 @@ const useWatchedChannels = client => {
         setUnreadChannels([...unreadChannels]);
 
         if (!channel.data.name) {
-          setOneOnOneConversations([channel, ...oneOnOneConversations]);
+          setDirectMessagingConversations([
+            channel,
+            ...directMessagingConversations,
+          ]);
         } else {
           setReadChannels([channel, ...readChannels]);
         }
@@ -307,7 +324,7 @@ const useWatchedChannels = client => {
     return () => {
       client.off(handleEvents);
     };
-  }, [client, readChannels, unreadChannels, oneOnOneConversations]);
+  }, [client, readChannels, unreadChannels, directMessagingConversations]);
 
   return {
     activeChannelId,
@@ -316,8 +333,8 @@ const useWatchedChannels = client => {
     setUnreadChannels,
     readChannels,
     setReadChannels,
-    oneOnOneConversations,
-    setOneOnOneConversations,
+    directMessagingConversations,
+    setDirectMessagingConversations,
   };
 };
 
