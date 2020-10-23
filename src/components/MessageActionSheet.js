@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {ActionSheetCustom as ActionSheet} from 'react-native-actionsheet';
 
-import {View, StyleProp, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
 import {ChatClientService, SCText} from '../utils';
 import {useTheme} from '@react-navigation/native';
 import {SVGIcon} from './SVGIcon';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import Clipboard from '@react-native-community/clipboard';
 
 export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
   const chatClient = ChatClientService.getClient();
@@ -39,7 +40,9 @@ export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
     id: 'copy',
     title: 'Copy Text',
     icon: 'copy-text',
-    handler: () => null,
+    handler: () => {
+      Clipboard.setString(props.message.text);
+    },
   });
   options.push({
     id: 'reply',

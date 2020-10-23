@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/checkbox": "^0.5.5",
+    "@react-native-community/clipboard": "^1.5.0",
     "@react-native-community/masked-view": "^0.1.7",
     "@react-native-community/netinfo": "^5.6.2",
     "@react-native-community/picker": "^1.8.1",
