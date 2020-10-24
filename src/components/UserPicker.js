@@ -7,13 +7,15 @@ import {
   View,
   StyleSheet,
   FlatList,
+  Image
 } from 'react-native';
-import {ChatUserContext, USERS} from '../utils';
+import {ChatClientService, ChatUserContext, USERS} from '../utils';
 import {useTheme} from '@react-navigation/native';
 import {SCText} from './SCText';
 
 export const UserPicker = props => {
   const [modalVisible, setModalVisible] = useState(props.modalVisible);
+  const chatClient = ChatClientService.getClient();
   const {switchUser} = useContext(ChatUserContext);
   const {colors} = useTheme();
 
@@ -63,11 +65,31 @@ export const UserPicker = props => {
                       switchUser(item[props.value]);
                       props.onRequestClose();
                     }}>
-                    {props.renderRow ? (
-                      props.renderRow(item, index)
-                    ) : (
-                      <Text style={styles.itemText}>{item[props.label]}</Text>
-                    )}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        padding: 10,
+                        backgroundColor: colors.backgroundSecondary,
+                        alignItems: 'center',
+                      }}>
+                      <Image
+                        source={{uri: item.image}}
+                        style={{height: 35, width: 35}}
+                      />
+                      <View>
+                        <SCText style={{color: colors.text, paddingLeft: 20}}>
+                          {item.name} {item.id === chatClient.user.id ? '(active)' : ''}
+                        </SCText>
+                        <SCText
+                          style={{
+                            color: colors.linkText,
+                            fontSize: 13,
+                            paddingLeft: 20,
+                          }}>
+                          @{item.id}
+                        </SCText>
+                      </View>
+                    </View>
                   </TouchableHighlight>
                 );
               }}

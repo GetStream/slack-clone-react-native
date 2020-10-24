@@ -228,7 +228,12 @@ export const MessageSearchScreen = () => {
                 data={results}
                 renderItem={({item}) => {
                   return (
-                    <View
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate('TargettedMessageChannelScreen', {
+                          message: item,
+                        });
+                      }}
                       style={[
                         styles.resultItemContainer,
                         {
@@ -245,7 +250,7 @@ export const MessageSearchScreen = () => {
                           groupStyles={['single']}
                         />
                       </ThemeProvider>
-                    </View>
+                    </TouchableOpacity>
                   );
                 }}
               />

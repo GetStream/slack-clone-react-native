@@ -65,35 +65,6 @@ export const ScreenHeader = ({title, showLogo = false}) => {
         onValueChange={userId => {
           setPickerVisible(false);
         }}
-        renderRow={(item, index) => {
-          return (
-            <View
-              style={{
-                flexDirection: 'row',
-                padding: 10,
-                backgroundColor: colors.backgroundSecondary,
-                alignItems: 'center',
-              }}>
-              <Image
-                source={{uri: item.image}}
-                style={{height: 35, width: 35}}
-              />
-              <View>
-                <SCText style={{color: colors.text, paddingLeft: 20}}>
-                  {item.name}
-                </SCText>
-                <SCText
-                  style={{
-                    color: colors.linkText,
-                    fontSize: 13,
-                    paddingLeft: 20,
-                  }}>
-                  @{item.id}
-                </SCText>
-              </View>
-            </View>
-          );
-        }}
         value={'id'}
       />
     </>

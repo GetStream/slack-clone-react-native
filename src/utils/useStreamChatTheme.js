@@ -20,7 +20,9 @@ export default () => {
       'thread.newThread': 'display: none',
       'messageList.dateSeparator.container':
         'margin-top: 10; margin-bottom: 5;',
-      'typingIndicator.text': `color: ${colors.text};`,
+        'messageList.typingIndicatorContainer': `height: 30`,
+      'typingIndicator.container': `backgroundColor: ${colors.background};`,
+      'typingIndicator.text': `color: ${colors.text};font-size: 12px`,
       'message.file.container': `background-color: ${
         colors.background
       }; border-color: ${colors.border}; border-width: 1px`,
