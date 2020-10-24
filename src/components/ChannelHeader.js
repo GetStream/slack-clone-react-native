@@ -9,7 +9,7 @@ export const ChannelHeader = ({goBack, channel}) => {
   const {colors} = useTheme();
   const navigation = useNavigation();
 
-  const isDirectMessagingConversation = !channel.data.name;
+  const isDirectMessagingConversation = !channel?.data?.name;
   const isOneOnOneConversation =
     isDirectMessagingConversation &&
     Object.keys(channel.state.members).length === 2;

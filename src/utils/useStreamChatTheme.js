@@ -5,6 +5,7 @@ export default () => {
   const {colors} = useTheme();
   const getChatStyle = () => {
     return {
+      'loadingIndicator.loadingText': `color: ${colors.text}`,
       'messageList.dateSeparator.date': 'color: black;',
       'messageInput.container': `border-top-color: #979A9A; border-top-width: 0.4px; backgroundColor: ${
         colors.background

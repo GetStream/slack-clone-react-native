@@ -80,9 +80,21 @@ export const ChannelListItem = ({
     }
 
     ChannelTitle = (
-      <SCText style={channelTitleStyle}>
-        {truncate(getChannelDisplayName(channel), 40)}
-      </SCText>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <SCText style={channelTitleStyle}>
+          {truncate(getChannelDisplayName(channel, false, false), 40)}
+        </SCText>
+        {showAvatar &&
+          (channel.state.members[otherUserId].user.online ? (
+            // If the other user is online, then show the green presence indicator next to his name
+            <PresenceIndicator online={true} />
+          ) : (
+            <PresenceIndicator online={false} />
+          ))}
+        <SCText style={{marginLeft: 5}}>
+          {channel.state.members[otherUserId].user.status}
+        </SCText>
+      </View>
     );
   } else if (isDirectMessagingConversation) {
     ChannelPrefix = (
@@ -134,7 +146,7 @@ export const ChannelListItem = ({
   );
 };
 
-const PresenceIndicator = ({online}) => {
+export const PresenceIndicator = ({online, backgroundTransparent = true}) => {
   const {colors} = useTheme();
   return (
     <View
@@ -144,6 +156,9 @@ const PresenceIndicator = ({online}) => {
           : [
               styles.offlineCircle,
               {
+                backgroundColor: backgroundTransparent
+                  ? 'transparent'
+                  : colors.background,
                 borderColor: colors.text,
                 borderWidth: 1,
               },
@@ -186,6 +201,8 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   channelTitle: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     padding: 5,
     paddingLeft: 10,
   },

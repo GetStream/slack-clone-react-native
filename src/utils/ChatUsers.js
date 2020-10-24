@@ -11,6 +11,10 @@ export const USER_TOKENS = {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiam9zaCJ9.SSK1tAzqDMmCei1Y498YDYhWIFljZzZtsCGmCdu5AC4',
   luke:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoibHVrZSJ9.zvTMRzjR5t4K5sK0VjczbPoOYhYxSdBeoa_P9jZuuiY',
+  nick:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoibmljayJ9.vTiCq9nYrT3BJhILVSGMbC-mKzu-PHvBGPNWmLFH0mE',
+  scott:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic2NvdHQifQ.gzFcAl2dONxXWZmR1e-iUXOK-RIa1Gi7IfcNeq4hY5M',
 };
 export const USERS = {
   vishal: {
@@ -48,5 +52,17 @@ export const USERS = {
     name: 'Luke',
     image: 'https://ca.slack-edge.com/T02RM6X6B-UHLLRBJBU-4d0ebdff049c-512',
     value: 'luke',
+  },
+  nick: {
+    id: 'nick',
+    name: 'Nick Parson',
+    image: 'https://ca.slack-edge.com/T02RM6X6B-U10BF2R9R-2e7377522518-512',
+    value: 'nick',
+  },
+  scott: {
+    id: 'scott',
+    name: 'Scott',
+    image: 'https://ca.slack-edge.com/T02RM6X6B-U5KT650MQ-5a65b75846de-512',
+    value: 'scott',
   },
 };

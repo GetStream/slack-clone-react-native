@@ -39,7 +39,7 @@ import {ThreadScreen} from './src/screens/ThreadScreen';
 import {BottomTabs} from './src/components/BottomTabs';
 import {DarkTheme, LightTheme} from './src/appTheme';
 
-LogBox.ignoreAllLogs(true);
+// LogBox.ignoreAllLogs(true);
 
 const Tab = createBottomTabNavigator();
 

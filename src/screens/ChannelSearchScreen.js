@@ -7,6 +7,7 @@ import {ModalScreenHeader} from '../components/ModalScreenHeader';
 import {CacheService, ChatClientService} from '../utils';
 import {useTheme} from '@react-navigation/native';
 import {SCText} from '../components/SCText';
+import {DirectMessagingConversationAvatar} from '../components/DirectMessagingConversationAvatar';
 
 export const ChannelSearchScreen = ({
   navigation,
@@ -76,6 +77,7 @@ export const ChannelSearchScreen = ({
             style={[
               styles.inputBox,
               {
+                color: colors.text,
                 backgroundColor: colors.background,
                 borderColor: colors.border,
                 borderWidth: dark ? 1 : 0.5,
@@ -96,22 +98,17 @@ export const ChannelSearchScreen = ({
               keyboardShouldPersistTaps="always"
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
-              data={CacheService.getMembers()}
+              data={CacheService.getOneToOneConversations()}
               renderItem={({item}) => {
                 return (
                   <TouchableOpacity
                     style={styles.memberContainer}
                     onPress={() => {
                       navigation.navigate('ChannelScreen', {
-                        channelId: item.channelId,
+                        channelId: item.id,
                       });
                     }}>
-                    <Image
-                      style={styles.memberImage}
-                      source={{
-                        uri: item.image,
-                      }}
-                    />
+                    <DirectMessagingConversationAvatar channel={item} />
                     <SCText style={styles.memberName}>{item.name}</SCText>
                   </TouchableOpacity>
                 );

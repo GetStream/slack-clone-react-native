@@ -33,6 +33,8 @@ export const ChannelList = () => {
         activeChannelId={activeChannelId}
         setActiveChannelId={setActiveChannelId}
         changeChannel={changeChannel}
+        showAvatar={false}
+        presenceIndicator
         isUnread={isUnread}
         channel={channel}
         client={client}

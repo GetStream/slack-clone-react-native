@@ -1,3 +1,4 @@
+import {useTheme} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {View, SafeAreaView, StyleSheet, Text} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -6,15 +7,17 @@ import {ChannelHeader} from '../components/ChannelHeader';
 import {CustomKeyboardCompatibleView} from '../components/CustomKeyboardCompatibleView';
 import {DateSeparator} from '../components/DateSeparator';
 import {MessageSlack} from '../components/MessageSlack';
-import {useStreamChatTheme} from '../utils';
+import {ChatClientService, useStreamChatTheme} from '../utils';
 
 export function TargettedMessageChannelScreen({
   navigation,
   route: {
-    params: {chatClient, message = null},
+    params: {message = null},
   },
 }) {
   const chatTheme = useStreamChatTheme();
+  const {colors} = useTheme();
+  const chatClient = ChatClientService.getClient();
   const [channel, setChannel] = useState(null);
   useEffect(() => {
     const initChannel = async () => {
@@ -33,14 +36,16 @@ export function TargettedMessageChannelScreen({
     initChannel();
   }, [chatClient, message]);
 
+  if (!channel) {
+    return null;
+  }
   return (
-    <SafeAreaView style={styles.channelScreenSaveAreaView}>
+    <SafeAreaView
+      style={{
+        backgroundColor: colors.background,
+      }}>
       <View style={styles.channelScreenContainer}>
-        <ChannelHeader
-          navigation={navigation}
-          channel={channel}
-          client={chatClient}
-        />
+        <ChannelHeader channel={channel}  goBack={navigation.goBack} />
         <View style={styles.chatContainer}>
           <Chat client={chatClient} style={chatTheme}>
             <Channel
@@ -57,7 +62,12 @@ export function TargettedMessageChannelScreen({
           </Chat>
         </View>
         <TouchableOpacity
-          style={styles.recentMessageLink}
+          style={[
+            styles.recentMessageLink,
+            {
+              backgroundColor: colors.primary,
+            },
+          ]}
           onPress={() => {
             channel.initialized = false;
             navigation.navigate('ChannelScreen', {
@@ -87,7 +97,6 @@ const styles = StyleSheet.create({
     width: 350,
   },
   chatContainer: {
-    backgroundColor: 'white',
     flexGrow: 1,
     flexShrink: 1,
   },
@@ -95,7 +104,6 @@ const styles = StyleSheet.create({
     height: 60,
     alignSelf: 'center',
     width: '100%',
-    backgroundColor: '#F7F7F7',
     paddingTop: 20,
   },
   recentMessageLinkText: {

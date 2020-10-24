@@ -1,13 +1,17 @@
-import ChatClientService from "./ChatClientService";
+import ChatClientService from './ChatClientService';
 
-export const getChannelDisplayName = (channel, includePrefix = false) => {
+export const getChannelDisplayName = (
+  channel,
+  includeChannelPrefix = false,
+  includeUserStatus = true,
+) => {
   if (!channel) {
     return '#channel_name';
   }
 
   if (channel.name || (channel.data && channel.data.name)) {
     const name = channel.name || channel.data.name;
-    return `${includePrefix ? '#' : ''} ${name
+    return `${includeChannelPrefix ? '#' : ''} ${name
       .toLowerCase()
       .replace(' ', '_')}`;
   }
@@ -23,7 +27,9 @@ export const getChannelDisplayName = (channel, includePrefix = false) => {
 
   if (otherMembers.length === 1) {
     return `${otherMembers[0].user.name}  ${
-      otherMembers[0].user.status ? otherMembers[0].user.status : ''
+      includeUserStatus && otherMembers[0].user.status
+        ? otherMembers[0].user.status
+        : ''
     }`;
   }
   return otherMembers.map(m => m.user.name).join(', ');
