@@ -25,6 +25,10 @@ export default () => {
       }; border-color: ${colors.border}; border-width: 1px`,
       'message.file.title': `color: ${colors.text}`,
       'message.file.size': `color: ${colors.text}`,
+      'message.reactionPicker.container': 'justify-content: flex-end;',
+      'message.reactionPicker.containerView':
+        'width: 100%; border-radius: 0; padding-bottom: 20px;',
+      'message.reactionPicker.emoji': 'font-size: 30px;margin: 5px;',
       'message.avatarWrapper.spacer': 'height: 0;',
       'message.content.container':
         'flex: 1; align-items: stretch; max-width: 320px; padding-top: 0; border-radius: 0;',

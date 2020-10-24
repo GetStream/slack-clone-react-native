@@ -3,10 +3,11 @@ import {ReactionPickerWrapper} from 'stream-chat-react-native';
 import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
 import {SVGIcon} from './SVGIcon';
 import {useTheme} from '@react-navigation/native';
+import { ReactionPicker } from './ReactionPicker';
 
 export const MessageFooter = props => {
   const {dark} = useTheme();
-
+  const {openReactionPicker} = props;
   return (
     <View style={styles.reactionListContainer}>
       {props.message.latest_reactions &&
@@ -17,25 +18,22 @@ export const MessageFooter = props => {
           props.message.reaction_counts,
           props.handleReaction,
         )}
-      <ReactionPickerWrapper
-        {...props}
-        offset={{
-          left: -70,
-          top: 10,
-        }}>
-        {props.message.latest_reactions &&
-          props.message.latest_reactions.length > 0 && (
-            <View
-              style={[
-                styles.reactionPickerContainer,
-                {
-                  backgroundColor: dark ? '#313538' : '#F0F0F0',
-                },
-              ]}>
-              <SVGIcon height="18" width="18" type="emoji" />
-            </View>
-          )}
-      </ReactionPickerWrapper>
+
+      <ReactionPicker {...props} />
+
+      {props.message.latest_reactions &&
+        props.message.latest_reactions.length > 0 && (
+          <TouchableOpacity
+            onPress={openReactionPicker}
+            style={[
+              styles.reactionPickerContainer,
+              {
+                backgroundColor: dark ? '#313538' : '#F0F0F0',
+              },
+            ]}>
+            <SVGIcon height="18" width="18" type="emoji" />
+          </TouchableOpacity>
+        )}
     </View>
   );
 };
@@ -113,9 +111,11 @@ const styles = StyleSheet.create({
   reactionListContainer: {
     flexDirection: 'row',
     alignSelf: 'flex-start',
+    alignItems: 'center',
     marginTop: 5,
     marginBottom: 10,
     marginLeft: 10,
+    flexWrap: 'wrap'
   },
   reactionItemContainer: {
     borderWidth: 1,
@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
     paddingRight: 7,
     borderRadius: 10,
     marginRight: 5,
+    marginTop: 5
   },
   reactionItem: {
     fontSize: 14,

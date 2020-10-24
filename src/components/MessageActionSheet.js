@@ -9,6 +9,7 @@ import {useTheme} from '@react-navigation/native';
 import {SVGIcon} from './SVGIcon';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Clipboard from '@react-native-community/clipboard';
+import ReactNativeHaptic from 'react-native-haptic';
 
 export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
   const chatClient = ChatClientService.getClient();
@@ -62,6 +63,7 @@ export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
   return (
     <ActionSheet
       title={renderReactions(props.supportedReactions, type => {
+        ReactNativeHaptic.generate('impact');
         props.handleReaction(type);
         props.setActionSheetVisible(false);
       })}
@@ -71,6 +73,7 @@ export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
       styles={{
         body: {
           backgroundColor: colors.background,
+          borderRadius: 20,
         },
         buttonBox: {
           alignItems: 'flex-start',
@@ -95,6 +98,8 @@ export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
           borderBottomColor: colors.border,
           borderBottomWidth: 1,
           padding: 15,
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10
         },
       }}
       options={options.map((option, i) => {

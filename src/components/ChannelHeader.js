@@ -83,6 +83,7 @@ export const styles = StyleSheet.create({
     fontSize: 17,
     fontFamily: 'Lato-Regular',
     alignSelf: 'center',
+    textAlign: 'center'
   },
   channelSubTitle: {},
   centerContent: {
