@@ -29,6 +29,7 @@ export const UrlPreview = props => {
             url: props.image_url || props.thumb_url,
           }}
           style={styles.thumbnail}
+          resizeMode="cover"
         />
       </View>
     </TouchableOpacity>
@@ -41,18 +42,15 @@ const styles = StyleSheet.create({
     borderLeftColor: '#E4E4E4',
     paddingLeft: 10,
     marginLeft: 10,
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   detailsContainer: {
     flexDirection: 'column',
-    flex: 6,
   },
-  thumbnailContainer: {
-    flex: 1,
-  },
+  thumbnailContainer: {},
   thumbnail: {
-    height: 40,
-    width: 40,
+    width: '100%',
+    height: 150,
   },
   titleUrl: {
     fontFamily: 'Lato-Regular',

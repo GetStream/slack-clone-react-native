@@ -50,6 +50,15 @@ export const MessageText = props => {
           text: {
             fontSize: 16,
             color: colors.text,
+            fontFamily: 'Lato-Regular',
+          },
+          // link: {
+          //   color: 'blue',
+          //   fontSize: 25,
+          // },
+          inlineCode: {
+            fontWeight: '200',
+            color: 'red',
           },
         },
       })}

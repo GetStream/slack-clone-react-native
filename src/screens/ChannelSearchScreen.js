@@ -50,7 +50,6 @@ export const ChannelSearchScreen = ({
         )}
         <View style={styles.headerContainer}>
           <TextInput
-            autoCapitalize={false}
             autoFocus
             onChangeText={async text => {
               setText(text);

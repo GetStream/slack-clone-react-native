@@ -28,6 +28,7 @@ export const ChannelListItem = ({
    * For oneOnOneConversation, its the name of other user (on other end of chat).
    */
   let ChannelTitle = null;
+  let ChannelPostfix = null;
   /**
    * Id of other user in oneOnOneConversation. This will be used to decide ChannelTitle
    */
@@ -80,10 +81,13 @@ export const ChannelListItem = ({
     }
 
     ChannelTitle = (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <SCText style={channelTitleStyle}>
-          {truncate(getChannelDisplayName(channel, false, false), 40)}
-        </SCText>
+      <SCText style={channelTitleStyle}>
+        {truncate(getChannelDisplayName(channel, false, true), 40)}
+      </SCText>
+    );
+
+    ChannelPostfix = (
+      <View style={styles.row}>
         {showAvatar &&
           (channel.state.members[otherUserId].user.online ? (
             // If the other user is online, then show the green presence indicator next to his name
@@ -91,9 +95,6 @@ export const ChannelListItem = ({
           ) : (
             <PresenceIndicator online={false} />
           ))}
-        <SCText style={{marginLeft: 5}}>
-          {channel.state.members[otherUserId].user.status}
-        </SCText>
       </View>
     );
   } else if (isDirectMessagingConversation) {
@@ -127,6 +128,7 @@ export const ChannelListItem = ({
       <View style={styles.channelTitleContainer}>
         {ChannelPrefix}
         {ChannelTitle}
+        {ChannelPostfix}
       </View>
       {isDirectMessagingConversation && isUnread && (
         <View style={styles.unreadMentionsContainer}>
@@ -169,17 +171,23 @@ export const PresenceIndicator = ({online, backgroundTransparent = true}) => {
 };
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   onlineCircle: {
     width: 10,
     height: 10,
     borderRadius: 100 / 2,
     backgroundColor: '#117A58',
+    marginRight: 5,
   },
   offlineCircle: {
     width: 10,
     height: 10,
     borderRadius: 100 / 2,
     backgroundColor: 'transparent',
+    marginRight: 5,
   },
   channelRow: {
     padding: 3,
@@ -196,7 +204,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   unreadChannelTitle: {
-    marginLeft: 3,
+    marginLeft: 0,
     fontWeight: '900',
     padding: 5,
   },
@@ -204,10 +212,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     padding: 5,
-    paddingLeft: 10,
+    paddingLeft: 5,
   },
   channelTitlePrefix: {
     fontWeight: '300',
+    fontSize: 22,
     padding: 0,
   },
   oneOnOneConversationImage: {

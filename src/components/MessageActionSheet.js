@@ -10,19 +10,13 @@ import {SVGIcon} from './SVGIcon';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Clipboard from '@react-native-community/clipboard';
 import ReactNativeHaptic from 'react-native-haptic';
+import {getFrequentlyUsedReactions} from '../utils/supportedReactions';
 
 export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
   const chatClient = ChatClientService.getClient();
   const {colors} = useTheme();
 
-  const options = [
-    {
-      id: 'cancel',
-      title: 'Cancel',
-      icon: 'drafts',
-      handler: () => null,
-    },
-  ];
+  const options = [];
 
   if (props.message.user.id === chatClient.user.id) {
     options.push({
@@ -60,14 +54,21 @@ export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
     props.setActionSheetVisible(false);
   };
 
+  const openReactionPicker = () => {
+    props.setActionSheetVisible(false);
+    setTimeout(() => {
+      props.openReactionPicker();
+    }, 100);
+  };
   return (
     <ActionSheet
-      title={renderReactions(props.supportedReactions, type => {
-        ReactNativeHaptic.generate('impact');
+      title={renderReactions(type => {
+        console.warn('handling reaction .>>>>');
+        // ReactNativeHaptic && ReactNativeHaptic.generate('impact');
         props.handleReaction(type);
         props.setActionSheetVisible(false);
-      })}
-      cancelButtonIndex={0}
+      }, openReactionPicker)}
+      cancelButtonIndex={-1}
       destructiveButtonIndex={0}
       onPress={index => onActionPress(options[index].id)}
       styles={{
@@ -99,7 +100,7 @@ export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
           borderBottomWidth: 1,
           padding: 15,
           borderTopLeftRadius: 10,
-          borderTopRightRadius: 10
+          borderTopRightRadius: 10,
         },
       }}
       options={options.map((option, i) => {
@@ -127,13 +128,14 @@ export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
   );
 });
 
-export const renderReactions = (supportedReactions, handleReaction) => {
-  const emojiDataByType = {};
-  supportedReactions.forEach(e => (emojiDataByType[e.id] = e));
-  console.warn(supportedReactions);
+export const renderReactions = (handleReaction, openReactionPicker) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const {dark} = useTheme();
+  const reactions = getFrequentlyUsedReactions().slice(0, 6);
+
   return (
     <View style={styles.reactionListContainer}>
-      {supportedReactions.map((r, index) => (
+      {reactions.map((r, index) => (
         <ReactionItem
           key={index}
           type={r.id}
@@ -141,6 +143,18 @@ export const renderReactions = (supportedReactions, handleReaction) => {
           handleReaction={handleReaction}
         />
       ))}
+      <TouchableOpacity
+        onPress={() => {
+          openReactionPicker();
+        }}
+        style={[
+          styles.reactionPickerContainer,
+          {
+            backgroundColor: dark ? '#313538' : '#F0F0F0',
+          },
+        ]}>
+        <SVGIcon height="25" width="25" type="emoji" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -148,10 +162,7 @@ export const renderReactions = (supportedReactions, handleReaction) => {
 const ReactionItem = ({type, handleReaction, icon}) => {
   const {dark} = useTheme();
   return (
-    <TouchableOpacity
-      onPress={() => {
-        handleReaction(type);
-      }}
+    <View
       key={type}
       style={[
         styles.reactionItemContainer,
@@ -161,6 +172,9 @@ const ReactionItem = ({type, handleReaction, icon}) => {
         },
       ]}>
       <Text
+        onPress={() => {
+          handleReaction(type);
+        }}
         style={[
           styles.reactionItem,
           {
@@ -169,7 +183,7 @@ const ReactionItem = ({type, handleReaction, icon}) => {
         ]}>
         {icon}
       </Text>
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -182,12 +196,13 @@ const styles = StyleSheet.create({
     height: 30,
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   reactionItemContainer: {
     borderWidth: 1,
     padding: 3,
-    paddingLeft: 6,
-    paddingRight: 6,
+    paddingLeft: 3,
+    paddingRight: 3,
     borderRadius: 40,
     marginRight: 10,
     justifyContent: 'center',
@@ -195,5 +210,11 @@ const styles = StyleSheet.create({
   },
   reactionItem: {
     fontSize: 28,
+  },
+  reactionPickerContainer: {
+    padding: 4,
+    paddingLeft: 8,
+    paddingRight: 6,
+    borderRadius: 10,
   },
 });

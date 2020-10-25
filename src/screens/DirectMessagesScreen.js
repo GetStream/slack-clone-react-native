@@ -62,7 +62,7 @@ export const DirectMessagesScreen = props => {
                   {lastMessage && lastMessage.user.id === chatClient.user.id
                     ? 'You:  '
                     : `${lastMessage.user.name}: `}
-                  {lastMessage.text}
+                  {truncate(lastMessage.text, 125)}
                 </SCText>
               </View>
             </TouchableOpacity>
@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 25,
     marginBottom: 15,
+    marginRight: 10
   },
   messagePreview: {
     fontSize: 15,

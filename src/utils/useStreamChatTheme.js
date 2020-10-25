@@ -17,10 +17,18 @@ export default () => {
       'messageInput.fileUploadPreview.attachmentContainerView': `border-color: ${
         colors.border
       }`,
+      'messageInput.suggestions.container': `background-color: ${
+        colors.background
+      }`,
+      'messageInput.suggestions.mention.name': `color: ${colors.text}`,
+      'messageInput.suggestions.title': `color: ${colors.text}`,
+      'messageInput.suggestions.command.title': `color: ${colors.text}`,
+      'messageInput.suggestions.command.args': `color: ${colors.text}`,
+      'messageInput.suggestions.command.description': `color: ${colors.text}`,
       'thread.newThread': 'display: none',
       'messageList.dateSeparator.container':
         'margin-top: 10; margin-bottom: 5;',
-        'messageList.typingIndicatorContainer': `height: 30`,
+      'messageList.typingIndicatorContainer': 'height: 30',
       'typingIndicator.container': `backgroundColor: ${colors.background};`,
       'typingIndicator.text': `color: ${colors.text};font-size: 12px`,
       'message.file.container': `background-color: ${
@@ -47,13 +55,6 @@ export default () => {
       'message.gallery.galleryContainer':
         'border-top-left-radius: 8px;border-top-right-radius: 8px;border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; margin-left: 5px; width: 95%',
       'message.replies.messageRepliesText': 'color: #0064c2',
-      'message.content.markdown': {
-        text: {
-          fontSize: 16,
-          fontFamily: 'Lato-Regular',
-          color: colors.text,
-        },
-      },
     };
   };
   const [chatStyle, setChatStyle] = useState(getChatStyle());

@@ -129,7 +129,7 @@ export const MessageSearchScreen = () => {
               setLoadingResults(true);
               search(text);
             }}
-            placeholder="Search"
+            placeholder="Search for message"
             placeholderTextColor={colors.text}
             inlineImageLeft="search_icon"
             style={[
@@ -245,7 +245,19 @@ export const MessageSearchScreen = () => {
                       </SCText>
                       <ThemeProvider style={chatStyle}>
                         <DefaultMessage
-                          Message={MessageSlack}
+                          Message={props => (
+                            <MessageSlack
+                              {...props}
+                              onPress={() => {
+                                navigation.navigate(
+                                  'TargettedMessageChannelScreen',
+                                  {
+                                    message: item,
+                                  },
+                                );
+                              }}
+                            />
+                          )}
                           message={item}
                           groupStyles={['single']}
                         />

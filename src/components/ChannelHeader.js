@@ -24,6 +24,9 @@ export const ChannelHeader = ({goBack, channel}) => {
       ]}>
       <View style={styles.leftContent}>
         <TouchableOpacity
+          style={{
+            width: 50,
+          }}
           onPress={() => {
             goBack && goBack();
           }}>

@@ -1,8 +1,17 @@
 import {useTheme} from '@react-navigation/native';
 import React, {useEffect, useRef} from 'react';
-import {Modal, View, Text, Animated, TouchableOpacity} from 'react-native';
+import {
+  Modal,
+  View,
+  Text,
+  Animated,
+  TouchableOpacity,
+  SectionList,
+  StyleSheet,
+} from 'react-native';
 import {SCText} from './SCText';
 import ReactNativeHaptic from 'react-native-haptic';
+import {groupedSupportedReactions } from '../utils/supportedReactions';
 
 export const ReactionPicker = props => {
   const {
@@ -13,7 +22,9 @@ export const ReactionPicker = props => {
   } = props;
   const {colors} = useTheme();
   const slide = useRef(new Animated.Value(-600)).current;
+  const reactionPickerExpanded = useRef(false);
   const _dismissReactionPicker = () => {
+    reactionPickerExpanded.current = false;
     Animated.timing(slide, {
       toValue: -600,
       duration: 100,
@@ -24,8 +35,8 @@ export const ReactionPicker = props => {
   };
 
   const _handleReaction = type => {
-    ReactNativeHaptic.generate('impact');
-
+    ReactNativeHaptic && ReactNativeHaptic.generate('impact');
+    reactionPickerExpanded.current = false;
     Animated.timing(slide, {
       toValue: -600,
       duration: 100,
@@ -37,10 +48,10 @@ export const ReactionPicker = props => {
 
   useEffect(() => {
     if (reactionPickerVisible) {
-      ReactNativeHaptic.generate('impact');
+      ReactNativeHaptic && ReactNativeHaptic.generate('impact');
       setTimeout(() => {
         Animated.timing(slide, {
-          toValue: 0,
+          toValue: -300,
           duration: 100,
           useNativeDriver: false,
         }).start();
@@ -87,42 +98,92 @@ export const ReactionPicker = props => {
             backgroundColor: colors.background,
             borderRadius: 15,
             paddingHorizontal: 10,
-            paddingTop: 20,
           }}>
-          <SCText>Frequently Used</SCText>
           <View
             style={{
+              width: '100%',
               flexDirection: 'row',
               flexWrap: 'wrap',
               justifyContent: 'center',
-              marginTop: 10,
               marginBottom: 20,
             }}>
-            {supportedReactions.map(({icon, id}) => {
-              return (
-                <View
-                  key={id}
-                  testID={id}
+            <SectionList
+              onScrollBeginDrag={() => {
+                reactionPickerExpanded.current = true;
+                Animated.timing(slide, {
+                  toValue: 0,
+                  duration: 300,
+                  useNativeDriver: false,
+                }).start();
+              }}
+              style={{height: 600, width: '100%'}}
+              onScroll={event => {
+                if (!reactionPickerExpanded.current) {
+                  return;
+                }
+
+                if (event.nativeEvent.contentOffset.y <= 0) {
+                  reactionPickerExpanded.current = false;
+                  Animated.timing(slide, {
+                    toValue: -300,
+                    duration: 300,
+                    useNativeDriver: false,
+                  }).start();
+                }
+              }}
+              sections={groupedSupportedReactions}
+              renderSectionHeader={({section: {title}}) => (
+                <SCText
                   style={{
-                    alignItems: 'center',
-                    marginTop: -5,
+                    backgroundColor: colors.background,
+                    padding: 10,
+                    paddingLeft: 13,
+                    fontWeight: '200',
                   }}>
-                  <Text
-                    onPress={() => _handleReaction(id)}
-                    testID={`${id}-reaction`}
+                  {title}
+                </SCText>
+              )}
+              renderItem={({item}) => {
+                return (
+                  <View
                     style={{
-                      fontSize: 38,
-                      margin: 8,
-                      marginVertical: 5,
+                      width: '100%',
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
+                      justifyContent: 'center',
+                      marginTop: 3,
                     }}>
-                    {icon}
-                  </Text>
-                </View>
-              );
-            })}
+                    {item.map(({icon, id}) => {
+                      return (
+                        <View
+                          key={id}
+                          testID={id}
+                          style={{
+                            alignItems: 'center',
+                            marginTop: -5,
+                          }}>
+                          <Text
+                            onPress={() => _handleReaction(id)}
+                            testID={`${id}-reaction`}
+                            style={{
+                              fontSize: 35,
+                              margin: 5,
+                              marginVertical: 5,
+                            }}>
+                            {icon}
+                          </Text>
+                        </View>
+                      );
+                    })}
+                  </View>
+                );
+              }}
+            />
           </View>
         </View>
       </Animated.View>
     </Modal>
   );
 };
+
+const styles = StyleSheet.create({});

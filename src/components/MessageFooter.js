@@ -3,7 +3,7 @@ import {ReactionPickerWrapper} from 'stream-chat-react-native';
 import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
 import {SVGIcon} from './SVGIcon';
 import {useTheme} from '@react-navigation/native';
-import { ReactionPicker } from './ReactionPicker';
+import {ReactionPicker} from './ReactionPicker';
 
 export const MessageFooter = props => {
   const {dark} = useTheme();
@@ -14,6 +14,7 @@ export const MessageFooter = props => {
         props.message.latest_reactions.length > 0 &&
         renderReactions(
           props.message.latest_reactions,
+          props.message.own_reactions,
           props.supportedReactions,
           props.message.reaction_counts,
           props.handleReaction,
@@ -40,18 +41,20 @@ export const MessageFooter = props => {
 
 export const renderReactions = (
   reactions,
+  ownReactions = [],
   supportedReactions,
   reactionCounts,
   handleReaction,
 ) => {
   const reactionsByType = {};
+  const ownReactionTypes = ownReactions.map(or => or.type);
   reactions &&
     reactions.forEach(item => {
       if (reactions[item.type] === undefined) {
         return (reactionsByType[item.type] = [item]);
       } else {
         return (reactionsByType[item.type] = [
-          ...reactionsByType[item.type],
+          ...(reactionsByType[item.type] || []),
           item,
         ]);
       }
@@ -69,6 +72,7 @@ export const renderReactions = (
         handleReaction={handleReaction}
         reactionCounts={reactionCounts}
         emojiDataByType={emojiDataByType}
+        ownReactionTypes={ownReactionTypes}
       />
     ) : null,
   );
@@ -79,8 +83,10 @@ const ReactionItem = ({
   handleReaction,
   reactionCounts,
   emojiDataByType,
+  ownReactionTypes,
 }) => {
   const {dark} = useTheme();
+  const isOwnReaction = ownReactionTypes.indexOf(type) > -1;
   return (
     <TouchableOpacity
       onPress={() => {
@@ -90,8 +96,20 @@ const ReactionItem = ({
       style={[
         styles.reactionItemContainer,
         {
-          borderColor: dark ? '#1E1D21' : '#0064c2',
-          backgroundColor: dark ? '#313538' : '#d6ebff',
+          borderColor: dark
+            ? isOwnReaction
+              ? '#313538'
+              : '#1E1D21'
+            : isOwnReaction
+            ? '#0064e2'
+            : 'transparent',
+          backgroundColor: dark
+            ? isOwnReaction
+              ? '#194B8A'
+              : '#1E1D21'
+            : isOwnReaction
+            ? '#d6ebff'
+            : '#F0F0F0',
         },
       ]}>
       <Text
@@ -115,19 +133,19 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 10,
     marginLeft: 10,
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   reactionItemContainer: {
     borderWidth: 1,
     padding: 4,
-    paddingLeft: 7,
-    paddingRight: 7,
-    borderRadius: 10,
-    marginRight: 5,
-    marginTop: 5
+    paddingLeft: 8,
+    paddingRight: 8,
+    borderRadius: 17,
+    marginRight: 6,
+    marginTop: 5,
   },
   reactionItem: {
-    fontSize: 14,
+    fontSize: 16,
   },
   reactionPickerContainer: {
     padding: 4,
