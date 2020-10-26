@@ -1,13 +1,15 @@
 import React from 'react';
 import {View, StyleSheet, SectionList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+
+import {useNavigation, useTheme} from '@react-navigation/native';
+
 import {ChatClientService, notImplemented} from '../../utils';
+import {SVGIcon} from '../SVGIcon';
+import {SCText} from '../SCText';
 
 import {ChannelListItem} from '../ChannelListItem';
-import {useNavigation, useTheme} from '@react-navigation/native';
-import {SVGIcon} from '../SVGIcon';
-import {useWatchedChannels} from './hooks/useWatchedChannels';
-import {SCText} from '../SCText';
+import {useWatchedChannels} from './useWatchedChannels';
 
 export const ChannelList = () => {
   const client = ChatClientService.getClient();

@@ -63,14 +63,19 @@ export const MessageActionSheet = React.forwardRef((props, actionSheetRef) => {
   return (
     <ActionSheet
       title={renderReactions(type => {
-        console.warn('handling reaction .>>>>');
-        // ReactNativeHaptic && ReactNativeHaptic.generate('impact');
+        ReactNativeHaptic && ReactNativeHaptic.generate('impact');
         props.handleReaction(type);
         props.setActionSheetVisible(false);
       }, openReactionPicker)}
       cancelButtonIndex={-1}
       destructiveButtonIndex={0}
-      onPress={index => onActionPress(options[index].id)}
+      onPress={index => {
+        if (index > -1 && index < options.length) {
+          onActionPress(options[index].id)
+        } else {
+          props.setActionSheetVisible(false);
+        }
+      }}
       styles={{
         body: {
           backgroundColor: colors.background,

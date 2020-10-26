@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {useTheme} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import {SVGIcon} from './SVGIcon';
 import {SCText} from './SCText';
 
-export const BottomTabs = ({state, descriptors, navigation}) => {
+export const BottomTabs = ({state, navigation}) => {
   const {colors} = useTheme();
   const insets = useSafeAreaInsets();
   const getTitle = key => {
@@ -15,13 +15,13 @@ export const BottomTabs = ({state, descriptors, navigation}) => {
         return {
           icon: <SVGIcon type="home-tab" width={25} height={25} />,
           iconActive: <SVGIcon type="home-tab-active" width={25} height={25} />,
-          subtitle: 'Home',
+          title: 'Home',
         };
       case 'dms':
         return {
           icon: <SVGIcon type="dm-tab" width={25} height={25} />,
           iconActive: <SVGIcon type="dm-tab-active" width={25} height={25} />,
-          subtitle: 'DMs',
+          title: 'DMs',
         };
       case 'mentions':
         return {
@@ -29,25 +29,26 @@ export const BottomTabs = ({state, descriptors, navigation}) => {
           iconActive: (
             <SVGIcon type="mentions-tab-active" width={25} height={25} />
           ),
-          subtitle: 'Mention',
+          title: 'Mention',
         };
       case 'you':
         return {
           icon: <SVGIcon type="you-tab" width={25} height={25} />,
           iconActive: <SVGIcon type="you-tab-active" width={25} height={25} />,
-          subtitle: 'You',
+          title: 'You',
         };
     }
   };
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        backgroundColor: colors.background,
-        borderTopColor: colors.border,
-        borderTopWidth: 0.5,
-        paddingBottom: insets.bottom,
-      }}>
+      style={[
+        {
+          backgroundColor: colors.background,
+          borderTopColor: colors.border,
+          paddingBottom: insets.bottom,
+        },
+        styles.tabListContainer,
+      ]}>
       {state.routes.map((route, index) => {
         const tab = getTitle(route.name);
 
@@ -65,19 +66,28 @@ export const BottomTabs = ({state, descriptors, navigation}) => {
         };
 
         return (
-          <TouchableOpacity
-            onPress={onPress}
-            style={{
-              flex: 1,
-              padding: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+          <TouchableOpacity onPress={onPress} style={styles.tabContainer}>
             {isFocused ? tab.iconActive : tab.icon}
-            <SCText style={{fontSize: 12}}>{tab.subtitle}</SCText>
+            <SCText style={styles.tabTitle}>{tab.title}</SCText>
           </TouchableOpacity>
         );
       })}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  tabListContainer: {
+    flexDirection: 'row',
+    borderTopWidth: 0.5,
+  },
+  tabContainer: {
+    flex: 1,
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tabTitle: {
+    fontSize: 12,
+  },
+});

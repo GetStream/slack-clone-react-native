@@ -1,67 +1,66 @@
-import React, {useEffect, useState} from 'react';
-import {Text, Appearance} from 'react-native';
+// src/components/SVGIcon.js
+
+import React from 'react';
 import {useTheme} from '@react-navigation/native';
 
-import AsyncStorage from '@react-native-community/async-storage';
+import FileAttachmentIcon from '../images/svgs/channel/attachment.svg';
+import ImageAttachmentIcon from '../images/svgs/channel/picture.svg';
+import FileAttachmentIconDark from '../images/svgs/channel/attachment-dark.svg';
+import ImageAttachmentIconDark from '../images/svgs/channel/picture-dark.svg';
 
-import FileAttachmentIcon from '../images/channel/attachment.svg';
-import ImageAttachmentIcon from '../images/channel/picture.svg';
-import FileAttachmentIconDark from '../images/channel/attachment-copy.svg';
-import ImageAttachmentIconDark from '../images/channel/picture-copy.svg';
+import NewMessageBubbleIcon from '../images/svgs/channel-list/new-message.svg';
+import NewMessageBubbleIconDark from '../images/svgs/channel-list/new-message-dark.svg';
 
-import NewMessageBubbleIcon from '../images/channel-list/new-message.svg';
-import NewMessageBubbleIconDark from '../images/channel-list/new-message-copy.svg';
+import SearchIcon from '../images/svgs/channel/search.svg';
+import SearchIconDark from '../images/svgs/channel/search-dark.svg';
+import InfoIcon from '../images/svgs/channel/info.svg';
+import InfoIconDark from '../images/svgs/channel/info-dark.svg';
+import EmojiIcon from '../images/svgs/channel/emoji.svg';
+import EmojiIconDark from '../images/svgs/channel/emoji-dark.svg';
+import ThreadsIcon from '../images/svgs/channel-list/threads.svg';
+import ThreadsIconDark from '../images/svgs/channel-list/threads-dark.svg';
+import DraftsIcon from '../images/svgs/channel-list/drafts.svg';
+import DraftsIconDark from '../images/svgs/channel-list/drafts-dark.svg';
+import GlobalSearchIconDark from '../images/svgs/channel-list/search-dark.svg';
+import GlobalSearchIcon from '../images/svgs/channel-list/search.svg';
 
-import SearchIcon from '../images/channel/search.svg';
-import SearchIconDark from '../images/channel/search-copy.svg';
-import InfoIcon from '../images/channel/info.svg';
-import InfoIconDark from '../images/channel/info-copy.svg';
-import EmojiIcon from '../images/channel/emoji.svg';
-import EmojiIconDark from '../images/channel/emoji-copy.svg';
-import ThreadsIcon from '../images/channel-list/threads.svg';
-import ThreadsIconDark from '../images/channel-list/threads-copy.svg';
-import DraftsIcon from '../images/channel-list/drafts.svg';
-import DraftsIconDark from '../images/channel-list/drafts-copy.svg';
-import GlobalSearchIconDark from '../images/channel-list/search-copy.svg';
-import GlobalSearchIcon from '../images/channel-list/search.svg';
+import DMTabIcon from '../images/svgs/tab-bar/dm.svg';
+import DMTabIconActive from '../images/svgs/tab-bar/dm-selected.svg';
+import HomeTabIcon from '../images/svgs/tab-bar/home.svg';
+import HomeTabIconActive from '../images/svgs/tab-bar/home-selected.svg';
+import MentionsTabIcon from '../images/svgs/tab-bar/mentions.svg';
+import MentionsTabIconActive from '../images/svgs/tab-bar/mentions-selected.svg';
+import YouTabIcon from '../images/svgs/tab-bar/you.svg';
+import YouTabIconActive from '../images/svgs/tab-bar/you-selected.svg';
 
-import DMTabIcon from '../images/tab-bar/dm.svg';
-import DMTabIconActive from '../images/tab-bar/dm-selected.svg';
-import HomeTabIcon from '../images/tab-bar/home.svg';
-import HomeTabIconActive from '../images/tab-bar/home-selected.svg';
-import MentionsTabIcon from '../images/tab-bar/mentions.svg';
-import MentionsTabIconActive from '../images/tab-bar/mentions-selected.svg';
-import YouTabIcon from '../images/tab-bar/you.svg';
-import YouTabIconActive from '../images/tab-bar/you-selected.svg';
+import DMTabIconDark from '../images/svgs/tab-bar/dm-dark.svg';
+import DMTabIconActiveDark from '../images/svgs/tab-bar/dm-selected-dark.svg';
+import HomeTabIconDark from '../images/svgs/tab-bar/home-dark.svg';
+import HomeTabIconActiveDark from '../images/svgs/tab-bar/home-selected-dark.svg';
+import MentionsTabIconDark from '../images/svgs/tab-bar/mentions-dark.svg';
+import MentionsTabIconActiveDark from '../images/svgs/tab-bar/mentions-selected-dark.svg';
+import YouTabIconDark from '../images/svgs/tab-bar/you-dark.svg';
+import YouTabIconActiveDark from '../images/svgs/tab-bar/you-selected-dark.svg';
 
-import DMTabIconDark from '../images/tab-bar/dm-copy.svg';
-import DMTabIconActiveDark from '../images/tab-bar/dm-selected-copy.svg';
-import HomeTabIconDark from '../images/tab-bar/home-copy.svg';
-import HomeTabIconActiveDark from '../images/tab-bar/home-selected-copy.svg';
-import MentionsTabIconDark from '../images/tab-bar/mentions-copy.svg';
-import MentionsTabIconActiveDark from '../images/tab-bar/mentions-selected-copy.svg';
-import YouTabIconDark from '../images/tab-bar/you-copy.svg';
-import YouTabIconActiveDark from '../images/tab-bar/you-selected-copy.svg';
+import AwayIcon from '../images/svgs/profile/away.svg';
+import DNDIcon from '../images/svgs/profile/dnd.svg';
+import NotificationsIcon from '../images/svgs/profile/notifications.svg';
+import PreferencesIcon from '../images/svgs/profile/preferences.svg';
+import SavedItemsIcon from '../images/svgs/profile/saved-items.svg';
+import ViewProfileIcon from '../images/svgs/profile/view-profile.svg';
+import AwayIconDark from '../images/svgs/profile/away-dark.svg';
+import DNDIconDark from '../images/svgs/profile/dnd-dark.svg';
+import NotificationsIconDark from '../images/svgs/profile/notifications-dark.svg';
+import PreferencesIconDark from '../images/svgs/profile/preferences-dark.svg';
+import SavedItemsIconDark from '../images/svgs/profile/saved-items-dark.svg';
+import ViewProfileIconDark from '../images/svgs/profile/view-profile-dark.svg';
 
-import AwayIcon from '../images/profile/away.svg';
-import DNDIcon from '../images/profile/dnd.svg';
-import NotificationsIcon from '../images/profile/notifications.svg';
-import PreferencesIcon from '../images/profile/preferences.svg';
-import SavedItemsIcon from '../images/profile/saved-items.svg';
-import ViewProfileIcon from '../images/profile/view-profile.svg';
-import AwayIconDark from '../images/profile/away-copy.svg';
-import DNDIconDark from '../images/profile/dnd-copy.svg';
-import NotificationsIconDark from '../images/profile/notifications-copy.svg';
-import PreferencesIconDark from '../images/profile/preferences-copy.svg';
-import SavedItemsIconDark from '../images/profile/saved-items-copy.svg';
-import ViewProfileIconDark from '../images/profile/view-profile-copy.svg';
-
-import CopyTextIcon from '../images/message/copy-text.svg';
-import DeleteTextIcon from '../images/message/delete.svg';
-import EditTextIcon from '../images/message/edit.svg';
-import CopyTextIconDark from '../images/message/copy-text-copy.svg';
-import DeleteTextIconDark from '../images/message/delete-copy.svg';
-import EditTextIconDark from '../images/message/edit-copy.svg';
+import CopyTextIcon from '../images/svgs/message/copy-text.svg';
+import DeleteTextIcon from '../images/svgs/message/delete.svg';
+import EditTextIcon from '../images/svgs/message/edit.svg';
+import CopyTextIconDark from '../images/svgs/message/copy-text-dark.svg';
+import DeleteTextIconDark from '../images/svgs/message/delete-dark.svg';
+import EditTextIconDark from '../images/svgs/message/edit-dark.svg';
 
 export const SVGIcon = ({type, height, width}) => {
   const {dark} = useTheme();

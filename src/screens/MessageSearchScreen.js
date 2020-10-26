@@ -5,8 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   AsyncStore,
   ChatClientService,
@@ -17,11 +17,13 @@ import {
   Message as DefaultMessage,
   ThemeProvider,
 } from 'stream-chat-react-native';
-import {MessageSlack} from '../components/MessageSlack';
 import {useNavigation, useTheme} from '@react-navigation/native';
+
+import {MessageSlack} from '../components/MessageSlack';
 import {SCText} from '../components/SCText';
 
 import {ListItemSeparator} from '../components/ListItemSeparator';
+
 export const MessageSearchScreen = () => {
   const {colors, dark} = useTheme();
   const navigation = useNavigation();
@@ -131,7 +133,6 @@ export const MessageSearchScreen = () => {
             }}
             placeholder="Search for message"
             placeholderTextColor={colors.text}
-            inlineImageLeft="search_icon"
             style={[
               styles.inputBox,
               {

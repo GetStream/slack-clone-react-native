@@ -65,7 +65,7 @@ export function ThreadScreen({
       setChannel(_channel);
       setIsReady(true);
     }
-  }, [chatClient, channelId, threadId]);
+  }, [channelId, threadId]);
 
   if (!isReady || !thread) {
     return null;

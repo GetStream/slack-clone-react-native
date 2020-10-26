@@ -17,15 +17,16 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import {StreamChat} from 'stream-chat';
 
-import {ChannelScreen} from './src/screens/ChannelScreen';
-import {NewMessageScreen} from './src/screens/NewMessageScreen';
-import {ChannelSearchScreen} from './src/screens/ChannelSearchScreen';
 import {
   ChatUserContext,
   ChatClientService,
   USER_TOKENS,
   USERS,
 } from './src/utils';
+
+import {ChannelScreen} from './src/screens/ChannelScreen';
+import {NewMessageScreen} from './src/screens/NewMessageScreen';
+import {ChannelSearchScreen} from './src/screens/ChannelSearchScreen';
 import {ChannelListScreen} from './src/screens/ChannelListScreen';
 import {DraftsScreen} from './src/screens/DraftsScreen';
 import {MentionsScreen} from './src/screens/MentionsSearch';
@@ -38,30 +39,41 @@ import {ThreadScreen} from './src/screens/ThreadScreen';
 
 import {BottomTabs} from './src/components/BottomTabs';
 import {DarkTheme, LightTheme} from './src/appTheme';
+import {copilot} from 'react-native-copilot';
 
-// LogBox.ignoreAllLogs(true);
+LogBox.ignoreAllLogs(true);
 
 const Tab = createBottomTabNavigator();
 
 const HomeStack = createStackNavigator();
 const ModalStack = createStackNavigator();
 
-export default () => {
+export default copilot()(props => {
   const scheme = useColorScheme();
   const [connecting, setConnecting] = useState(true);
-  const [chatClient, setChatClient] = useState(null);
   const [user, setUser] = useState(USERS.vishal);
+
+  useEffect(() => {
+    props.start();
+  }, []);
 
   useEffect(() => {
     let client;
 
+    // Initializes Stream's chat client.
+    // Documentation: https://getstream.io/chat/docs/init_and_users/?language=js
     const initChat = async () => {
       client = new StreamChat('q95x9hkbyd6p', {
         timeout: 10000,
       });
 
       await client.setUser(user, USER_TOKENS[user.id]);
-      setChatClient(client);
+
+      // We are going to store chatClient in following ChatClientService, so that it can be
+      // accessed in other places. Ideally one would store client in a context provider, so that
+      // component can re-render if client is updated. But in our case, client only gets updated
+      // when chat user is switched - and which case we re-render the entire chat application.
+      // So we don't need to worry about re-rendering every component on updating client.
       ChatClientService.setClient(client);
       setConnecting(false);
     };
@@ -70,19 +82,14 @@ export default () => {
     initChat();
 
     return () => {
-      chatClient && chatClient.disconnect();
+      client && client.disconnect();
     };
   }, [user]);
 
   if (connecting) {
     return (
       <SafeAreaView>
-        <View
-          style={{
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+        <View style={styles.loadingContainer}>
           <ActivityIndicator size="small" color="black" />
         </View>
       </SafeAreaView>
@@ -96,7 +103,6 @@ export default () => {
           <View style={styles.container}>
             <ChatUserContext.Provider
               value={{
-                chatClient,
                 switchUser: userId => setUser(USERS[userId]),
               }}>
               <HomeStackNavigator />
@@ -106,7 +112,7 @@ export default () => {
       </AppearanceProvider>
     </SafeAreaProvider>
   );
-};
+});
 
 const ModalStackNavigator = props => {
   return (
@@ -114,27 +120,27 @@ const ModalStackNavigator = props => {
       <ModalStack.Screen
         name="Tabs"
         component={TabNavigation}
-        options={{headerShown: false, tabBarVisible: false}}
+        options={{headerShown: false}}
       />
       <ModalStack.Screen
         name="NewMessageScreen"
         component={NewMessageScreen}
-        options={{headerShown: false, tabBarVisible: false}}
+        options={{headerShown: false}}
       />
       <ModalStack.Screen
         name="ChannelSearchScreen"
         component={ChannelSearchScreen}
-        options={{headerShown: false, tabBarVisible: false}}
+        options={{headerShown: false}}
       />
       <ModalStack.Screen
         name="MessageSearchScreen"
         component={MessageSearchScreen}
-        options={{headerShown: false, tabBarVisible: false}}
+        options={{headerShown: false}}
       />
       <ModalStack.Screen
         name="TargettedMessageChannelScreen"
         component={TargettedMessageChannelScreen}
-        options={{headerShown: false, tabBarVisible: false}}
+        options={{headerShown: false}}
       />
     </ModalStack.Navigator>
   );
@@ -146,22 +152,22 @@ const HomeStackNavigator = props => {
       <HomeStack.Screen
         name="ModalStack"
         component={ModalStackNavigator}
-        options={{headerShown: false, tabBarVisible: false}}
+        options={{headerShown: false}}
       />
       <HomeStack.Screen
         name="ChannelScreen"
         component={ChannelScreen}
-        options={{headerShown: false, tabBarVisible: false}}
+        options={{headerShown: false}}
       />
       <HomeStack.Screen
         name="DraftsScreen"
         component={DraftsScreen}
-        options={{headerShown: false, tabBarVisible: false}}
+        options={{headerShown: false}}
       />
       <HomeStack.Screen
         name="ThreadScreen"
         component={ThreadScreen}
-        options={{headerShown: false, tabBarVisible: false}}
+        options={{headerShown: false}}
       />
     </HomeStack.Navigator>
   );
@@ -178,8 +184,12 @@ const TabNavigation = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
+  loadingContainer: {
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   channelScreenSaveAreaView: {
     backgroundColor: 'white',
   },

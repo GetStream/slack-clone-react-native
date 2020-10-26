@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {CacheService, ChatClientService} from '../../../utils';
+import {CacheService, ChatClientService} from '../../utils';
 
 export const useWatchedChannels = () => {
   const client = ChatClientService.getClient();
@@ -11,6 +11,7 @@ export const useWatchedChannels = () => {
     setDirectMessagingConversations,
   ] = useState([]);
 
+  // Base filter
   const filters = {
     type: 'messaging',
     example: 'slack-demo',
@@ -27,15 +28,8 @@ export const useWatchedChannels = () => {
     const _readChannels = [];
     const _directMessagingConversations = [];
 
-    /**
-     * fetchChannels simply gets the channels from queryChannels endpoint
-     * and sorts them by following 3 categories:
-     *
-     * - Unread channels
-     * - Channels (read channels)
-     * - Direct conversations/messages
-     */
     const fetchChannels = async () => {
+      // Query channels where name is not empty.
       const channels = await client.queryChannels(
         {
           ...filters,
@@ -59,10 +53,12 @@ export const useWatchedChannels = () => {
       setReadChannels([..._readChannels]);
       setDirectMessagingConversations([..._directMessagingConversations]);
 
+      // Cache the data so that it can be used on other screens.
       CacheService.setChannels(channels);
     };
 
     const fetchDirectMessagingConversations = async () => {
+      // Query channels where name is empty - direct messaging conversations
       const directMessagingChannels = await client.queryChannels(
         {
           ...filters,
@@ -89,6 +85,7 @@ export const useWatchedChannels = () => {
       setReadChannels([..._readChannels]);
       setDirectMessagingConversations([..._directMessagingConversations]);
 
+      // Cache the data so that it can be used on other screens.
       CacheService.setDirectMessagingConversations(directMessagingChannels);
     };
 
@@ -96,7 +93,7 @@ export const useWatchedChannels = () => {
       await fetchChannels();
       await fetchDirectMessagingConversations();
 
-      CacheService.initCache();
+      CacheService.loadRecentAndOneToOne();
     }
 
     init();

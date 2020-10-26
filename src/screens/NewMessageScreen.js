@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {View, SafeAreaView, Platform, StyleSheet} from 'react-native';
+import {View, SafeAreaView, StyleSheet} from 'react-native';
 import {
   Chat,
   Channel,
   MessageList,
   MessageInput,
-  KeyboardCompatibleView,
 } from 'stream-chat-react-native';
 import {useTheme} from '@react-navigation/native';
 
@@ -23,9 +22,9 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {UserSearch} from '../components/UserSearch';
-import { CustomKeyboardCompatibleView } from '../components/CustomKeyboardCompatibleView';
+import {CustomKeyboardCompatibleView} from '../components/CustomKeyboardCompatibleView';
 
-export function NewMessageScreen() {
+export const NewMessageScreen = () => {
   const chatStyles = useStreamChatTheme();
 
   const [tags, setTags] = useState([]);
@@ -130,7 +129,7 @@ export function NewMessageScreen() {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   channelScreenContainer: {flexDirection: 'column', height: '100%'},

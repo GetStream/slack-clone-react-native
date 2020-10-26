@@ -1,3 +1,5 @@
+// src/appTheme.js
+
 export const DarkTheme = {
   dark: true,
   colors: {

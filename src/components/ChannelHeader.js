@@ -1,7 +1,8 @@
 import React from 'react';
 import {TouchableOpacity, View, StyleSheet} from 'react-native';
-import {getChannelDisplayName, truncate} from '../utils';
+import {getChannelDisplayName, notImplemented, truncate} from '../utils';
 import {useTheme, useNavigation} from '@react-navigation/native';
+
 import {SVGIcon} from './SVGIcon';
 import {SCText} from './SCText';
 
@@ -57,7 +58,9 @@ export const ChannelHeader = ({goBack, channel}) => {
           }}>
           <SVGIcon height="20" width="20" type="search" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuIconContainer}>
+        <TouchableOpacity
+          style={styles.menuIconContainer}
+          onPress={notImplemented}>
           <SVGIcon height="20" width="20" type="info" />
         </TouchableOpacity>
       </View>
@@ -86,7 +89,7 @@ export const styles = StyleSheet.create({
     fontSize: 17,
     fontFamily: 'Lato-Regular',
     alignSelf: 'center',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   channelSubTitle: {},
   centerContent: {

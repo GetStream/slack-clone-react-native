@@ -16,7 +16,7 @@ export default {
   setChannels: channels => {
     this.channels = channels;
   },
-  initCache: () => {
+  loadRecentAndOneToOne: () => {
     const chatClient = ChatClientService.getClient();
     const memberIds = [];
 

@@ -38,7 +38,7 @@ export default () => {
       'message.file.size': `color: ${colors.text}`,
       'message.reactionPicker.container': 'justify-content: flex-end;',
       'message.reactionPicker.containerView':
-        'width: 100%; border-radius: 0; padding-bottom: 20px;',
+        'width: 100%; height: 100px; flex-wrap: wrap; border-radius: 0; padding-bottom: 20px;',
       'message.reactionPicker.emoji': 'font-size: 30px;margin: 5px;',
       'message.avatarWrapper.spacer': 'height: 0;',
       'message.content.container':

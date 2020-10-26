@@ -18,14 +18,15 @@ export const ChannelListItem = ({
    * Prefix could be one of following
    *
    * '#' - if its a normal group channel
-   * empty circle - if its direct message or oneOnOneConversation with offline user
-   * green circle - if its direct message or oneOnOneConversation with online user
+   * empty circle - if its direct messaging conversation with offline user
+   * green circle - if its direct messaging conversation with with online user
+   * Count of members - if its group direct messaging conversations.
    */
   let ChannelPrefix = null;
   /**
    * Its the label component or title component to show for channel
-   * For normal group channel, its the name of the channel - channel.data.name
-   * For oneOnOneConversation, its the name of other user (on other end of chat).
+   * For channel, its the name of the channel - channel.data.name
+   * For direct messaging conversations, its the names of other members of chat.
    */
   let ChannelTitle = null;
   let ChannelPostfix = null;

@@ -8,7 +8,7 @@ import {UrlPreview} from './UrlPreview';
 import {Giphy} from './Giphy';
 import {MessageActionSheet} from './MessageActionSheet';
 import ReactNativeHaptic from 'react-native-haptic';
-import { getSupportedReactions } from '../utils/supportedReactions';
+import {getSupportedReactions} from '../utils/supportedReactions';
 
 export const MessageSlack = props => {
   if (props.message.deleted_at) {

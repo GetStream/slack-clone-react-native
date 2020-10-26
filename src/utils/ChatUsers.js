@@ -15,6 +15,12 @@ export const USER_TOKENS = {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoibmljayJ9.vTiCq9nYrT3BJhILVSGMbC-mKzu-PHvBGPNWmLFH0mE',
   scott:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic2NvdHQifQ.gzFcAl2dONxXWZmR1e-iUXOK-RIa1Gi7IfcNeq4hY5M',
+  tommaso:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidG9tbWFzbyJ9.wuLqzU1D6RYKokmzkgyFvQ43lWF7dMVGt5NOLwHNqyc',
+  cilvia:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiY2lsdmlhIn0.jHi2vjKoF02P9lOog0kDVhsIrGFjuWJqZelX5capR30',
+  marcelo:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoibWFyY2VsbyJ9.xpFoSta53fovRpyULXavYdv2qO5bLG0HpyEFxmYOMlY',
 };
 export const USERS = {
   vishal: {
@@ -28,6 +34,24 @@ export const USERS = {
     name: 'Thierry',
     image: 'https://ca.slack-edge.com/T02RM6X6B-U02RM6X6D-g28a1278a98e-512',
     value: 'thierry',
+  },
+  tommaso: {
+    id: 'tommaso',
+    name: 'Tommaso Barbugli',
+    image: 'https://ca.slack-edge.com/T02RM6X6B-U02U7SJP4-0f65a5997877-512',
+    value: 'tommaso',
+  },
+  marcelo: {
+    id: 'marcelo',
+    name: 'Marcelo Pires',
+    image: 'https://ca.slack-edge.com/T02RM6X6B-UD6TCA6P6-2b60e1b19771-512',
+    value: 'marcelo',
+  },
+  cilvia: {
+    id: 'cilvia',
+    name: 'Neil Hannah',
+    image: 'https://ca.slack-edge.com/T02RM6X6B-U01173D1D5J-0dead6eea6ea-512',
+    value: 'cilvia',
   },
   jaap: {
     id: 'jaap',

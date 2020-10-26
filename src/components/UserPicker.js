@@ -7,7 +7,7 @@ import {
   View,
   StyleSheet,
   FlatList,
-  Image
+  Image,
 } from 'react-native';
 import {ChatClientService, ChatUserContext, USERS} from '../utils';
 import {useTheme} from '@react-navigation/native';
@@ -55,6 +55,7 @@ export const UserPicker = props => {
               Switch User
             </SCText>
             <FlatList
+              style={{height: 420}}
               data={Object.values(USERS)}
               keyExtractor={(_, index) => index.toString()}
               renderItem={({item, index}) => {
@@ -78,7 +79,19 @@ export const UserPicker = props => {
                       />
                       <View>
                         <SCText style={{color: colors.text, paddingLeft: 20}}>
-                          {item.name} {item.id === chatClient.user.id ? '(active)' : ''}
+                          {item.name}{' '}
+                          {item.id === chatClient.user.id ? (
+                            <SCText
+                              style={{
+                                fontStyle: 'italic',
+                                fontSize: 12,
+                                color: '#32CD32',
+                              }}>
+                              (current logged in user)
+                            </SCText>
+                          ) : (
+                            ''
+                          )}
                         </SCText>
                         <SCText
                           style={{

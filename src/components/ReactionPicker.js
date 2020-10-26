@@ -11,15 +11,10 @@ import {
 } from 'react-native';
 import {SCText} from './SCText';
 import ReactNativeHaptic from 'react-native-haptic';
-import {groupedSupportedReactions } from '../utils/supportedReactions';
+import {groupedSupportedReactions} from '../utils/supportedReactions';
 
-export const ReactionPicker = props => {
-  const {
-    dismissReactionPicker,
-    handleReaction,
-    reactionPickerVisible,
-    supportedReactions,
-  } = props;
+export const ReactionPicker = (props) => {
+  const {dismissReactionPicker, handleReaction, reactionPickerVisible} = props;
   const {colors} = useTheme();
   const slide = useRef(new Animated.Value(-600)).current;
   const reactionPickerExpanded = useRef(false);
@@ -34,7 +29,7 @@ export const ReactionPicker = props => {
     });
   };
 
-  const _handleReaction = type => {
+  const _handleReaction = (type) => {
     ReactNativeHaptic && ReactNativeHaptic.generate('impact');
     reactionPickerExpanded.current = false;
     Animated.timing(slide, {
@@ -70,43 +65,30 @@ export const ReactionPicker = props => {
       transparent
       visible>
       <TouchableOpacity
-        style={{
-          width: '100%',
-          height: '100%',
-          alignSelf: 'flex-end',
-          alignItems: 'flex-start',
-          backgroundColor: 'rgba(0,0,0,0.7)',
-        }}
+        style={styles.overlay}
         activeOpacity={1}
         leftAlign
         onPress={() => {
-          console.warn('dismissReactionPicker');
           _dismissReactionPicker();
         }}
       />
       <Animated.View
-        style={{
-          position: 'absolute',
-          bottom: slide,
-          backgroundColor: 'transparent',
-        }}
+        style={[
+          {
+            bottom: slide,
+          },
+          styles.animatedContainer,
+        ]}
         activeOpacity={1}
         leftAlign>
         <View
-          style={{
-            flexDirection: 'column',
-            backgroundColor: colors.background,
-            borderRadius: 15,
-            paddingHorizontal: 10,
-          }}>
-          <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              marginBottom: 20,
-            }}>
+          style={[
+            {
+              backgroundColor: colors.background,
+            },
+            styles.pickerContainer,
+          ]}>
+          <View style={styles.listCOntainer}>
             <SectionList
               onScrollBeginDrag={() => {
                 reactionPickerExpanded.current = true;
@@ -117,7 +99,7 @@ export const ReactionPicker = props => {
                 }).start();
               }}
               style={{height: 600, width: '100%'}}
-              onScroll={event => {
+              onScroll={(event) => {
                 if (!reactionPickerExpanded.current) {
                   return;
                 }
@@ -134,42 +116,28 @@ export const ReactionPicker = props => {
               sections={groupedSupportedReactions}
               renderSectionHeader={({section: {title}}) => (
                 <SCText
-                  style={{
-                    backgroundColor: colors.background,
-                    padding: 10,
-                    paddingLeft: 13,
-                    fontWeight: '200',
-                  }}>
+                  style={[
+                    {
+                      backgroundColor: colors.background,
+                    },
+                    styles.groupTitle,
+                  ]}>
                   {title}
                 </SCText>
               )}
               renderItem={({item}) => {
                 return (
-                  <View
-                    style={{
-                      width: '100%',
-                      flexDirection: 'row',
-                      flexWrap: 'wrap',
-                      justifyContent: 'center',
-                      marginTop: 3,
-                    }}>
+                  <View style={styles.reactionsRow}>
                     {item.map(({icon, id}) => {
                       return (
                         <View
                           key={id}
                           testID={id}
-                          style={{
-                            alignItems: 'center',
-                            marginTop: -5,
-                          }}>
+                          style={styles.reactionsItemContainer}>
                           <Text
                             onPress={() => _handleReaction(id)}
                             testID={`${id}-reaction`}
-                            style={{
-                              fontSize: 35,
-                              margin: 5,
-                              marginVertical: 5,
-                            }}>
+                            style={styles.reactionsItem}>
                             {icon}
                           </Text>
                         </View>
@@ -186,4 +154,49 @@ export const ReactionPicker = props => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  overlay: {
+    width: '100%',
+    height: '100%',
+    alignSelf: 'flex-end',
+    alignItems: 'flex-start',
+    backgroundColor: 'rgba(0,0,0,0.7)',
+  },
+  animatedContainer: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+  },
+  pickerContainer: {
+    flexDirection: 'column',
+    borderRadius: 15,
+    paddingHorizontal: 10,
+  },
+  listContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  groupTitle: {
+    padding: 10,
+    paddingLeft: 13,
+    fontWeight: '200',
+  },
+  reactionsRow: {
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginTop: 3,
+  },
+  reactionsItemContainer: {
+    alignItems: 'center',
+    marginTop: -5,
+  },
+  reactionsItem: {
+    fontSize: 35,
+    margin: 5,
+    marginVertical: 5,
+  },
+});

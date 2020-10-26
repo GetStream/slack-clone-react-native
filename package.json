@@ -25,6 +25,7 @@
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-appearance": "^0.3.4",
+    "react-native-copilot": "^2.5.1",
     "react-native-document-picker": "^3.3.2",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-get-random-values": "^1.5.0",
@@ -39,7 +40,7 @@
     "react-native-svg-transformer": "^0.14.3",
     "react-native-tags": "^2.2.0",
     "stream-chat": "^2.3.0",
-    "stream-chat-react-native": "2.0.0-beta.0"
+    "stream-chat-react-native": "2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",

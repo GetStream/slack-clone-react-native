@@ -6,7 +6,7 @@ import {
   MessageList,
   MessageInput,
 } from 'stream-chat-react-native';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 
 import {ChannelHeader} from '../components/ChannelHeader';
 import {DateSeparator} from '../components/DateSeparator';
@@ -21,12 +21,11 @@ import {
 } from '../utils';
 import {CustomKeyboardCompatibleView} from '../components/CustomKeyboardCompatibleView';
 
-export function ChannelScreen({
-  route: {
-    params: {channelId = null},
-  },
-}) {
+export function ChannelScreen() {
   const {colors} = useTheme();
+  const {
+    params: {channelId = null},
+  } = useRoute();
   const chatStyles = useStreamChatTheme();
   const navigation = useNavigation();
   const chatClient = ChatClientService.getClient();

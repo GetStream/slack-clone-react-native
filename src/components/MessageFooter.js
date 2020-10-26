@@ -1,5 +1,4 @@
 import React from 'react';
-import {ReactionPickerWrapper} from 'stream-chat-react-native';
 import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
 import {SVGIcon} from './SVGIcon';
 import {useTheme} from '@react-navigation/native';

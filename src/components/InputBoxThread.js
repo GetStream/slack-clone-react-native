@@ -16,9 +16,9 @@ export const InputBoxThread = props => {
   const {colors} = useTheme();
   const [leftMenuActive, setLeftMenuActive] = useState(true);
   const {channel} = useChannelContext();
-  const transform = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
-  const translateMenuLeft = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
-  const translateMenuRight = useRef(new Animated.Value(300)).current; // Initial value for opacity: 0
+  const transform = useRef(new Animated.Value(0)).current;
+  const translateMenuLeft = useRef(new Animated.Value(0)).current;
+  const translateMenuRight = useRef(new Animated.Value(300)).current;
   const opacityMenuLeft = useRef(new Animated.Value(1)).current;
   const opacityMenuRight = useRef(new Animated.Value(0)).current;
   const isDirectMessagingConversation = !channel.data.name;

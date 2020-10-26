@@ -1,24 +1,55 @@
 import React, {useState} from 'react';
-import {View, Image, StyleSheet} from 'react-native';
-import {FlatList, TextInput, TouchableOpacity} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {
+  View,
+  SafeAreaView,
+  StyleSheet,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
+import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
+import debounce from 'lodash/debounce';
+
+import {CacheService, ChatClientService} from '../utils';
+import {SCText} from '../components/SCText';
 import {ChannelListItem} from '../components/ChannelListItem';
 import {ModalScreenHeader} from '../components/ModalScreenHeader';
-import {CacheService, ChatClientService} from '../utils';
-import {useTheme} from '@react-navigation/native';
-import {SCText} from '../components/SCText';
 import {DirectMessagingConversationAvatar} from '../components/DirectMessagingConversationAvatar';
 
-export const ChannelSearchScreen = ({
-  navigation,
-  route: {
-    params: {channelsOnly = false},
-  },
-}) => {
+export const ChannelSearchScreen = () => {
   const {colors, dark} = useTheme();
+  const navigation = useNavigation();
+  const {
+    params: {channelsOnly = false},
+  } = useRoute();
+
   const chatClient = ChatClientService.getClient();
   const [results, setResults] = useState(CacheService.getRecentConversations());
   const [text, setText] = useState('');
+  const onChangeText = async text => {
+    setText(text);
+    if (!text) {
+      return setResults(CacheService.getRecentConversations());
+    }
+
+    const result = await chatClient.queryChannels({
+      type: 'messaging',
+      $or: [
+        {'member.user.name': {$autocomplete: text}},
+        {
+          name: {
+            $autocomplete: text,
+          },
+        },
+      ],
+    });
+    setResults(result);
+  };
+
+  const onChangeTextDebounced = debounce(onChangeText, 1000, {
+    leading: true,
+    trailing: true,
+  });
 
   const renderChannelRow = (channel, isUnread) => {
     return (
@@ -51,25 +82,7 @@ export const ChannelSearchScreen = ({
         <View style={styles.headerContainer}>
           <TextInput
             autoFocus
-            onChangeText={async text => {
-              setText(text);
-              if (!text) {
-                return setResults(CacheService.getRecentConversations());
-              }
-
-              const result = await chatClient.queryChannels({
-                type: 'messaging',
-                $or: [
-                  {'member.user.name': {$autocomplete: text}},
-                  {
-                    name: {
-                      $autocomplete: text,
-                    },
-                  },
-                ],
-              });
-              setResults(result);
-            }}
+            onChangeText={onChangeTextDebounced}
             value={text}
             placeholder="Search"
             placeholderTextColor={colors.text}
