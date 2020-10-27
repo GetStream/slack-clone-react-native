@@ -1,3 +1,6 @@
+
+🎉 Slack clone 2.0 coming soon - https://github.com/GetStream/slack-clone-react-native/pull/9
+
 # Slack-clone using React Native, Stream
 
 <div style="display: inline">
