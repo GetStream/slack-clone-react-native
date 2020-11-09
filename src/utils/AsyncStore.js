@@ -13,4 +13,16 @@ export default {
   setItem: async (key, value) => {
     await AsyncStorage.setItem(key, JSON.stringify(value));
   },
+  removeItem: key => {
+    return AsyncStorage.removeItem(key);
+  },
+  getAllKeys: () => {
+    return AsyncStorage.getAllKeys();
+  },
+  multiGet: keys => {
+    return AsyncStorage.multiGet(keys);
+  },
+  flushGetRequests: () => {
+    return AsyncStorage.flushGetRequests();
+  },
 };

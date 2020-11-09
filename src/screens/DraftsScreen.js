@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
 
 import {FlatList} from 'react-native-gesture-handler';
-import {ChatClientService} from '../utils';
-import AsyncStorage from '@react-native-community/async-storage';
+import {AsyncStore, ChatClientService} from '../utils';
 import {NewMessageBubble} from '../components/NewMessageBubble';
 
 import {useNavigation, useTheme} from '@react-navigation/native';
@@ -17,12 +16,12 @@ export const DraftsScreen = () => {
 
   useEffect(() => {
     const getDraftMessages = async () => {
-      const keys = await AsyncStorage.getAllKeys();
+      const keys = await AsyncStore.getAllKeys();
       const draftKeys = keys.filter(k => {
         return k.indexOf(`@slack-clone-draft-${chatClient.user.id}`) === 0;
       });
 
-      const items = await AsyncStorage.multiGet(draftKeys);
+      const items = await AsyncStore.multiGet(draftKeys);
       const drafts = items.map(i => {
         const draft = JSON.parse(i[1]);
         return draft;

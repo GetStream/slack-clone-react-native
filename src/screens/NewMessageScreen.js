@@ -14,12 +14,12 @@ import {MessageSlack} from '../components/MessageSlack';
 import {ModalScreenHeader} from '../components/ModalScreenHeader';
 
 import {
+  AsyncStore,
   ChatClientService,
   getChannelDisplayImage,
   getChannelDisplayName,
   useStreamChatTheme,
 } from '../utils';
-import AsyncStorage from '@react-native-community/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {UserSearch} from '../components/UserSearch';
 import {CustomKeyboardCompatibleView} from '../components/CustomKeyboardCompatibleView';
@@ -41,10 +41,7 @@ export const NewMessageScreen = () => {
       title: getChannelDisplayName(channel),
       text,
     };
-    AsyncStorage.setItem(
-      `@slack-clone-draft-${channel.id}`,
-      JSON.stringify(storeObject),
-    );
+    AsyncStore.setItem(`@slack-clone-draft-${channel.id}`, storeObject);
 
     navigation.goBack();
   };

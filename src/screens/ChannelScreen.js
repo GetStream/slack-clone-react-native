@@ -12,12 +12,12 @@ import {ChannelHeader} from '../components/ChannelHeader';
 import {DateSeparator} from '../components/DateSeparator';
 import {InputBox} from '../components/InputBox';
 import {MessageSlack} from '../components/MessageSlack';
-import AsyncStorage from '@react-native-community/async-storage';
 import {
   getChannelDisplayImage,
   getChannelDisplayName,
   useStreamChatTheme,
   ChatClientService,
+  AsyncStore,
 } from '../utils';
 import {CustomKeyboardCompatibleView} from '../components/CustomKeyboardCompatibleView';
 
@@ -40,9 +40,9 @@ export function ChannelScreen() {
       title: getChannelDisplayName(channel, true),
       text,
     };
-    AsyncStorage.setItem(
+    AsyncStore.setItem(
       `@slack-clone-draft-${chatClient.user.id}-${channelId}`,
-      JSON.stringify(storeObject),
+      storeObject,
     );
 
     navigation.goBack();
@@ -50,16 +50,17 @@ export function ChannelScreen() {
 
   useEffect(() => {
     const setDraftMessage = async () => {
-      const draftStr = await AsyncStorage.getItem(
+      const draft = await AsyncStore.getItem(
         `@slack-clone-draft-${chatClient.user.id}-
         ${channelId}`,
+        null,
       );
-      if (!draftStr) {
+
+      if (!draft) {
         setIsReady(true);
         return;
       }
 
-      const draft = JSON.parse(draftStr);
       setInitialValue(draft.text);
       setText(draft.text);
       setIsReady(true);
@@ -71,7 +72,7 @@ export function ChannelScreen() {
       setChannel(_channel);
       setDraftMessage();
     }
-  }, [chatClient, channelId]);
+  }, [channelId]);
 
   if (!isReady) {
     return null;
@@ -94,7 +95,7 @@ export function ChannelScreen() {
             <Channel
               channel={channel}
               doSendMessageRequest={async (cid, message) => {
-                AsyncStorage.removeItem(`@slack-clone-draft-${channelId}`);
+                AsyncStore.removeItem(`@slack-clone-draft-${channelId}`);
                 setText('');
                 return channel.sendMessage(message);
               }}
