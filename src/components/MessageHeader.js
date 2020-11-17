@@ -1,6 +1,8 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Moment from 'moment';
+import {useTheme} from '@react-navigation/native';
+import {SCText} from './SCText';
 
 export const MessageHeader = props => {
   return (
@@ -15,14 +17,25 @@ export const MessageHeader = props => {
 };
 
 export const MessageUserBar = ({groupStyles, message}) => {
+  const {colors} = useTheme();
   if (groupStyles[0] === 'single' || groupStyles[0] === 'top') {
     return (
-      <View style={styles.userBar}>
-        <Text style={styles.messageUserName}>{message.user.name}</Text>
-        <Text style={styles.messageDate}>
-          {Moment(message.created_at).format('hh:ss A')}
-        </Text>
-      </View>
+      <>
+        <View style={styles.userBar}>
+          <SCText
+            style={[
+              styles.messageUserName,
+              {
+                color: colors.boldText,
+              },
+            ]}>
+            {message.user.name}
+          </SCText>
+          <SCText style={styles.messageDate}>
+            {Moment(message.created_at).format('hh:ss A')}
+          </SCText>
+        </View>
+      </>
     );
   }
   return null;
@@ -42,7 +55,6 @@ const styles = StyleSheet.create({
   },
   messageUserName: {
     fontWeight: '900',
-    color: 'black',
     fontSize: 15,
     fontFamily: 'Lato-Bold',
   },

@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {SCText} from './SCText';
 
 export const UrlPreview = props => {
   const getDomain = url => {
@@ -18,9 +19,9 @@ export const UrlPreview = props => {
   return (
     <TouchableOpacity style={styles.container}>
       <View style={styles.detailsContainer}>
-        <Text style={styles.titleUrl}>{getDomain(props.title_link)}</Text>
-        <Text style={styles.title}>{props.title}</Text>
-        <Text style={styles.description}>{props.text}</Text>
+        <SCText style={styles.titleUrl}>{getDomain(props.title_link)}</SCText>
+        <SCText style={styles.title}>{props.title}</SCText>
+        <SCText style={styles.description}>{props.text}</SCText>
       </View>
       <View style={styles.thumbnailContainer}>
         <Image
@@ -28,6 +29,7 @@ export const UrlPreview = props => {
             url: props.image_url || props.thumb_url,
           }}
           style={styles.thumbnail}
+          resizeMode="cover"
         />
       </View>
     </TouchableOpacity>
@@ -40,18 +42,15 @@ const styles = StyleSheet.create({
     borderLeftColor: '#E4E4E4',
     paddingLeft: 10,
     marginLeft: 10,
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   detailsContainer: {
     flexDirection: 'column',
-    flex: 6,
   },
-  thumbnailContainer: {
-    flex: 1,
-  },
+  thumbnailContainer: {},
   thumbnail: {
-    height: 40,
-    width: 40,
+    width: '100%',
+    height: 150,
   },
   titleUrl: {
     fontFamily: 'Lato-Regular',

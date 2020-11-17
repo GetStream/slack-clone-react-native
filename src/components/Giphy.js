@@ -1,11 +1,12 @@
 import React from 'react';
-import {Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {SCText} from './SCText';
 
 export const Giphy = props => {
   return (
     <TouchableOpacity style={styles.container}>
-      <Text style={styles.title}>{props.title}</Text>
-      <Text style={styles.description}>Posted using Giphy.com</Text>
+      <SCText style={styles.title}>{props.title}</SCText>
+      <SCText style={styles.description}>Posted using Giphy.com</SCText>
       <Image
         source={{
           url: props.image_url || props.thumb_url,
