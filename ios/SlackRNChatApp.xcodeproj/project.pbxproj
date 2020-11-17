@@ -29,7 +29,6 @@
 		BA1D890F5EDD40CA966D4F8D /* Lato-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FC3EEDD1410C4006884D7BF1 /* Lato-ThinItalic.ttf */; };
 		C80B51F74CC249C2BBE89224 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C70419D0C1E491D80E2DBE3 /* Lato-Italic.ttf */; };
 		F58D7B75E3AA48B8829CE2CE /* Lato-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FBF99B6F85541068F66A27C /* Lato-BlackItalic.ttf */; };
-		FC90B0932545CD1C00B23B58 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FC90B0922545CD1C00B23B58 /* GoogleService-Info.plist */; };
 		FFF5508D1A092395C7C46CFA /* libPods-SlackRNChatApp-SlackRNChatAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A4AD70B8437CA36086273B /* libPods-SlackRNChatApp-SlackRNChatAppTests.a */; };
 /* End PBXBuildFile section */
 
@@ -88,7 +87,6 @@
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F494D1E1AB8F6D5A6AC1BDD6 /* Pods-SlackRNChatApp-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SlackRNChatApp-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-SlackRNChatApp-tvOSTests/Pods-SlackRNChatApp-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		FC3EEDD1410C4006884D7BF1 /* Lato-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-ThinItalic.ttf"; path = "../src/fonts/Lato-ThinItalic.ttf"; sourceTree = "<group>"; };
-		FC90B0922545CD1C00B23B58 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,7 +145,6 @@
 		13B07FAE1A68108700A75B9A /* SlackRNChatApp */ = {
 			isa = PBXGroup;
 			children = (
-				FC90B0922545CD1C00B23B58 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -384,7 +381,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FC90B0932545CD1C00B23B58 /* GoogleService-Info.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				38F756006DDA4FC298059738 /* Lato-Black.ttf in Resources */,
@@ -727,6 +723,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = EHV7XZLAHA;
 				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = SlackRNChatApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
