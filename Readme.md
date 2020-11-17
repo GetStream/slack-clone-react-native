@@ -6,7 +6,7 @@
 
 ## Tutorial
 
-https://dev.to/vishalnarkhede/how-to-build-slack-clone-with-react-native-part-2-g5?preview=267e12eea2525d598733d6f5fdb064de73f9984727528cb23bfe0429c37f0391ba9dba5ce2a0840e8779ab7b3dd63e245ce7ad23513a254192064a2c
+https://dev.to/vishalnarkhede/how-to-build-slack-clone-with-react-native-part-2-g5
 
 ## How to run project
 
