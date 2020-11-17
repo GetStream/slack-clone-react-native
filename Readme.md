@@ -17,11 +17,15 @@ cd slack-clone-react-native
 # Install npm dependencies
 yarn
 
+# Link the assets
+
+npx react-native link
+
 # Install pod dependencies
-cd ios && pod install && cd ..
+npx pod-install
 
 # Run on ios simulator
-react-native run-ios
+npx react-native run-ios
 ```
 
 ## Expo app
