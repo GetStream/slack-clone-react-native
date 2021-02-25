@@ -63,11 +63,11 @@ export default copilot()(props => {
     // Initializes Stream's chat client.
     // Documentation: https://getstream.io/chat/docs/init_and_users/?language=js
     const initChat = async () => {
-      client = new StreamChat('q95x9hkbyd6p', {
+      client = StreamChat.getInstance('q95x9hkbyd6p', {
         timeout: 10000,
       });
 
-      await client.setUser(user, USER_TOKENS[user.id]);
+      await client.connectUser(user, USER_TOKENS[user.id]);
 
       // We are going to store chatClient in following ChatClientService, so that it can be
       // accessed in other places. Ideally one would store client in a context provider, so that
