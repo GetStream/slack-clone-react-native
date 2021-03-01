@@ -6,6 +6,10 @@
 
 More screenshots [here](https://github.com/GetStream/slack-clone-react-native/tree/master/screenshots/v2)
 
+## ⚠ Note
+
+Slack clone is built using `stream-chat-react-native@2.x.x`. This example won't work on [`stream-chat-react-native@3.x.x`](https://github.com/GetStream/stream-chat-react-native/wiki#v300) yet, which brought plenty of breaking changes. We will publish a new version for slack clone soon. Currently we are busy with polishing of `stream-chat-react-native@3.x.x` :)
+
 ## Tutorial
 
 https://dev.to/vishalnarkhede/how-to-build-slack-clone-with-react-native-part-2-g5
