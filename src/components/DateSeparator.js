@@ -1,8 +1,8 @@
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import moment from 'moment';
-
 import {useTheme} from '@react-navigation/native';
+import moment from 'moment';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+
 import {SCText} from './SCText';
 
 export const DateSeparator = ({message}) => {
@@ -18,11 +18,11 @@ export const DateSeparator = ({message}) => {
       ]}>
       <SCText style={styles.date}>
         {moment(message.date).calendar(null, {
-          sameDay: '[Today]',
-          nextDay: '[Tomorrow]',
-          nextWeek: 'dddd',
           lastDay: '[Yesterday]',
           lastWeek: '[Last] dddd',
+          nextDay: '[Tomorrow]',
+          nextWeek: 'dddd',
+          sameDay: '[Today]',
           sameElse: 'DD/MM/YYYY',
         })}
       </SCText>
@@ -32,14 +32,14 @@ export const DateSeparator = ({message}) => {
 
 const styles = StyleSheet.create({
   container: {
+    borderBottomWidth: 1,
     flexDirection: 'column',
     marginBottom: 10,
     marginTop: 10,
-    borderBottomWidth: 1,
   },
   date: {
+    fontSize: 12,
     fontWeight: 'bold',
     paddingBottom: 5,
-    fontSize: 12,
   },
 });

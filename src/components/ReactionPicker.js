@@ -1,202 +1,140 @@
-import {useTheme} from '@react-navigation/native';
-import React, {useEffect, useRef} from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  Animated,
-  TouchableOpacity,
-  SectionList,
-  StyleSheet,
-} from 'react-native';
-import {SCText} from './SCText';
-import ReactNativeHaptic from 'react-native-haptic';
+/* eslint-disable react/display-name */
+import {BottomSheetModal, BottomSheetSectionList} from '@gorhom/bottom-sheet';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useCallback, useMemo} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import Animated, {useAnimatedStyle} from 'react-native-reanimated';
+
 import {groupedSupportedReactions} from '../utils/supportedReactions';
+import {SCText} from './SCText';
 
-export const ReactionPicker = (props) => {
-  const {dismissReactionPicker, handleReaction, reactionPickerVisible} = props;
-  const {colors} = useTheme();
-  const slide = useRef(new Animated.Value(-600)).current;
-  const reactionPickerExpanded = useRef(false);
-  const _dismissReactionPicker = () => {
-    reactionPickerExpanded.current = false;
-    Animated.timing(slide, {
-      toValue: -600,
-      duration: 100,
-      useNativeDriver: false,
-    }).start(() => {
-      dismissReactionPicker();
-    });
-  };
+const keyExtractor = (item, index) =>
+  index + '-' + item.reduce((acc, curr) => `${acc}-${curr.uid}`, '');
+const SectionHeader = React.memo(({section: {title}}) => (
+  <SCText
+    style={[
+      {
+        backgroundColor: 'white',
+      },
+      styles.groupTitle,
+    ]}>
+    {title}
+  </SCText>
+));
 
-  const _handleReaction = (type) => {
-    ReactNativeHaptic && ReactNativeHaptic.generate('impact');
-    reactionPickerExpanded.current = false;
-    Animated.timing(slide, {
-      toValue: -600,
-      duration: 100,
-      useNativeDriver: false,
-    }).start(() => {
-      handleReaction(type);
-    });
-  };
+const EmojiRow = React.memo(({emojis, onPress}) => (
+  <View style={styles.reactionsRow}>
+    {emojis.map(({icon, id, uid}) => (
+      <View key={uid} style={{flexDirection: 'column'}}>
+        <Text onPress={() => onPress(id)} style={styles.reactionsItem}>
+          {icon}
+        </Text>
+      </View>
+    ))}
+  </View>
+));
 
-  useEffect(() => {
-    if (reactionPickerVisible) {
-      ReactNativeHaptic && ReactNativeHaptic.generate('impact');
-      setTimeout(() => {
-        Animated.timing(slide, {
-          toValue: -300,
-          duration: 100,
-          useNativeDriver: false,
-        }).start();
-      }, 200);
-    }
-  });
-  if (!reactionPickerVisible) {
-    return null;
-  }
+const EmojiList = React.memo(() => {
+  const renderItem = ({item}) => <EmojiRow emojis={item} onPress={() => {}} />;
+
+  const renderSectionHeader = (props) => <SectionHeader {...props} />;
 
   return (
-    <Modal
-      animationType="fade"
-      onRequestClose={_dismissReactionPicker}
-      testID="reaction-picker"
-      transparent
-      visible>
-      <TouchableOpacity
-        style={styles.overlay}
-        activeOpacity={1}
-        leftAlign
-        onPress={() => {
-          _dismissReactionPicker();
-        }}
-      />
+    <BottomSheetSectionList
+      focusHook={useFocusEffect}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+      renderSectionHeader={renderSectionHeader}
+      sections={groupedSupportedReactions}
+    />
+  );
+});
+
+// eslint-disable-next-line react/display-name
+export const ReactionPicker = React.forwardRef((props, fRef) => {
+  // variables
+  const snapPoints = useMemo(() => [300, 600], []);
+
+  const renderBackdrop = useCallback((props) => {
+    const opacityStyle = useAnimatedStyle(
+      () => ({
+        // 896 - max height of bottom sheet
+        opacity: (896 - props.animatedPosition.value) / 896,
+      }),
+      [],
+    );
+
+    return (
       <Animated.View
         style={[
-          {
-            bottom: slide,
-          },
-          styles.animatedContainer,
-        ]}
-        activeOpacity={1}
-        leftAlign>
-        <View
-          style={[
-            {
-              backgroundColor: colors.background,
-            },
-            styles.pickerContainer,
-          ]}>
-          <View style={styles.listCOntainer}>
-            <SectionList
-              onScrollBeginDrag={() => {
-                reactionPickerExpanded.current = true;
-                Animated.timing(slide, {
-                  toValue: 0,
-                  duration: 300,
-                  useNativeDriver: false,
-                }).start();
-              }}
-              style={{height: 600, width: '100%'}}
-              onScroll={(event) => {
-                if (!reactionPickerExpanded.current) {
-                  return;
-                }
-
-                if (event.nativeEvent.contentOffset.y <= 0) {
-                  reactionPickerExpanded.current = false;
-                  Animated.timing(slide, {
-                    toValue: -300,
-                    duration: 300,
-                    useNativeDriver: false,
-                  }).start();
-                }
-              }}
-              sections={groupedSupportedReactions}
-              renderSectionHeader={({section: {title}}) => (
-                <SCText
-                  style={[
-                    {
-                      backgroundColor: colors.background,
-                    },
-                    styles.groupTitle,
-                  ]}>
-                  {title}
-                </SCText>
-              )}
-              renderItem={({item}) => {
-                return (
-                  <View style={styles.reactionsRow}>
-                    {item.map(({icon, id}) => {
-                      return (
-                        <View
-                          key={id}
-                          testID={id}
-                          style={styles.reactionsItemContainer}>
-                          <Text
-                            onPress={() => _handleReaction(id)}
-                            testID={`${id}-reaction`}
-                            style={styles.reactionsItem}>
-                            {icon}
-                          </Text>
-                        </View>
-                      );
-                    })}
-                  </View>
-                );
-              }}
-            />
-          </View>
-        </View>
+          StyleSheet.absoluteFillObject,
+          {backgroundColor: '#000000'},
+          opacityStyle,
+        ]}>
+        <TouchableOpacity
+          onPress={() => {
+            fRef.current?.dismiss();
+          }}
+          style={[StyleSheet.absoluteFillObject]}
+        />
       </Animated.View>
-    </Modal>
+    );
+  }, []);
+
+  return (
+    <BottomSheetModal
+      backdropComponent={renderBackdrop}
+      ref={fRef}
+      snapPoints={snapPoints}
+      stackBehavior={'replace'}>
+      <EmojiList />
+    </BottomSheetModal>
   );
-};
+});
 
 const styles = StyleSheet.create({
-  overlay: {
-    width: '100%',
-    height: '100%',
-    alignSelf: 'flex-end',
-    alignItems: 'flex-start',
-    backgroundColor: 'rgba(0,0,0,0.7)',
-  },
   animatedContainer: {
-    position: 'absolute',
     backgroundColor: 'transparent',
+    position: 'absolute',
+    width: '100%',
   },
-  pickerContainer: {
-    flexDirection: 'column',
-    borderRadius: 15,
-    paddingHorizontal: 10,
+  groupTitle: {
+    fontWeight: '200',
+    padding: 10,
+    paddingLeft: 13,
   },
   listContainer: {
-    width: '100%',
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     marginBottom: 20,
-  },
-  groupTitle: {
-    padding: 10,
-    paddingLeft: 13,
-    fontWeight: '200',
-  },
-  reactionsRow: {
     width: '100%',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginTop: 3,
   },
-  reactionsItemContainer: {
-    alignItems: 'center',
-    marginTop: -5,
+  overlay: {
+    alignItems: 'flex-start',
+    alignSelf: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    height: '100%',
+    width: '100%',
+  },
+  pickerContainer: {
+    borderRadius: 15,
+    flexDirection: 'column',
+    paddingHorizontal: 10,
+    width: '100%',
   },
   reactionsItem: {
     fontSize: 35,
     margin: 5,
     marginVertical: 5,
+  },
+  reactionsItemContainer: {
+    alignItems: 'center',
+    marginTop: -5,
+  },
+  reactionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 3,
   },
 });

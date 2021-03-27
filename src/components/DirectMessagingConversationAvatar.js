@@ -1,26 +1,30 @@
-import React from 'react';
-import {View, StyleSheet, Image} from 'react-native';
-
-import {ChatClientService} from '../utils';
 import {useTheme} from '@react-navigation/native';
-import {PresenceIndicator} from './ChannelListItem';
+import React from 'react';
+import {Image, StyleSheet, View} from 'react-native';
+import {useChatContext} from 'stream-chat-react-native';
+
+import {PresenceIndicator} from './PresenceIndicator';
 
 export const DirectMessagingConversationAvatar = ({channel}) => {
-  const chatClient = ChatClientService.getClient();
+  const {client} = useChatContext();
   const {colors} = useTheme();
   const otherMembers = Object.values(channel.state.members).filter(
-    m => m.user.id !== chatClient.user.id,
+    (m) => m.user.id !== client.user.id,
   );
+
   if (otherMembers.length >= 2) {
     return (
       <View style={styles.stackedAvatarContainer}>
         <Image
-          style={styles.stackedAvatarImage}
           source={{
             uri: otherMembers[0].user.image,
           }}
+          style={styles.stackedAvatarImage}
         />
         <Image
+          source={{
+            uri: otherMembers[1].user.image,
+          }}
           style={[
             styles.stackedAvatarImage,
             styles.stackedAvatarTopImage,
@@ -28,9 +32,6 @@ export const DirectMessagingConversationAvatar = ({channel}) => {
               borderColor: colors.background,
             },
           ]}
-          source={{
-            uri: otherMembers[1].user.image,
-          }}
         />
       </View>
     );
@@ -38,10 +39,10 @@ export const DirectMessagingConversationAvatar = ({channel}) => {
   return (
     <View style={styles.avatarImage}>
       <Image
-        style={styles.avatarImage}
         source={{
           uri: otherMembers[0].user.image,
         }}
+        style={styles.avatarImage}
       />
       <View
         style={[
@@ -51,8 +52,8 @@ export const DirectMessagingConversationAvatar = ({channel}) => {
           },
         ]}>
         <PresenceIndicator
-          online={otherMembers[0].user.online}
           backgroundTransparent={false}
+          online={otherMembers[0].user.online}
         />
       </View>
     </View>
@@ -60,28 +61,32 @@ export const DirectMessagingConversationAvatar = ({channel}) => {
 };
 
 const styles = StyleSheet.create({
+  avatarImage: {
+    borderRadius: 5,
+    height: 55,
+    width: 55,
+  },
+  presenceIndicatorContainer: {
+    borderRadius: 100 / 2,
+    borderWidth: 3,
+    bottom: -5,
+    position: 'absolute',
+    right: -10,
+  },
   stackedAvatarContainer: {
     height: 45,
-    width: 45,
     marginTop: 5,
-  },
-  stackedAvatarTopImage: {
-    position: 'absolute',
-    borderWidth: 3,
-    bottom: 0,
-    right: 0,
+    width: 45,
   },
   stackedAvatarImage: {
+    borderRadius: 5,
     height: 31,
     width: 31,
-    borderRadius: 5,
   },
-  avatarImage: {height: 45, width: 45, borderRadius: 5},
-  presenceIndicatorContainer: {
-    position: 'absolute',
-    bottom: -5,
-    right: -10,
+  stackedAvatarTopImage: {
     borderWidth: 3,
-    borderRadius: 100 / 2,
+    bottom: 0,
+    position: 'absolute',
+    right: 0,
   },
 });

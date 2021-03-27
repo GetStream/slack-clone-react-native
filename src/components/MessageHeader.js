@@ -1,23 +1,24 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import Moment from 'moment';
 import {useTheme} from '@react-navigation/native';
+import Moment from 'moment';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {useMessageContext} from 'stream-chat-react-native';
+
 import {SCText} from './SCText';
 
-export const MessageHeader = props => {
-  return (
-    <View style={styles.column}>
-      {props.message.attachments.length > 0 && (
-        <View style={styles.header}>
-          <MessageUserBar {...props} />
-        </View>
-      )}
-    </View>
-  );
-};
+export const MessageHeader = (props) => (
+  <View style={styles.column}>
+    {props.message.attachments.length > 0 && (
+      <View style={styles.header}>
+        <MessageUserBar {...props} />
+      </View>
+    )}
+  </View>
+);
 
-export const MessageUserBar = ({groupStyles, message}) => {
+export const MessageUserBar = () => {
   const {colors} = useTheme();
+  const {groupStyles, message} = useMessageContext();
   if (groupStyles[0] === 'single' || groupStyles[0] === 'top') {
     return (
       <>
@@ -46,21 +47,21 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   header: {
-    paddingLeft: 8,
-  },
-  userBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 5,
-  },
-  messageUserName: {
-    fontWeight: '900',
-    fontSize: 15,
-    fontFamily: 'Lato-Bold',
+    paddingLeft: 2,
   },
   messageDate: {
     color: 'grey',
-    marginLeft: 6,
     fontSize: 10,
+    marginLeft: 6,
+  },
+  messageUserName: {
+    fontFamily: 'Lato-Bold',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  userBar: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: 5,
   },
 });

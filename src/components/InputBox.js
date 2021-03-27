@@ -1,75 +1,117 @@
-import React from 'react';
-import {TouchableOpacity, View, StyleSheet} from 'react-native';
-import {AutoCompleteInput, SendButton} from 'stream-chat-react-native';
-import {SCText} from './SCText';
-
-
 import {useTheme} from '@react-navigation/native';
+import React, {useState} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  AutoCompleteInput,
+  SendButton,
+  useChannelContext,
+} from 'stream-chat-react-native';
+
+import {useKeyboard} from '../hooks/useKeaboard';
+import {notImplemented} from '../utils';
 import {SVGIcon} from './SVGIcon';
 
-export const InputBox = props => {
+export const InputBox = (props) => {
   const {colors} = useTheme();
+  const {channel} = useChannelContext();
+  const {isOpen: isKeyboardOpen} = useKeyboard();
+  const [textHeight, setTextHeight] = useState(0);
+  const onContentSizeChange = ({
+    nativeEvent: {
+      contentSize: {height},
+    },
+  }) => {
+    if (!textHeight) {
+      setTextHeight(height);
+    }
+  };
+  const additionalTextInputProps = {
+    onContentSizeChange,
+    placeholder:
+      channel && channel.data.name
+        ? 'Message #' + channel.data.name.toLowerCase().replace(' ', '_')
+        : 'Message',
+    placeholderTextColor: '#979A9A',
+    style: [
+      {
+        maxHeight: (textHeight || 17) * 4,
+        minHeight: 30,
+      },
+    ],
+  };
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <AutoCompleteInput {...props} />
-      <View
-        style={[styles.actionsContainer, {backgroundColor: colors.background}]}>
-        <View style={styles.row}>
-          <TouchableOpacity
-            onPress={() => {
-              props.appendText('@');
-            }}>
-            <SCText style={styles.textActionLabel}>@</SCText>
-          </TouchableOpacity>
-          {/* Text editor is not functional yet. We will cover it in some future tutorials */}
-          <TouchableOpacity style={styles.textEditorContainer}>
-            <SCText style={styles.textActionLabel}>Aa</SCText>
-          </TouchableOpacity>
+      <AutoCompleteInput
+        {...props}
+        additionalTextInputProps={additionalTextInputProps}
+      />
+      {!!isKeyboardOpen && (
+        <View
+          style={[
+            styles.actionsContainer,
+            {backgroundColor: colors.background},
+          ]}>
+          <View style={styles.row}>
+            <TouchableOpacity onPress={props.openCommandsPicker}>
+              <SVGIcon
+                height='18'
+                type={'input-buttons-shortcuts'}
+                width='18'
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={props.openMentionsPicker}>
+              <SVGIcon height='18' type={'input-buttons-mentions'} width='18' />
+            </TouchableOpacity>
+            {/* Text editor is not functional yet. We will cover it in some future tutorials */}
+            <TouchableOpacity onPress={notImplemented}>
+              <SVGIcon
+                height='18'
+                type={'input-buttons-formatting'}
+                width='18'
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.row}>
+            <TouchableOpacity onPress={props.openFilePicker}>
+              <SVGIcon height='18' type='file-attachment' width='18' />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={props.openAttachmentPicker}>
+              <SVGIcon height='21' type='image-attachment' width='18' />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={notImplemented}>
+              <SVGIcon
+                height='18'
+                type={'send-button'}
+                fill={'#1F629E'}
+                width='18'
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.row}>
-          <TouchableOpacity
-            onPress={props._pickFile}
-            style={styles.fileAttachmentIcon}>
-            <SVGIcon type="file-attachment" height="18" width="18" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={props._pickImage}
-            style={styles.imageAttachmentIcon}>
-            <SVGIcon type="image-attachment" height="18" width="18" />
-          </TouchableOpacity>
-          <SendButton {...props} />
-        </View>
-      </View>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    width: '100%',
-    height: 60,
-  },
   actionsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 5,
   },
-  row: {flexDirection: 'row'},
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    width: '100%',
+  },
+  inputContainer: {},
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 100,
+  },
   textActionLabel: {
     fontSize: 18,
-  },
-  textEditorContainer: {
-    marginLeft: 10,
-  },
-  fileAttachmentIcon: {
-    marginRight: 10,
-    marginLeft: 10,
-    alignSelf: 'center',
-  },
-  imageAttachmentIcon: {
-    marginRight: 10,
-    marginLeft: 10,
-    alignSelf: 'flex-end',
   },
 });

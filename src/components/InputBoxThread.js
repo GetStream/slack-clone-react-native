@@ -1,18 +1,52 @@
+import CheckBox from '@react-native-community/checkbox';
+import {useTheme} from '@react-navigation/native';
 import React, {useRef, useState} from 'react';
-import {TouchableOpacity, Animated, View, StyleSheet} from 'react-native';
+import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   AutoCompleteInput,
   SendButton,
   useChannelContext,
 } from 'stream-chat-react-native';
+
 import {getChannelDisplayName} from '../utils';
-
-import {useTheme} from '@react-navigation/native';
-import {SVGIcon} from './SVGIcon';
-import CheckBox from '@react-native-community/checkbox';
 import {SCText} from './SCText';
+import {SVGIcon} from './SVGIcon';
 
-export const InputBoxThread = props => {
+const styles = StyleSheet.create({
+  actionsContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '100%',
+  },
+  container: {
+    flexDirection: 'column',
+    height: 60,
+    width: '100%',
+  },
+  fileAttachmentIcon: {
+    alignSelf: 'center',
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  imageAttachmentIcon: {
+    alignSelf: 'flex-end',
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    width: '100%',
+  },
+  textActionLabel: {
+    fontSize: 18,
+  },
+  textEditorContainer: {
+    marginLeft: 10,
+  },
+});
+
+export const InputBoxThread = (props) => {
   const {colors} = useTheme();
   const [leftMenuActive, setLeftMenuActive] = useState(true);
   const {channel} = useChannelContext();
@@ -21,7 +55,7 @@ export const InputBoxThread = props => {
   const translateMenuRight = useRef(new Animated.Value(300)).current;
   const opacityMenuLeft = useRef(new Animated.Value(1)).current;
   const opacityMenuRight = useRef(new Animated.Value(0)).current;
-  const isDirectMessagingConversation = !channel.data.name;
+  const isDM = !channel.data.name;
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
@@ -44,28 +78,28 @@ export const InputBoxThread = props => {
             onPress={() => {
               Animated.parallel([
                 Animated.timing(transform, {
-                  toValue: leftMenuActive ? 180 : 0,
                   duration: 200,
+                  toValue: leftMenuActive ? 180 : 0,
                   useNativeDriver: false,
                 }),
                 Animated.timing(translateMenuLeft, {
-                  toValue: leftMenuActive ? -300 : 0,
                   duration: 200,
+                  toValue: leftMenuActive ? -300 : 0,
                   useNativeDriver: false,
                 }),
                 Animated.timing(translateMenuRight, {
-                  toValue: leftMenuActive ? 0 : 300,
                   duration: 200,
+                  toValue: leftMenuActive ? 0 : 300,
                   useNativeDriver: false,
                 }),
                 Animated.timing(opacityMenuLeft, {
-                  toValue: leftMenuActive ? 0 : 1,
                   duration: leftMenuActive ? 50 : 200,
+                  toValue: leftMenuActive ? 0 : 1,
                   useNativeDriver: false,
                 }),
                 Animated.timing(opacityMenuRight, {
-                  toValue: leftMenuActive ? 1 : 0,
                   duration: leftMenuActive ? 50 : 200,
+                  toValue: leftMenuActive ? 1 : 0,
                   useNativeDriver: false,
                 }),
               ]).start();
@@ -73,59 +107,57 @@ export const InputBoxThread = props => {
             }}
             style={[
               {
-                padding: 1.5,
-                paddingRight: 6,
-                paddingLeft: 6,
-                borderRadius: 10,
                 backgroundColor: colors.linkText,
+                borderRadius: 10,
+                padding: 1.5,
+                paddingLeft: 6,
+                paddingRight: 6,
               },
             ]}>
-            <SCText style={{fontWeight: '900', color: 'white'}}>{'<'}</SCText>
+            <SCText style={{color: 'white', fontWeight: '900'}}>{'<'}</SCText>
           </TouchableOpacity>
         </Animated.View>
 
         <View
           style={{
+            flexDirection: 'row',
             flexGrow: 1,
             flexShrink: 1,
-            flexDirection: 'row',
             marginLeft: 20,
           }}>
           <Animated.View
             style={{
-              flexDirection: 'row',
               alignItems: 'center',
-              transform: [{translateX: translateMenuLeft}],
+              flexDirection: 'row',
               opacity: opacityMenuLeft,
+              transform: [{translateX: translateMenuLeft}],
             }}>
             <CheckBox
-              boxType="square"
+              boxType='square'
               disabled={false}
-              style={{width: 15, height: 15}}
-              onValueChange={newValue =>
+              onValueChange={(newValue) =>
                 props.setSendMessageInChannel(newValue)
               }
+              style={{height: 15, width: 15}}
             />
-            <SCText style={{marginLeft: 12, fontSize: 14}}>
+            <SCText style={{fontSize: 14, marginLeft: 12}}>
               Also send to{' '}
-              {isDirectMessagingConversation
-                ? 'group'
-                : getChannelDisplayName(channel, true)}
+              {isDM ? 'group' : getChannelDisplayName(channel, true)}
             </SCText>
           </Animated.View>
           <Animated.View
             style={{
-              position: 'absolute',
-              width: '100%',
               alignItems: 'center',
               alignSelf: 'center',
-              justifyContent: 'center',
               flexDirection: 'row',
+              justifyContent: 'center',
+              opacity: opacityMenuRight,
+              position: 'absolute',
               transform: [
                 {translateX: translateMenuRight},
                 {perspective: 1000},
               ],
-              opacity: opacityMenuRight,
+              width: '100%',
             }}>
             <View style={styles.row}>
               <TouchableOpacity
@@ -147,60 +179,21 @@ export const InputBoxThread = props => {
                 },
               ]}>
               <TouchableOpacity
-                onPress={props._pickFile}
+                onPress={props.openFilePicker}
                 style={styles.fileAttachmentIcon}>
-                <SVGIcon type="file-attachment" height="18" width="18" />
+                <SVGIcon height='18' type='file-attachment' width='18' />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={props._pickImage}
+                onPress={props.toggleAttachmentPicker}
                 style={styles.imageAttachmentIcon}>
-                <SVGIcon type="image-attachment" height="18" width="18" />
+                <SVGIcon height='18' type='image-attachment' width='18' />
               </TouchableOpacity>
             </View>
           </Animated.View>
         </View>
 
-        <SendButton
-          {...props}
-          sendMessage={() => {
-            props.sendMessage(props.channel);
-          }}
-        />
+        <SendButton {...props} />
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    width: '100%',
-    height: 60,
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center',
-  },
-  row: {
-    flex: 1,
-    flexDirection: 'row',
-    width: '100%',
-  },
-  textActionLabel: {
-    fontSize: 18,
-  },
-  textEditorContainer: {
-    marginLeft: 10,
-  },
-  fileAttachmentIcon: {
-    marginRight: 10,
-    marginLeft: 10,
-    alignSelf: 'center',
-  },
-  imageAttachmentIcon: {
-    marginRight: 10,
-    marginLeft: 10,
-    alignSelf: 'flex-end',
-  },
-});

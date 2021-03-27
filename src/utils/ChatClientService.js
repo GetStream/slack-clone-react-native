@@ -1,5 +1,6 @@
+/* eslint-disable babel/no-invalid-this */
 export default {
   client: null,
-  setClient: client => (this.client = client),
   getClient: () => this.client,
+  setClient: (client) => (this.client = client),
 };

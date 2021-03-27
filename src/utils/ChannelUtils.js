@@ -22,7 +22,7 @@ export const getChannelDisplayName = (
 
   const chatClient = ChatClientService.getClient();
   const otherMembers = Object.values(channel.state.members).filter(
-    m => m.user.id !== chatClient.user.id,
+    (m) => m.user.id !== chatClient.user.id,
   );
 
   if (otherMembers.length === 1) {
@@ -32,10 +32,10 @@ export const getChannelDisplayName = (
         : ''
     }`;
   }
-  return otherMembers.map(m => m.user.name).join(', ');
+  return otherMembers.map((m) => m.user.name).join(', ');
 };
 
-export const getChannelDisplayImage = channel => {
+export const getChannelDisplayImage = (channel) => {
   if (!channel) {
     return null;
   }
@@ -46,7 +46,7 @@ export const getChannelDisplayImage = channel => {
 
   const chatClient = ChatClientService.getClient();
   const otherMembers = Object.values(channel.state.members).filter(
-    m => m.user.id !== chatClient.user.id,
+    (m) => m.user.id !== chatClient.user.id,
   );
 
   return otherMembers[0] && otherMembers[0].user.image;

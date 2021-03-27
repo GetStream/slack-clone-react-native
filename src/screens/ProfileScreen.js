@@ -1,33 +1,33 @@
-import React from 'react';
-import {Image, View, StyleSheet} from 'react-native';
-
-import {ScreenHeader} from './ScreenHeader';
 import {useTheme} from '@react-navigation/native';
-import {ChatClientService, notImplemented} from '../utils';
+import React from 'react';
+import {Image, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {SVGIcon} from '../components/SVGIcon';
-import {SCText} from '../components/SCText';
 
-export const ProfileScreen = props => {
+import {SCText} from '../components/SCText';
+import {SVGIcon} from '../components/SVGIcon';
+import {ChatClientService, notImplemented} from '../utils';
+import {ScreenHeader} from './ScreenHeader';
+
+export const ProfileScreen = (props) => {
   const {colors} = useTheme();
   const chatClient = ChatClientService.getClient();
 
   return (
     <View
       style={{
-        flex: 1,
         backgroundColor: colors.background,
+        flex: 1,
       }}>
       <View style={{flex: 1}}>
-        <ScreenHeader navigation={props.navigation} title="You" />
+        <ScreenHeader navigation={props.navigation} title='You' />
         <View style={styles.container}>
           <View style={styles.row}>
             <View>
               <Image
-                style={styles.userImage}
                 source={{
                   uri: chatClient.user.image,
                 }}
+                style={styles.userImage}
               />
             </View>
             <View style={styles.userDetails}>
@@ -41,11 +41,11 @@ export const ProfileScreen = props => {
             onPress={notImplemented}
             style={[
               {
-                padding: 13,
+                borderRadius: 10,
                 borderWidth: 1,
                 marginTop: 20,
+                padding: 13,
                 paddingLeft: 20,
-                borderRadius: 10,
               },
               {
                 borderColor: colors.border,
@@ -66,15 +66,15 @@ export const ProfileScreen = props => {
                 },
               ]}>
               <TouchableOpacity
-                style={styles.actionItemContainer}
-                onPress={notImplemented}>
-                <SVGIcon type={'dnd'} height="23" width="23" />
+                onPress={notImplemented}
+                style={styles.actionItemContainer}>
+                <SVGIcon height='23' type={'dnd'} width='23' />
                 <SCText style={{paddingLeft: 20}}>{'Do not disturb'}</SCText>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.actionItemContainer}
-                onPress={notImplemented}>
-                <SVGIcon type={'away'} height="23" width="23" />
+                onPress={notImplemented}
+                style={styles.actionItemContainer}>
+                <SVGIcon height='23' type={'away'} width='23' />
                 <SCText style={{paddingLeft: 20}}>{'Set yourself away'}</SCText>
               </TouchableOpacity>
             </View>
@@ -87,27 +87,27 @@ export const ProfileScreen = props => {
                 },
               ]}>
               <TouchableOpacity
-                style={styles.actionItemContainer}
-                onPress={notImplemented}>
-                <SVGIcon type={'notifications'} height="23" width="23" />
+                onPress={notImplemented}
+                style={styles.actionItemContainer}>
+                <SVGIcon height='23' type={'notifications'} width='23' />
                 <SCText style={{paddingLeft: 20}}>{'Notifications'}</SCText>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.actionItemContainer}
-                onPress={notImplemented}>
-                <SVGIcon type={'preferences'} height="23" width="23" />
+                onPress={notImplemented}
+                style={styles.actionItemContainer}>
+                <SVGIcon height='23' type={'preferences'} width='23' />
                 <SCText style={{paddingLeft: 20}}>{'Preferences'}</SCText>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.actionItemContainer}
-                onPress={notImplemented}>
-                <SVGIcon type={'saved-items'} height="23" width="23" />
+                onPress={notImplemented}
+                style={styles.actionItemContainer}>
+                <SVGIcon height='23' type={'saved-items'} width='23' />
                 <SCText style={{paddingLeft: 20}}>{'Saved items'}</SCText>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.actionItemContainer}
-                onPress={notImplemented}>
-                <SVGIcon type={'view-profile'} height="23" width="23" />
+                onPress={notImplemented}
+                style={styles.actionItemContainer}>
+                <SVGIcon height='23' type={'view-profile'} width='23' />
                 <SCText style={{paddingLeft: 20}}>{'View profile'}</SCText>
               </TouchableOpacity>
             </View>
@@ -119,12 +119,22 @@ export const ProfileScreen = props => {
 };
 
 const styles = StyleSheet.create({
+  actionItemContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 50,
+  },
+  actionItemSection: {},
   container: {
-    padding: 20,
     flex: 1,
+    padding: 20,
   },
   row: {
     flexDirection: 'row',
+  },
+  status: {
+    fontSize: 12,
+    fontWeight: '400',
   },
   userDetails: {
     flex: 1,
@@ -134,22 +144,12 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   userImage: {
+    borderRadius: 7,
     height: 60,
     width: 60,
-    borderRadius: 7,
   },
   userName: {
-    fontWeight: 'bold',
     fontSize: 18,
-  },
-  status: {
-    fontSize: 12,
-    fontWeight: '400',
-  },
-  actionItemSection: {},
-  actionItemContainer: {
-    flexDirection: 'row',
-    height: 50,
-    alignItems: 'center',
+    fontWeight: 'bold',
   },
 });

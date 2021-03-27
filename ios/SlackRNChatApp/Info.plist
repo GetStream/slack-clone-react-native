@@ -41,6 +41,8 @@
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Upload pics</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Upload pics</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Lato-Black.ttf</string>

@@ -1,58 +1,56 @@
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
-  View,
-  StyleSheet,
-  SafeAreaView,
   LogBox,
+  SafeAreaView,
+  StyleSheet,
+  View,
 } from 'react-native';
 import {AppearanceProvider, useColorScheme} from 'react-native-appearance';
-
+import {copilot} from 'react-native-copilot';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
 import {StreamChat} from 'stream-chat';
+import {Chat, OverlayProvider} from 'stream-chat-react-native';
 
+import {DarkTheme, LightTheme} from './src/appTheme';
+import {BottomTabs} from './src/components/BottomTabs';
+import {ChannelListScreen} from './src/screens/ChannelListScreen/ChannelListScreen';
+import {ChannelScreen} from './src/screens/ChannelScreen/ChannelScreen';
+import {ChannelSearchScreen} from './src/screens/ChannelSearchScreen/ChannelSearchScreen';
+import {JumpToSearchScreen} from './src/screens/ChannelSearchScreen/JumpToSearchScreen';
+import {DirectMessagesScreen} from './src/screens/DirectMessagesScreen';
+import {DraftsScreen} from './src/screens/DraftsScreen';
+import {MentionsScreen} from './src/screens/MentionsScreen/MentionsScreen';
+import {MessageSearchScreen} from './src/screens/MessageSearchScreen/MessageSearchScreen';
+import {NewMessageScreen} from './src/screens/NewMessageScreen/NewMessageScreen';
+import {ProfileScreen} from './src/screens/ProfileScreen';
+import { ShareMessageScreen } from './src/screens/ShareMessageScreen/ShareMessageScreen';
+import {TargettedMessageChannelScreen} from './src/screens/TargettedMessageChannelScreen';
+import {ThreadScreen} from './src/screens/ThreadScreen';
 import {
-  ChatUserContext,
   ChatClientService,
+  ChatUserContext,
   USER_TOKENS,
   USERS,
+  useStreamChatTheme,
 } from './src/utils';
 
-import {ChannelScreen} from './src/screens/ChannelScreen';
-import {NewMessageScreen} from './src/screens/NewMessageScreen';
-import {ChannelSearchScreen} from './src/screens/ChannelSearchScreen';
-import {ChannelListScreen} from './src/screens/ChannelListScreen';
-import {DraftsScreen} from './src/screens/DraftsScreen';
-import {MentionsScreen} from './src/screens/MentionsSearch';
-import {DirectMessagesScreen} from './src/screens/DirectMessagesScreen';
-import {TargettedMessageChannelScreen} from './src/screens/TargettedMessageChannelScreen';
-import {MessageSearchScreen} from './src/screens/MessageSearchScreen';
-import {ProfileScreen} from './src/screens/ProfileScreen';
-
-import {ThreadScreen} from './src/screens/ThreadScreen';
-
-import {BottomTabs} from './src/components/BottomTabs';
-import {DarkTheme, LightTheme} from './src/appTheme';
-import {copilot} from 'react-native-copilot';
-
-LogBox.ignoreAllLogs(true);
-
+LogBox.ignoreAllLogs();
 const Tab = createBottomTabNavigator();
 
+const RootStack = createStackNavigator();
 const HomeStack = createStackNavigator();
 const ModalStack = createStackNavigator();
 
-export default copilot()(props => {
+export default copilot()((props) => {
   const scheme = useColorScheme();
   const [connecting, setConnecting] = useState(true);
   const [user, setUser] = useState(USERS.vishal);
-
+  const [client, setClient] = useState(client);
   useEffect(() => {
     props.start();
   }, []);
@@ -75,6 +73,7 @@ export default copilot()(props => {
       // when chat user is switched - and which case we re-render the entire chat application.
       // So we don't need to worry about re-rendering every component on updating client.
       ChatClientService.setClient(client);
+      setClient(client);
       setConnecting(false);
     };
 
@@ -90,7 +89,7 @@ export default copilot()(props => {
     return (
       <SafeAreaView>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="small" color="black" />
+          <ActivityIndicator color='black' size='small' />
         </View>
       </SafeAreaView>
     );
@@ -103,9 +102,9 @@ export default copilot()(props => {
           <View style={styles.container}>
             <ChatUserContext.Provider
               value={{
-                switchUser: userId => setUser(USERS[userId]),
+                switchUser: (userId) => setUser(USERS[userId]),
               }}>
-              <HomeStackNavigator />
+              <RootNavigation client={client} />
             </ChatUserContext.Provider>
           </View>
         </NavigationContainer>
@@ -114,97 +113,109 @@ export default copilot()(props => {
   );
 });
 
-const ModalStackNavigator = props => {
-  return (
-    <ModalStack.Navigator initialRouteName="Home" mode="modal">
-      <ModalStack.Screen
-        name="Tabs"
-        component={TabNavigation}
-        options={{headerShown: false}}
-      />
-      <ModalStack.Screen
-        name="NewMessageScreen"
-        component={NewMessageScreen}
-        options={{headerShown: false}}
-      />
-      <ModalStack.Screen
-        name="ChannelSearchScreen"
-        component={ChannelSearchScreen}
-        options={{headerShown: false}}
-      />
-      <ModalStack.Screen
-        name="MessageSearchScreen"
-        component={MessageSearchScreen}
-        options={{headerShown: false}}
-      />
-      <ModalStack.Screen
-        name="TargettedMessageChannelScreen"
-        component={TargettedMessageChannelScreen}
-        options={{headerShown: false}}
-      />
-    </ModalStack.Navigator>
-  );
-};
+const ModalStackNavigator = () => (
+  <ModalStack.Navigator>
+    <ModalStack.Screen
+      component={ChannelSearchScreen}
+      name='ChannelSearchScreen'
+      options={{headerShown: false}}
+    />
+    <ModalStack.Screen
+      component={JumpToSearchScreen}
+      name='JumpToSearchScreen'
+      options={{headerShown: false}}
+    />
+    <ModalStack.Screen
+      component={NewMessageScreen}
+      name='NewMessageScreen'
+      options={{headerShown: false}}
+    />
+    <ModalStack.Screen
+      component={ShareMessageScreen}
+      name='ShareMessageScreen'
+      options={{headerShown: false}}
+    />
+    <ModalStack.Screen
+      component={TargettedMessageChannelScreen}
+      name='TargettedMessageChannelScreen'
+      options={{headerShown: false}}
+    />
+  </ModalStack.Navigator>
+);
 
-const HomeStackNavigator = props => {
-  return (
-    <HomeStack.Navigator initialRouteName="ModalStack">
-      <HomeStack.Screen
-        name="ModalStack"
-        component={ModalStackNavigator}
-        options={{headerShown: false}}
-      />
-      <HomeStack.Screen
-        name="ChannelScreen"
-        component={ChannelScreen}
-        options={{headerShown: false}}
-      />
-      <HomeStack.Screen
-        name="DraftsScreen"
-        component={DraftsScreen}
-        options={{headerShown: false}}
-      />
-      <HomeStack.Screen
-        name="ThreadScreen"
-        component={ThreadScreen}
-        options={{headerShown: false}}
-      />
-    </HomeStack.Navigator>
-  );
-};
+const HomeStackNavigator = () => (
+  <HomeStack.Navigator initialRouteName='ChannelListScreen'>
+    <HomeStack.Screen
+      component={ChannelListScreen}
+      name='ChannelListScreen'
+      options={{headerShown: false}}
+    />
+    <HomeStack.Screen
+      component={ChannelScreen}
+      name='ChannelScreen'
+      options={{headerShown: false}}
+    />
+    <HomeStack.Screen
+      component={DraftsScreen}
+      name='DraftsScreen'
+      options={{headerShown: false}}
+    />
+    <HomeStack.Screen
+      component={ThreadScreen}
+      name='ThreadScreen'
+      options={{headerShown: false}}
+    />
+  </HomeStack.Navigator>
+);
 
-const TabNavigation = () => {
-  return (
-    <Tab.Navigator tabBar={props => <BottomTabs {...props} />}>
-      <Tab.Screen name="home" component={ChannelListScreen} />
-      <Tab.Screen name={'dms'} component={DirectMessagesScreen} />
-      <Tab.Screen name={'mentions'} component={MentionsScreen} />
-      <Tab.Screen name={'you'} component={ProfileScreen} />
+const TabNavigation = () => (
+  <BottomSheetModalProvider>
+    <Tab.Navigator tabBar={(props) => <BottomTabs {...props} />}>
+      <Tab.Screen component={HomeStackNavigator} name='home' />
+      <Tab.Screen component={DirectMessagesScreen} name={'dms'} />
+      <Tab.Screen component={MentionsScreen} name={'mentions'} />
+      <Tab.Screen component={MessageSearchScreen} name={'search'} />
+      <Tab.Screen component={ProfileScreen} name={'you'} />
     </Tab.Navigator>
+    </BottomSheetModalProvider>
+
+  );
+
+const RootNavigation = (props) => {
+  const chatStyles = useStreamChatTheme();
+  return (
+    <OverlayProvider>
+      <Chat client={props.client} style={chatStyles}>
+          <RootStack.Navigator mode='modal'>
+            <RootStack.Screen component={TabNavigation} name='Tabs' options={{headerShown: false}}/>
+            <RootStack.Screen component={ModalStackNavigator} name={'Modals'} options={{headerShown: false}}/>
+          </RootStack.Navigator>
+      </Chat>
+    </OverlayProvider>
   );
 };
 
 const styles = StyleSheet.create({
-  loadingContainer: {
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  channelScreenContainer: {flexDirection: 'column', height: '100%'},
   channelScreenSaveAreaView: {
     backgroundColor: 'white',
-  },
-  channelScreenContainer: {flexDirection: 'column', height: '100%'},
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  drawerNavigator: {
-    backgroundColor: '#3F0E40',
-    width: 350,
   },
   chatContainer: {
     backgroundColor: 'white',
     flexGrow: 1,
     flexShrink: 1,
+  },
+  container: {
+    backgroundColor: 'white',
+    flex: 1,
+  },
+  drawerNavigator: {
+    backgroundColor: '#3F0E40',
+    width: 350,
+  },
+  loadingContainer: {
+    alignItems: 'center',
+    height: '100%',
+    justifyContent: 'center',
   },
 });

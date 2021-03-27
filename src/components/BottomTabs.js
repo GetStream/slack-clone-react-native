@@ -1,40 +1,49 @@
+import {useTheme} from '@react-navigation/native';
 import React from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {useNavigation, useTheme} from '@react-navigation/native';
-import {SVGIcon} from './SVGIcon';
 import {SCText} from './SCText';
+import {SVGIcon} from './SVGIcon';
 
-export const BottomTabs = ({state, navigation}) => {
+export const BottomTabs = ({navigation, state}) => {
   const {colors} = useTheme();
   const insets = useSafeAreaInsets();
-  const getTitle = key => {
+  const getTitle = (key) => {
+    // eslint-disable-next-line default-case
     switch (key) {
       case 'home':
         return {
-          icon: <SVGIcon type="home-tab" width={25} height={25} />,
-          iconActive: <SVGIcon type="home-tab-active" width={25} height={25} />,
+          icon: <SVGIcon height={25} type='home-tab' width={25} />,
+          iconActive: <SVGIcon height={25} type='home-tab-active' width={25} />,
           title: 'Home',
         };
       case 'dms':
         return {
-          icon: <SVGIcon type="dm-tab" width={25} height={25} />,
-          iconActive: <SVGIcon type="dm-tab-active" width={25} height={25} />,
+          icon: <SVGIcon height={25} type='dm-tab' width={25} />,
+          iconActive: <SVGIcon height={25} type='dm-tab-active' width={25} />,
           title: 'DMs',
         };
       case 'mentions':
         return {
-          icon: <SVGIcon type="mentions-tab" width={25} height={25} />,
+          icon: <SVGIcon height={25} type='mentions-tab' width={25} />,
           iconActive: (
-            <SVGIcon type="mentions-tab-active" width={25} height={25} />
+            <SVGIcon height={25} type='mentions-tab-active' width={25} />
+          ),
+          title: 'Mention',
+        };
+      case 'search':
+        return {
+          icon: <SVGIcon height={25} type='global-search' width={25} />,
+          iconActive: (
+            <SVGIcon height={25} type='global-search-selected' width={25} />
           ),
           title: 'Mention',
         };
       case 'you':
         return {
-          icon: <SVGIcon type="you-tab" width={25} height={25} />,
-          iconActive: <SVGIcon type="you-tab-active" width={25} height={25} />,
+          icon: <SVGIcon height={25} type='you-tab' width={25} />,
+          iconActive: <SVGIcon height={25} type='you-tab-active' width={25} />,
           title: 'You',
         };
     }
@@ -56,8 +65,8 @@ export const BottomTabs = ({state, navigation}) => {
 
         const onPress = () => {
           const event = navigation.emit({
-            type: 'tabPress',
             target: route.key,
+            type: 'tabPress',
           });
 
           if (!isFocused && !event.defaultPrevented) {
@@ -66,7 +75,10 @@ export const BottomTabs = ({state, navigation}) => {
         };
 
         return (
-          <TouchableOpacity onPress={onPress} style={styles.tabContainer}>
+          <TouchableOpacity
+            key={route.name}
+            onPress={onPress}
+            style={styles.tabContainer}>
             {isFocused ? tab.iconActive : tab.icon}
             <SCText style={styles.tabTitle}>{tab.title}</SCText>
           </TouchableOpacity>
@@ -77,15 +89,15 @@ export const BottomTabs = ({state, navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  tabListContainer: {
-    flexDirection: 'row',
-    borderTopWidth: 0.5,
-  },
   tabContainer: {
-    flex: 1,
-    padding: 10,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
+    padding: 10,
+  },
+  tabListContainer: {
+    borderTopWidth: 0.5,
+    flexDirection: 'row',
   },
   tabTitle: {
     fontSize: 12,

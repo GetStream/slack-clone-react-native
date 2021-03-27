@@ -1,10 +1,12 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {goToURL} from 'stream-chat-react-native';
+
 import {SCText} from './SCText';
 
-export const UrlPreview = props => {
-  const getDomain = url => {
-    let domain = url && url.replace('https://', '').replace('http://', '');
+export const UrlPreview = (props) => {
+  const getDomain = (url) => {
+    const domain = url && url.replace('https://', '').replace('http://', '');
 
     if (!domain) {
       return url;
@@ -17,7 +19,9 @@ export const UrlPreview = props => {
     return domain.slice(0, indexOfSlash);
   };
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      onPress={() => goToURL(props.title_link)}
+      style={styles.container}>
       <View style={styles.detailsContainer}>
         <SCText style={styles.titleUrl}>{getDomain(props.title_link)}</SCText>
         <SCText style={styles.title}>{props.title}</SCText>
@@ -25,11 +29,11 @@ export const UrlPreview = props => {
       </View>
       <View style={styles.thumbnailContainer}>
         <Image
+          resizeMode='cover'
           source={{
             url: props.image_url || props.thumb_url,
           }}
           style={styles.thumbnail}
-          resizeMode="cover"
         />
       </View>
     </TouchableOpacity>
@@ -38,33 +42,33 @@ export const UrlPreview = props => {
 
 const styles = StyleSheet.create({
   container: {
-    borderLeftWidth: 5,
     borderLeftColor: '#E4E4E4',
-    paddingLeft: 10,
-    marginLeft: 10,
+    borderLeftWidth: 5,
     flexDirection: 'column',
+    marginTop: 10,
+    paddingLeft: 10,
+  },
+  description: {
+    fontFamily: 'Lato-Regular',
+    padding: 2,
   },
   detailsContainer: {
     flexDirection: 'column',
   },
-  thumbnailContainer: {},
   thumbnail: {
-    width: '100%',
     height: 150,
+    width: '100%',
+  },
+  thumbnailContainer: {},
+  title: {
+    color: '#1E75BE',
+    fontFamily: 'Lato-Regular',
+    fontWeight: 'bold',
+    padding: 2,
   },
   titleUrl: {
     fontFamily: 'Lato-Regular',
     fontWeight: 'bold',
-    padding: 2,
-  },
-  title: {
-    fontFamily: 'Lato-Regular',
-    fontWeight: 'bold',
-    color: '#1E75BE',
-    padding: 2,
-  },
-  description: {
-    fontFamily: 'Lato-Regular',
     padding: 2,
   },
 });

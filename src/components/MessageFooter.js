@@ -1,159 +1,77 @@
+import {useNavigation, useTheme} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
-import {SVGIcon} from './SVGIcon';
-import {useTheme} from '@react-navigation/native';
-import {ReactionPicker} from './ReactionPicker';
+import {StyleSheet, View} from 'react-native';
+import {useChannelContext, useMessageContext} from 'stream-chat-react-native';
 
-export const MessageFooter = props => {
-  const {dark} = useTheme();
-  const {openReactionPicker} = props;
-  return (
-    <View style={styles.reactionListContainer}>
-      {props.message.latest_reactions &&
-        props.message.latest_reactions.length > 0 &&
-        renderReactions(
-          props.message.latest_reactions,
-          props.message.own_reactions,
-          props.supportedReactions,
-          props.message.reaction_counts,
-          props.handleReaction,
-        )}
-
-      <ReactionPicker {...props} />
-
-      {props.message.latest_reactions &&
-        props.message.latest_reactions.length > 0 && (
-          <TouchableOpacity
-            onPress={openReactionPicker}
-            style={[
-              styles.reactionPickerContainer,
-              {
-                backgroundColor: dark ? '#313538' : '#F0F0F0',
-              },
-            ]}>
-            <SVGIcon height="18" width="18" type="emoji" />
-          </TouchableOpacity>
-        )}
-    </View>
-  );
-};
-
-export const renderReactions = (
-  reactions,
-  ownReactions = [],
-  supportedReactions,
-  reactionCounts,
-  handleReaction,
-) => {
-  const reactionsByType = {};
-  const ownReactionTypes = ownReactions.map(or => or.type);
-  reactions &&
-    reactions.forEach(item => {
-      if (reactions[item.type] === undefined) {
-        return (reactionsByType[item.type] = [item]);
-      } else {
-        return (reactionsByType[item.type] = [
-          ...(reactionsByType[item.type] || []),
-          item,
-        ]);
-      }
-    });
-
-  const emojiDataByType = {};
-  supportedReactions.forEach(e => (emojiDataByType[e.id] = e));
-
-  const reactionTypes = supportedReactions.map(e => e.id);
-  return Object.keys(reactionsByType).map((type, index) =>
-    reactionTypes.indexOf(type) > -1 ? (
-      <ReactionItem
-        key={index}
-        type={type}
-        handleReaction={handleReaction}
-        reactionCounts={reactionCounts}
-        emojiDataByType={emojiDataByType}
-        ownReactionTypes={ownReactionTypes}
-      />
-    ) : null,
-  );
-};
-
-const ReactionItem = ({
-  type,
-  handleReaction,
-  reactionCounts,
-  emojiDataByType,
-  ownReactionTypes,
-}) => {
-  const {dark} = useTheme();
-  const isOwnReaction = ownReactionTypes.indexOf(type) > -1;
-  return (
-    <TouchableOpacity
-      onPress={() => {
-        handleReaction(type);
-      }}
-      key={type}
-      style={[
-        styles.reactionItemContainer,
-        {
-          borderColor: dark
-            ? isOwnReaction
-              ? '#313538'
-              : '#1E1D21'
-            : isOwnReaction
-            ? '#0064e2'
-            : 'transparent',
-          backgroundColor: dark
-            ? isOwnReaction
-              ? '#194B8A'
-              : '#1E1D21'
-            : isOwnReaction
-            ? '#d6ebff'
-            : '#F0F0F0',
-        },
-      ]}>
-      <Text
-        style={[
-          styles.reactionItem,
-          {
-            color: dark ? '#CFD4D2' : '#0064c2',
-          },
-        ]}>
-        {emojiDataByType[type].icon} {reactionCounts[type]}
-      </Text>
-    </TouchableOpacity>
-  );
-};
+import {Reply} from './Reply';
+import {SlackReactionList} from './SlackReactionList/SlackReactionList';
 
 const styles = StyleSheet.create({
   reactionListContainer: {
-    flexDirection: 'row',
-    alignSelf: 'flex-start',
     alignItems: 'center',
-    marginTop: 5,
-    marginBottom: 10,
-    marginLeft: 10,
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
     flexWrap: 'wrap',
-  },
-  reactionItemContainer: {
-    borderWidth: 1,
-    padding: 4,
-    paddingLeft: 8,
-    paddingRight: 8,
-    borderRadius: 17,
-    marginRight: 6,
+    marginBottom: 10,
     marginTop: 5,
-  },
-  reactionItem: {
-    fontSize: 16,
   },
   reactionPickerContainer: {
+    borderRadius: 10,
     padding: 4,
     paddingLeft: 8,
     paddingRight: 6,
-    borderRadius: 10,
-  },
-  reactionPickerIcon: {
-    width: 19,
-    height: 19,
   },
 });
+
+export const MessageFooter = (props) => {
+  const {openReactionPicker: propOpenReactionPicker, scrollToMessage} = props;
+  const {
+    channel,
+    loadChannelAtMessage,
+    setTargetedMessage,
+  } = useChannelContext();
+  const navigation = useNavigation();
+  const {message} = useMessageContext();
+  const {colors} = useTheme();
+
+  const goToMessage = (message) => {
+    if (channel.cid === message.cid) {
+      try {
+        scrollToMessage(message.id);
+        setTargetedMessage(message.id);
+      } catch (_) {
+        /**
+         * scrollToMessage will fail if parent message is not within the windowSize of FlatList
+         * In that case simply reload the channel at given message.
+         */
+        loadChannelAtMessage({messageId: message.id});
+      }
+    } else {
+      navigation.setParams({
+        // cid -> `${channelType}:${channelId}`
+        channelId: message.cid.replace('messaging:', ''),
+        messageId: message.id,
+      });
+    }
+  };
+
+  const openReactionPicker = () => {
+    propOpenReactionPicker(message);
+  };
+
+  return (
+    <View style={styles.reactionListContainer}>
+      <View
+        style={{
+          borderLeftColor: colors.grey_gainsboro,
+          borderLeftWidth: 5,
+        }}>
+        <Reply
+          message={message.parent_shared_message}
+          onPress={() => goToMessage(message.parent_shared_message)}
+        />
+      </View>
+      <SlackReactionList openReactionPicker={openReactionPicker} />
+    </View>
+  );
+};

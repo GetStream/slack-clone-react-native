@@ -15,7 +15,7 @@ function isExternalModule(modulePath) {
 }
 
 function listDirectories(rootPath, cb) {
-  FS.readdirSync(rootPath).forEach(fileName => {
+  FS.readdirSync(rootPath).forEach((fileName) => {
     if (fileName.charAt(0) === '.') {
       return;
     }
@@ -142,7 +142,7 @@ function getPolyfillHelper() {
   // See if project has custom polyfills, if so, include the PATH to them
   try {
     const customPolyfills = require.resolve('./polyfills.js');
-    getPolyfills = (function(originalGetPolyfills) {
+    getPolyfills = (function (originalGetPolyfills) {
       return () => originalGetPolyfills().concat(customPolyfills);
     })(getPolyfills);
   } catch (e) {
@@ -194,7 +194,7 @@ module.exports = (async () => {
       blacklistRE: blacklist(moduleBlacklist),
       extraNodeModules,
       useWatchman: false,
-      assetExts: assetExts.filter(ext => ext !== 'svg'),
+      assetExts: assetExts.filter((ext) => ext !== 'svg'),
       sourceExts: [...sourceExts, 'svg'],
     },
     watchFolders: [PATH.resolve(__dirname)].concat(alternateRoots),

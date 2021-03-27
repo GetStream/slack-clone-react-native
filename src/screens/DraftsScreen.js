@@ -1,12 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {View, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
-
-import {FlatList} from 'react-native-gesture-handler';
-import {AsyncStore, ChatClientService} from '../utils';
-import {NewMessageBubble} from '../components/NewMessageBubble';
-
 import {useNavigation, useTheme} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
+
+import {NewMessageBubble} from '../components/NewMessageBubble';
 import {SCText} from '../components/SCText';
+import {AsyncStore, ChatClientService} from '../utils';
 
 export const DraftsScreen = () => {
   const [results, setResults] = useState([]);
@@ -17,16 +16,16 @@ export const DraftsScreen = () => {
   useEffect(() => {
     const getDraftMessages = async () => {
       const keys = await AsyncStore.getAllKeys();
-      const draftKeys = keys.filter(k => {
-        return k.indexOf(`@slack-clone-draft-${chatClient.user.id}`) === 0;
-      });
+      const draftKeys = keys.filter(
+        (k) => k.indexOf(`@slack-clone-draft-${chatClient.user.id}`) === 0,
+      );
 
       const items = await AsyncStore.multiGet(draftKeys);
-      const drafts = items.map(i => {
+      const drafts = items.map((i) => {
         const draft = JSON.parse(i[1]);
         return draft;
       });
-      setResults(drafts.filter(r => !!r.text));
+      setResults(drafts.filter((r) => !!r.text));
     };
 
     getDraftMessages();
@@ -52,33 +51,31 @@ export const DraftsScreen = () => {
         </View>
         <FlatList
           data={results}
-          renderItem={({item}) => {
-            return (
-              <TouchableOpacity
+          renderItem={({item}) => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ChannelScreen', {
+                  channelId: item.channelId,
+                });
+              }}
+              style={[
+                styles.draftItemContainer,
+                {
+                  borderBottomColor: colors.border,
+                },
+              ]}>
+              <SCText
                 style={[
-                  styles.draftItemContainer,
+                  styles.draftChannelTitle,
                   {
-                    borderBottomColor: colors.border,
+                    color: colors.boldText,
                   },
-                ]}
-                onPress={() => {
-                  navigation.navigate('ChannelScreen', {
-                    channelId: item.channelId,
-                  });
-                }}>
-                <SCText
-                  style={[
-                    styles.draftChannelTitle,
-                    {
-                      color: colors.boldText,
-                    },
-                  ]}>
-                  {item.title}
-                </SCText>
-                <SCText style={styles.draftMessageText}>{item.text}</SCText>
-              </TouchableOpacity>
-            );
-          }}
+                ]}>
+                {item.title}
+              </SCText>
+              <SCText style={styles.draftMessageText}>{item.text}</SCText>
+            </TouchableOpacity>
+          )}
         />
       </View>
       <NewMessageBubble
@@ -91,42 +88,42 @@ export const DraftsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-  },
-  headerContainer: {
-    padding: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'grey',
-  },
-  leftContent: {
-    flexDirection: 'row',
-  },
-  draftItemContainer: {
-    padding: 12,
-    paddingLeft: 20,
-    borderBottomWidth: 0.3,
-  },
-  draftChannelTitle: {
-    fontWeight: 'bold',
-  },
-  draftMessageText: {
-    marginTop: 10,
-    fontWeight: '400',
-  },
   backIcon: {
     fontSize: 35,
     textAlign: 'left',
   },
+  container: {
+    height: '100%',
+  },
+  draftChannelTitle: {
+    fontWeight: 'bold',
+  },
+  draftItemContainer: {
+    borderBottomWidth: 0.3,
+    padding: 12,
+    paddingLeft: 20,
+  },
+  draftMessageText: {
+    fontWeight: '400',
+    marginTop: 10,
+  },
+  headerContainer: {
+    borderBottomColor: 'grey',
+    borderBottomWidth: 0.5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
+  },
   headerTitle: {
-    fontWeight: '900',
     fontSize: 17,
+    fontWeight: '900',
   },
   headerTitleContainer: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+  },
+  leftContent: {
+    flexDirection: 'row',
   },
 });

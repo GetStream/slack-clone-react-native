@@ -1,13 +1,20 @@
-import React from 'react';
-import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
-  
 import {useTheme} from '@react-navigation/native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+
+import {CloseModalButton} from './CloseModalButton';
 import {SCText} from './SCText';
 
-export const ModalScreenHeader = ({goBack, title, subTitle}) => {
+const Spacer = () => <View style={{width: 50}} />;
+export const ModalScreenHeader = (props) => {
+  const {
+    goBack,
+    LeftContent = CloseModalButton,
+    RightContent = Spacer,
+    subTitle,
+    title,
+  } = props;
   const {colors} = useTheme();
-  const insets = useSafeAreaInsets();
 
   return (
     <View
@@ -15,17 +22,9 @@ export const ModalScreenHeader = ({goBack, title, subTitle}) => {
         styles.container,
         {
           backgroundColor: colors.background,
-          marginTop: insets.top > 0 ? 10 : 5,
         },
       ]}>
-      <View style={styles.leftContent}>
-        <TouchableOpacity
-          onPress={() => {
-            goBack && goBack();
-          }}>
-          <SCText style={styles.hamburgerIcon}>x</SCText>
-        </TouchableOpacity>
-      </View>
+      <LeftContent goBack={goBack} />
       <View>
         <SCText style={[styles.channelTitle, {color: colors.boldText}]}>
           {title}
@@ -36,53 +35,52 @@ export const ModalScreenHeader = ({goBack, title, subTitle}) => {
           </SCText>
         )}
       </View>
+      <View style={styles.leftContent}>
+        {!!RightContent && <RightContent />}
+      </View>
     </View>
   );
 };
 
 export const styles = StyleSheet.create({
-  container: {
-    padding: 15,
-    // marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'grey',
+  channelSubTitle: {
+    alignContent: 'center',
+    fontSize: 13,
+    fontWeight: '900',
+    marginLeft: 10,
+    textAlign: 'center',
   },
-  leftContent: {
-    position: 'absolute',
-    left: 20,
+  channelTitle: {
+    alignContent: 'center',
+    fontSize: 17,
+    fontWeight: '700',
+    marginLeft: 10,
+    textAlign: 'center',
+  },
+  container: {
+    alignItems: 'center',
+    borderBottomColor: 'grey',
+    borderBottomWidth: 0.5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
   },
   hamburgerIcon: {
     fontSize: 27,
   },
-  channelTitle: {
-    textAlign: 'center',
-    alignContent: 'center',
-    marginLeft: 10,
-    fontWeight: '900',
-    fontSize: 17,
-  },
-  channelSubTitle: {
-    textAlign: 'center',
-    alignContent: 'center',
-    marginLeft: 10,
-    fontWeight: '900',
-    fontSize: 13,
-  },
-  rightContent: {
-    flexDirection: 'row',
-    marginRight: 10,
-  },
-  searchIconContainer: {marginRight: 15, alignSelf: 'center'},
-  searchIcon: {
-    height: 18,
-    width: 18,
-  },
+  leftContent: {},
   menuIcon: {
     height: 18,
     width: 18,
   },
   menuIconContainer: {alignSelf: 'center'},
+  rightContent: {
+    flexDirection: 'row',
+    marginRight: 10,
+  },
+  searchIcon: {
+    height: 18,
+    width: 18,
+  },
+  searchIconContainer: {alignSelf: 'center', marginRight: 15},
 });

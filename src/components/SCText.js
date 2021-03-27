@@ -1,23 +1,28 @@
+import {useTheme} from '@react-navigation/native';
 import React from 'react';
 import {Text} from 'react-native';
-import {useTheme} from '@react-navigation/native';
 
-export const SCText = props => {
+export const SCText = (props) => {
   const {colors} = useTheme();
-  const style = Array.isArray(props.style)
+  const {onPress, style: propStyle} = props;
+  const style = Array.isArray(propStyle)
     ? [
         {
-          fontFamily: 'Lato-Regular',
           color: colors.text,
+          fontFamily: 'Lato-Regular',
           fontSize: 16,
         },
-        ...props.style,
+        ...propStyle,
       ]
     : {
-        fontFamily: 'Lato-Regular',
         color: colors.text,
+        fontFamily: 'Lato-Regular',
         fontSize: 16,
-        ...props.style,
+        ...propStyle,
       };
-  return <Text style={style}>{props.children}</Text>;
+  return (
+    <Text onPress={onPress} style={style}>
+      {props.children}
+    </Text>
+  );
 };

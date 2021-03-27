@@ -1,7 +1,7 @@
+import {useNavigation, useTheme} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 
-import {useNavigation, useTheme} from '@react-navigation/native';
 import {SVGIcon} from './SVGIcon';
 
 export const NewMessageBubble = () => {
@@ -10,7 +10,9 @@ export const NewMessageBubble = () => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('NewMessageScreen');
+        navigation.navigate('Modals', {
+          screen: 'NewMessageScreen',
+        });
       }}
       style={[
         styles.container,
@@ -18,30 +20,30 @@ export const NewMessageBubble = () => {
           backgroundColor: colors.primary,
         },
       ]}>
-      <SVGIcon type="new-message" height={51} width={51} />
+      <SVGIcon height={51} type='new-message' width={51} />
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 30,
-    width: 50,
-    height: 50,
     alignItems: 'center',
-    justifyContent: 'center',
-    right: 20,
+    borderColor: 'black',
+    borderRadius: 30,
+    borderWidth: 1,
     bottom: 30,
+    elevation: 8,
+    height: 50,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 20,
     shadowColor: '#000',
     shadowOffset: {
-      width: 0,
       height: 4,
+      width: 0,
     },
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
-    elevation: 8,
+    width: 50,
   },
 });
