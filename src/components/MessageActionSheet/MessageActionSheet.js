@@ -15,9 +15,11 @@ import {
 } from 'stream-chat-react-native';
 
 import {ChatClientService} from '../../utils';
+import {BottomSheetBackground} from '../BottomSheetBackground';
 import {ActionListContainer} from './ActionListContainer';
 
 const snapPoints = [300, 500];
+
 export const MessageActionSheet = React.forwardRef((props, fRef) => {
   const {
     actionHandlers,
@@ -143,6 +145,7 @@ export const MessageActionSheet = React.forwardRef((props, fRef) => {
   return (
     <BottomSheetModal
       backdropComponent={renderBackdrop}
+      backgroundComponent={BottomSheetBackground}
       ref={fRef}
       snapPoints={snapPoints}>
       <ActionListContainer

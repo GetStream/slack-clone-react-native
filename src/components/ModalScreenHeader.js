@@ -22,6 +22,7 @@ export const ModalScreenHeader = (props) => {
         styles.container,
         {
           backgroundColor: colors.background,
+          borderBottomColor: colors.border,
         },
       ]}>
       <LeftContent goBack={goBack} />
@@ -59,7 +60,6 @@ export const styles = StyleSheet.create({
   },
   container: {
     alignItems: 'center',
-    borderBottomColor: 'grey',
     borderBottomWidth: 0.5,
     flexDirection: 'row',
     justifyContent: 'space-between',

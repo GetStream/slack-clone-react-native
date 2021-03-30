@@ -6,7 +6,7 @@ import {
 
 export const MessageAvatar = (props) => {
   const {groupStyles, message} = useMessageContext();
-
+  console.log(message.text, groupStyles);
   return (
     <StreamMessageAvatar
       {...props}

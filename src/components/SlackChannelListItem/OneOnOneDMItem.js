@@ -61,10 +61,7 @@ export const OneOnOneDMItem = (props) => {
         {/* If the other user is online, then show the green presence indicator next to his name */}
         {showAvatar && <PresenceIndicator online={otherMember?.user?.online} />}
       </View>
-      {
-        showUnreadBadge &&
-        <UnreadCountBadge channel={channel} />
-      }
+      {showUnreadBadge && <UnreadCountBadge channel={channel} />}
     </TouchableOpacity>
   );
 };

@@ -1,7 +1,7 @@
 import {useTheme} from '@react-navigation/native';
 import Dayjs from 'dayjs';
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {SCText} from './SCText';
 
@@ -35,7 +35,7 @@ export const Reply = ({message, onPress}) => {
         styles.container,
         !message
           ? {
-              borderLeftColor: colors.grey_gainsboro,
+              borderLeftColor: colors.border,
               borderLeftWidth: 5,
             }
           : undefined,
@@ -53,14 +53,14 @@ export const Reply = ({message, onPress}) => {
         />
         <SCText style={styles.userName}>{message.user.name}</SCText>
       </View>
-      <Text style={styles.message}>{message.text}</Text>
-      {!!imageAttachment && <Text>Image from iOS</Text>}
-      <Text
+      <SCText style={styles.message}>{message.text}</SCText>
+      {!!imageAttachment && <SCText>Image from iOS</SCText>}
+      <SCText
         style={{
-          color: colors.grey,
+          color: colors.text,
         }}>
         {Dayjs(message.created_at).format('ll')}
-      </Text>
+      </SCText>
     </TouchableOpacity>
   );
 };

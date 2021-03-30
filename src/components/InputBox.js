@@ -3,8 +3,8 @@ import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   AutoCompleteInput,
-  SendButton,
   useChannelContext,
+  useMessageInputContext,
 } from 'stream-chat-react-native';
 
 import {useKeyboard} from '../hooks/useKeaboard';
@@ -14,6 +14,7 @@ import {SVGIcon} from './SVGIcon';
 export const InputBox = (props) => {
   const {colors} = useTheme();
   const {channel} = useChannelContext();
+  const {sendMessage} = useMessageInputContext();
   const {isOpen: isKeyboardOpen} = useKeyboard();
   const [textHeight, setTextHeight] = useState(0);
   const onContentSizeChange = ({
@@ -34,14 +35,22 @@ export const InputBox = (props) => {
     placeholderTextColor: '#979A9A',
     style: [
       {
+        color: colors.text,
         maxHeight: (textHeight || 17) * 4,
-        minHeight: 30,
+        minHeight: 25,
       },
     ],
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: colors.background}]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.background,
+          borderTopColor: colors.border,
+        },
+      ]}>
       <AutoCompleteInput
         {...props}
         additionalTextInputProps={additionalTextInputProps}
@@ -79,11 +88,11 @@ export const InputBox = (props) => {
             <TouchableOpacity onPress={props.openAttachmentPicker}>
               <SVGIcon height='21' type='image-attachment' width='18' />
             </TouchableOpacity>
-            <TouchableOpacity onPress={notImplemented}>
+            <TouchableOpacity onPress={sendMessage}>
               <SVGIcon
-                height='18'
-                type={'send-button'}
                 fill={'#1F629E'}
+                height='18'
+                type={'input-buttons-send'}
                 width='18'
               />
             </TouchableOpacity>
@@ -103,6 +112,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+    paddingHorizontal: 10,
+    paddingTop: 5,
     width: '100%',
   },
   inputContainer: {},

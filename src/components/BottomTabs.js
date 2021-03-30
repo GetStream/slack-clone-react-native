@@ -34,9 +34,9 @@ export const BottomTabs = ({navigation, state}) => {
         };
       case 'search':
         return {
-          icon: <SVGIcon height={25} type='global-search' width={25} />,
+          icon: <SVGIcon height={25} type='search-tab' width={25} />,
           iconActive: (
-            <SVGIcon height={25} type='global-search-selected' width={25} />
+            <SVGIcon height={25} type='search-tab-active' width={25} />
           ),
           title: 'Mention',
         };
@@ -52,7 +52,7 @@ export const BottomTabs = ({navigation, state}) => {
     <View
       style={[
         {
-          backgroundColor: colors.background,
+          backgroundColor: colors.backgroundTertiary,
           borderTopColor: colors.border,
           paddingBottom: insets.bottom,
         },

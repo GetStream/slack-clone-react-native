@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
-import { useChatContext } from 'stream-chat-react-native';
+import {useEffect, useRef, useState} from 'react';
+import {useChatContext} from 'stream-chat-react-native';
 
 export const usePaginatedSearchedUsers = () => {
-  const { chatClient } = useChatContext;
+  const {chatClient} = useChatContext;
 
   const [initialResults, setInitialResults] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -94,7 +94,7 @@ export const usePaginatedSearchedUsers = () => {
       };
 
       if (query) {
-        filter.name = { $autocomplete: query };
+        filter.name = {$autocomplete: query};
       }
 
       if (query !== searchText) {
@@ -111,7 +111,7 @@ export const usePaginatedSearchedUsers = () => {
 
       const res = await chatClient?.queryUsers(
         filter,
-        { name: 1 },
+        {name: 1},
         {
           limit: 10,
           offset: offset.current,
@@ -171,8 +171,8 @@ export const usePaginatedSearchedUsers = () => {
       fetchUsers('');
     },
     initialResults,
-    loading,
     loadMore,
+    loading,
     onChangeSearchText,
     onFocusInput,
     removeUser,

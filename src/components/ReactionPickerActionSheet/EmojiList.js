@@ -40,15 +40,7 @@ const EmojiRow = React.memo(({emojis, onPress}) => (
 ));
 
 const SectionHeader = React.memo(({section: {title}}) => (
-  <SCText
-    style={[
-      {
-        backgroundColor: 'white',
-      },
-      styles.groupTitle,
-    ]}>
-    {title}
-  </SCText>
+  <SCText style={styles.groupTitle}>{title}</SCText>
 ));
 
 export const EmojiList = React.memo(({toggleReaction}) => {

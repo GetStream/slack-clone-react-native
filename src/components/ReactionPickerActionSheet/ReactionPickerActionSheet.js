@@ -5,6 +5,7 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 
 import {useMessageReactions} from '../../hooks/useMessageReactions';
+import {BottomSheetBackground} from '../BottomSheetBackground';
 import {EmojiList} from './EmojiList';
 
 const snapPoints = [300, 600];
@@ -45,6 +46,7 @@ export const ReactionPickerActionSheet = React.forwardRef((props, fRef) => {
   return (
     <BottomSheetModal
       backdropComponent={renderBackdrop}
+      backgroundComponent={BottomSheetBackground}
       ref={fRef}
       snapPoints={snapPoints}
       stackBehavior={'replace'}>

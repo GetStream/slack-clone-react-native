@@ -2,7 +2,7 @@ import {useTheme} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   Channel,
   MessageInput,
@@ -115,18 +115,15 @@ export const NewMessageScreen = () => {
     <SafeAreaView
       style={{
         backgroundColor: colors.background,
-        height: '100%'
+        height: '100%',
       }}>
       <View style={styles.channelScreenContainer}>
         <ModalScreenHeader goBack={navigation.goBack} title='New Message' />
         <View
-          style={[
-            {
-              backgroundColor: colors.background,
-              flexGrow: 1,
-              flexShrink: 1,
-          },
-          ]}>
+          style={{
+            flexGrow: 1,
+            flexShrink: 1,
+          }}>
           <Channel
             additionalTextInputProps={additionalTextInputProps}
             channel={channel}
@@ -149,7 +146,7 @@ export const NewMessageScreen = () => {
               onFocus={setFocusOnSearch.bind(null, true)}
               onUsersChange={onUsersChange}
             />
-            <MessageList />
+            {focusOnSearch && <MessageList />}
             <MessageInput />
           </Channel>
         </View>

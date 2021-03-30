@@ -63,7 +63,7 @@ export const MessageFooter = (props) => {
     <View style={styles.reactionListContainer}>
       <View
         style={{
-          borderLeftColor: colors.grey_gainsboro,
+          borderLeftColor: colors.borderThick,
           borderLeftWidth: 5,
         }}>
         <Reply

@@ -19,7 +19,12 @@ export const MessageHeader = (props) => (
 export const MessageUserBar = () => {
   const {colors} = useTheme();
   const {groupStyles, message} = useMessageContext();
-  if (groupStyles[0] === 'single' || groupStyles[0] === 'top') {
+  if (
+    groupStyles[0] === 'single' ||
+    groupStyles[0] === 'top' ||
+    message.reply_count > 0 ||
+    message.quoted_message
+  ) {
     return (
       <>
         <View style={styles.userBar}>

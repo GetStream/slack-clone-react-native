@@ -150,7 +150,7 @@ export const ChannelScreen = () => {
       }
 
       if (paramChannel && paramChannel.initialized) {
-        console.log('already initialized')
+        console.log('already initialized');
         setChannel(paramChannel);
       } else {
         const newChannel = chatClient.channel('messaging', channelId);
