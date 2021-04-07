@@ -8,11 +8,13 @@ import {SCText} from '../SCText';
 const styles = StyleSheet.create({
   channelTitle: {
     flexDirection: 'row',
+    fontSize: 17,
     marginLeft: 7,
-    padding: 5,
+    padding: 5
   },
   unreadChannelTitle: {
-    fontWeight: '800',
+    fontSize: 16,
+    fontWeight: 'bold',
     marginLeft: 7,
     padding: 5,
   },
@@ -34,7 +36,7 @@ export const ChannelTitle = (props) => {
               styles.unreadChannelTitle,
               titleStyle,
             ]
-          : [styles.channelTitle, titleStyle]
+          : [styles.channelTitle, {color: colors.textTitle}, titleStyle]
       }>
       {truncate(getChannelDisplayName(channel, false, true), 30)}
     </SCText>

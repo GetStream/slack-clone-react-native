@@ -8,6 +8,7 @@ import NewMessageBubbleIcon from '../images/svgs/channel-list/new-message.svg';
 import ThreadsIcon from '../images/svgs/channel-list/threads.svg';
 import FileAttachmentIcon from '../images/svgs/channel/attachment.svg';
 import BackButtonIcon from '../images/svgs/channel/back-button.svg';
+import CloseButtonIcon from '../images/svgs/channel/close-button.svg';
 import EmojiIcon from '../images/svgs/channel/emoji.svg';
 import FormattingIcon from '../images/svgs/channel/formating.svg';
 import InfoIcon from '../images/svgs/channel/info.svg';
@@ -76,6 +77,7 @@ const iconMap = {
 
   // Channel header
   'back-button': BackButtonIcon,
+  'close-button': CloseButtonIcon,
   info: InfoIcon,
   'edit-text': EditTextIcon,
   search: SearchIcon,

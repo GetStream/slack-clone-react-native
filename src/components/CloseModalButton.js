@@ -1,19 +1,17 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import { TouchableOpacity} from 'react-native';
 
-import {SCText} from './SCText';
-
-export const styles = StyleSheet.create({
-  hamburgerIcon: {
-    fontSize: 27,
-  },
-});
+import { SVGIcon } from './SVGIcon';
 
 export const CloseModalButton = ({goBack}) => (
   <TouchableOpacity
     onPress={() => {
       goBack && goBack();
+    }}
+    style={{
+      flex: 1,
+      height: '100%'
     }}>
-    <SCText style={styles.hamburgerIcon}>x</SCText>
+    <SVGIcon height={15} type={'close-button'} width={15} />
   </TouchableOpacity>
 );

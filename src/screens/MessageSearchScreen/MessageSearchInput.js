@@ -6,7 +6,10 @@ import {TextInput, TouchableOpacity} from 'react-native';
 import {SCText} from '../../components/SCText';
 
 const styles = StyleSheet.create({
-  cancelButton: {justifyContent: 'center', padding: 5},
+  cancelButton: {
+    justifyContent: 'center',
+    padding: 5
+  },
   headerContainer: {
     flexDirection: 'row',
     padding: 10,
@@ -14,7 +17,6 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     borderRadius: 10,
-    borderWidth: 0.5,
     flex: 1,
     margin: 3,
     padding: 10,
@@ -34,9 +36,6 @@ export const MessageSearchInput = React.forwardRef((props, fRef) => {
     <View
       style={[
         styles.headerContainer,
-        {
-          backgroundColor: colors.backgroundSecondary,
-        },
       ]}>
       <TextInput
         autoFocus
@@ -44,21 +43,22 @@ export const MessageSearchInput = React.forwardRef((props, fRef) => {
         onChangeText={onChangeText}
         onSubmitEditing={onSubmit}
         placeholder='Search for message'
-        placeholderTextColor={colors.text}
+        placeholderTextColor={colors.textInverted}
         ref={fRef}
         returnKeyType='search'
         style={[
           styles.inputBox,
           {
-            backgroundColor: dark ? '#363639' : '#dcdcdc',
-            borderColor: dark ? '#212527' : '#D3D3D3',
-            color: colors.text,
+            backgroundColor: colors.primaryLight,
+            color: colors.textInverted,
           },
         ]}
         value={value}
       />
       <TouchableOpacity onPress={navigation.goBack} style={styles.cancelButton}>
-        <SCText>Cancel</SCText>
+        <SCText style={{
+          color: 'grey'
+        }}>Cancel</SCText>
       </TouchableOpacity>
     </View>
   );

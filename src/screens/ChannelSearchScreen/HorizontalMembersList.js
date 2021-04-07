@@ -3,7 +3,7 @@ import React from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useChatContext} from 'stream-chat-react-native';
 
-import {DirectMessagingConversationAvatar} from '../../components/DirectMessagingConversationAvatar';
+import {DMAvatar} from '../../components/DMAvatar';
 import {SCText} from '../../components/SCText';
 import {CacheService} from '../../utils';
 
@@ -43,7 +43,7 @@ export const HorizonalMembersList = () => {
           });
         }}
         style={styles.memberContainer}>
-        <DirectMessagingConversationAvatar channel={item} />
+        <DMAvatar channel={item} />
         <SCText style={styles.memberName}>{userName}</SCText>
       </TouchableOpacity>
     );

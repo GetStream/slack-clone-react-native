@@ -23,13 +23,13 @@ import {getSupportedReactions} from '../../utils/supportedReactions';
 import {UserSearch} from './UserSearch/UserSearch';
 
 const styles = StyleSheet.create({
-  channelScreenContainer: {
-    flexDirection: 'column',
-    height: '100%',
-  },
-  chatContainer: {
+  channelContainer: {
     flexGrow: 1,
     flexShrink: 1,
+  },
+  container: {
+    flexDirection: 'column',
+    height: '100%',
   },
 });
 const supportedReactions = getSupportedReactions();
@@ -64,6 +64,7 @@ export const NewMessageScreen = () => {
        * When message input is focused, switch to channel with selected members.
        */
       onFocus: async () => {
+        console.log('focusing')
         setFocusOnSearch(false);
         const newChannel = await getChannelUsingMembers([
           ...selectedUsers.current.map((t) => t.id),
@@ -117,13 +118,10 @@ export const NewMessageScreen = () => {
         backgroundColor: colors.background,
         height: '100%',
       }}>
-      <View style={styles.channelScreenContainer}>
+      <View style={styles.container}>
         <ModalScreenHeader goBack={navigation.goBack} title='New Message' />
         <View
-          style={{
-            flexGrow: 1,
-            flexShrink: 1,
-          }}>
+          style={styles.channelContainer}>
           <Channel
             additionalTextInputProps={additionalTextInputProps}
             channel={channel}
@@ -146,7 +144,7 @@ export const NewMessageScreen = () => {
               onFocus={setFocusOnSearch.bind(null, true)}
               onUsersChange={onUsersChange}
             />
-            {focusOnSearch && <MessageList />}
+            {!focusOnSearch && <MessageList />}
             <MessageInput />
           </Channel>
         </View>

@@ -1,9 +1,11 @@
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
-import {Channel, MessageInput, MessageList} from 'stream-chat-react-native';
+import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
+import {Channel, MessageInput, MessageList, MessageSimple, useMessageContext} from 'stream-chat-react-native';
+import {registerNativeHandlers} from 'stream-chat-react-native-core';
 
 import {CustomKeyboardCompatibleView} from '../../components/CustomKeyboardCompatibleView';
+import { EmptyComponent } from '../../components/EmptyComponent';
 import {Gallery} from '../../components/Gallery';
 import {Giphy} from '../../components/Giphy';
 import {InlineDateSeparator} from '../../components/InlineDateSeparator';
@@ -15,14 +17,12 @@ import {MessageHeader} from '../../components/MessageHeader';
 import {MessageRepliesAvatars} from '../../components/MessageRepliesAvatars';
 import {MessageText} from '../../components/MessageText';
 import {ReactionPickerActionSheet} from '../../components/ReactionPickerActionSheet/ReactionPickerActionSheet';
-import {Reply} from '../../components/Reply';
 import {UrlPreview} from '../../components/UrlPreview';
 import {useDraftMessage} from '../../hooks/useDraftMessage';
 import {ChatClientService} from '../../utils';
 import {supportedReactions} from '../../utils/supportedReactions';
 import {ChannelHeader} from './ChannelHeader';
 
-const EmptyComponent = () => null;
 const styles = StyleSheet.create({
   channelScreenContainer: {flexDirection: 'column', height: '100%'},
   chatContainer: {
@@ -51,6 +51,14 @@ const styles = StyleSheet.create({
     width: 50,
   },
 });
+
+const MessageWithoutDeleted = (props) => {
+  const {message} = useMessageContext();
+  if (message.type === 'deleted') {
+    return null;
+  }
+  return <MessageSimple {...props} />;
+};
 
 export const ChannelScreen = () => {
   const {colors} = useTheme();
@@ -150,7 +158,6 @@ export const ChannelScreen = () => {
       }
 
       if (paramChannel && paramChannel.initialized) {
-        console.log('already initialized');
         setChannel(paramChannel);
       } else {
         const newChannel = chatClient.channel('messaging', channelId);
@@ -200,22 +207,24 @@ export const ChannelScreen = () => {
             Giphy={Giphy}
             initialScrollToFirstUnreadMessage
             initialValue={draftText}
+            InlineDateSeparator={InlineDateSeparator}
             Input={InputBox}
             InputButtons={EmptyComponent}
             KeyboardCompatibleView={CustomKeyboardCompatibleView}
+            maxTimeBetweenGroupedMessages={4000}
             MessageAvatar={MessageAvatar}
             MessageDeleted={EmptyComponent}
             MessageFooter={renderMessageFooter}
             MessageHeader={MessageHeader}
             messageId={messageId}
             MessageRepliesAvatars={MessageRepliesAvatars}
+            MessageSimple={MessageWithoutDeleted}
             MessageText={MessageText}
             onChangeText={onChangeText}
             onLongPressMessage={onLongPressMessage}
             onPressInMessage={EmptyComponent}
             ReactionList={EmptyComponent}
-            Reply={Reply}
-            ScrollToBottomButton={EmptyComponent}
+            Reply={EmptyComponent}
             supportedReactions={supportedReactions}
             UrlPreview={UrlPreview}>
             <MessageList

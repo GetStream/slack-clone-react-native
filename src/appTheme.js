@@ -14,9 +14,11 @@ export const DarkTheme = {
     linkText: '#1E75BE',
     notification: 'rgb(255, 69, 58)',
     primary: '#121115',
+    primaryLight: '#4C4C57',
     shadow: '#232327',
     text: '#d8d8d9',
-    textInverted: '#d8d8d9', // dark mode = #302D22
+    textInverted: '#d8d8d9',
+    textTitle: '#a6a6a6', // dark mode = #302D22
   },
   dark: true,
 };
@@ -34,9 +36,11 @@ export const LightTheme = {
     linkText: '#1E75BE',
     notification: 'rgb(255, 69, 58)',
     primary: '#3D0C3B',
+    primaryLight: '#754a74',
     shadow: '#000',
     text: 'black',
-    textInverted: 'white', // dark mode = #302D22
+    textInverted: 'white',
+    textTitle: 'black', // dark mode = #302D22
   },
   dark: false,
 };

@@ -6,7 +6,7 @@ import {SelectedUserTag} from './SelectedUserTag';
 
 const styles = StyleSheet.create({
   inputBox: {
-    marginVertical: 10,
+    marginVertical: 0,
   },
   inputBoxContainer: {
     flexDirection: 'column',

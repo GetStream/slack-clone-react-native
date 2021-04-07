@@ -23,7 +23,12 @@ export const JumpToButton = () => {
           shadowColor: colors.shadow,
         },
       ]}>
-      <SCText>Jump to</SCText>
+      <SCText style={[
+        styles.title,
+        {
+          color: colors.textTitle
+        }
+      ]}>Jump to...</SCText>
     </TouchableOpacity>
   );
 };
@@ -31,15 +36,12 @@ export const JumpToButton = () => {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
-    borderWidth: 0.5,
-    elevation: 10,
+    borderWidth: 1,
+    elevation: 0,
     margin: 15,
     padding: 10,
-    shadowOffset: {
-      height: 1,
-      width: 0,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 1.41,
   },
+  title: {
+    fontSize: 17,
+  }
 });

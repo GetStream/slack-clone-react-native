@@ -77,7 +77,12 @@ export const UserSearch = ({onFocus, onUsersChange}) => {
 
   return (
     <>
-      <View style={styles.searchContainer}>
+      <View style={[
+        styles.searchContainer,
+        {
+          borderBottomColor: colors.border,
+        }
+      ]}>
         <SCText style={styles.searchContainerLabel}>To:</SCText>
         <MultiSelectInput
           onBlur={onBlur}
@@ -94,71 +99,11 @@ export const UserSearch = ({onFocus, onUsersChange}) => {
 };
 
 const styles = StyleSheet.create({
-  blurredTagText: {color: '#0080ff'},
-  inputBox: {
-    flex: 1,
-  },
-  inputBoxContainer: {
-    alignItems: 'center',
-    flex: 1,
-    flexWrap: 'wrap',
-  },
   searchContainer: {
     alignItems: 'center',
-    borderBottomColor: '#3A3A3D',
     borderBottomWidth: 0.5,
     flexDirection: 'row',
     paddingVertical: 5,
   },
   searchContainerLabel: {fontSize: 15, padding: 10},
-  searchResultContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    height: 50,
-    paddingLeft: 10,
-  },
-  searchResultUserImage: {
-    borderRadius: 5,
-    height: 30,
-    width: 30,
-  },
-  searchResultUserName: {paddingLeft: 10},
-  tagContainer: {
-    borderRadius: 3,
-    flexDirection: 'row',
-    margin: 2,
-    paddingRight: 5,
-  },
-  tagImage: {
-    borderBottomLeftRadius: 3,
-    borderTopLeftRadius: 3,
-    height: 25,
-    width: 25,
-  },
-  tagText: {
-    alignSelf: 'center',
-    fontSize: 14,
-    paddingLeft: 10,
-  },
-  tagsContainer: {
-    flexDirection: 'row',
-  },
-  textInput: {
-    color: 'rgba(0, 0, 0, 0.87)',
-    flex: 1,
-    fontSize: 13,
-    height: 32,
-    margin: 0,
-    padding: 0,
-    paddingLeft: 12,
-    paddingRight: 12,
-  },
-  textInputContainer: {
-    backgroundColor: '#ccc',
-    borderRadius: 16,
-    flex: 1,
-    height: 32,
-    margin: 4,
-    minWidth: 100,
-  },
 });

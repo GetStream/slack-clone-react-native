@@ -6,22 +6,21 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {SCText} from '../../components/SCText';
 
 const styles = StyleSheet.create({
-  groupTitle: {
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 40,
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+  },
+  title: {
     fontSize: 15,
     fontWeight: '800',
   },
-  groupTitleContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginLeft: 10,
-    marginRight: 10,
-    paddingTop: 14,
-  },
-  groupTitleRightButton: {
+  titleRightButton: {
     textAlignVertical: 'center',
   },
-  groupTitleRightButtonText: {
+  titleRightButtonText: {
     fontSize: 25,
   },
 });
@@ -32,17 +31,17 @@ export const SectionHeader = (props) => {
   return (
     <View
       style={[
-        styles.groupTitleContainer,
+        styles.container,
         {
           backgroundColor: colors.background,
         },
       ]}>
-      <SCText style={styles.groupTitle}>{title}</SCText>
+      <SCText style={styles.title}>{title}</SCText>
       {onPress && (
         <TouchableOpacity
           onPress={onPress}
-          style={styles.groupTitleRightButton}>
-          <SCText style={styles.groupTitleRightButtonText}>+</SCText>
+          style={styles.titleRightButton}>
+          <SCText style={styles.titleRightButtonText}>+</SCText>
         </TouchableOpacity>
       )}
     </View>

@@ -7,7 +7,7 @@ import React, {useMemo, useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ChannelList, Chat, useChatContext} from 'stream-chat-react-native';
 
-import {DirectMessagingConversationAvatar} from '../components/DirectMessagingConversationAvatar';
+import {DMAvatar} from '../components/DMAvatar';
 import {JumpToButton} from '../components/JumpToButton';
 import {NewMessageBubble} from '../components/NewMessageBubble';
 import {ScreenHeader} from './ScreenHeader';
@@ -44,7 +44,7 @@ export const DirectMessagesScreen = () => {
               channelId: channel.id,
             });
           }}
-          PreviewAvatar={DirectMessagingConversationAvatar}
+          PreviewAvatar={DMAvatar}
           setFlatListRef={setRef}
         />
       </Chat>

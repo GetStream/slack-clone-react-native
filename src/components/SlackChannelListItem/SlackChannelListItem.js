@@ -21,7 +21,7 @@ export const SlackChannelListItem = (props) => {
   const onPress = () => {
     onSelect(channel);
   };
-
+  console.log(channel.id, channel.data.name);
   if (isOneOnOneDM) {
     return (
       <View style={containerStyle}>

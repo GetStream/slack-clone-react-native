@@ -7,6 +7,26 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {SCText} from '../components/SCText';
 import {UserPicker} from '../components/UserPicker';
 
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  logo: {
+    borderRadius: 5,
+    height: 35,
+    marginRight: 20,
+    width: 35,
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: '700',
+  },
+});
+
 const CopilotLogo = walkthroughable(TouchableOpacity);
 
 export const ScreenHeader = ({showLogo = false, title}) => {
@@ -22,7 +42,7 @@ export const ScreenHeader = ({showLogo = false, title}) => {
           styles.container,
           {
             backgroundColor: colors.primary,
-            height: 55 + insets.top,
+            height: 60 + insets.top,
             paddingTop: insets.top,
           },
         ]}>
@@ -66,23 +86,3 @@ export const ScreenHeader = ({showLogo = false, title}) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  logo: {
-    borderRadius: 5,
-    height: 30,
-    marginRight: 20,
-    width: 30,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-  },
-});

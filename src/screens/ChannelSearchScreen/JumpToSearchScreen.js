@@ -11,6 +11,9 @@ import {ChannelSearchList} from './ChannelSearchList';
 import {HorizonalMembersList} from './HorizontalMembersList';
 
 const styles = StyleSheet.create({
+  searchInputContainer: {
+    borderBottomWidth: 0.5,
+  },
   searchResultsContainer: {
     paddingTop: 10,
   },
@@ -59,7 +62,14 @@ export const JumpToSearchScreen = () => {
         backgroundColor: colors.background,
       }}>
       <View>
-        <ChannelSearchInput onSubmit={onSubmit} />
+        <View style={[
+          styles.searchInputContainer,
+          {
+            borderBottomColor: colors.border
+          }
+        ]}>
+          <ChannelSearchInput onSubmit={onSubmit} />
+        </View>
         {!searchText && <HorizonalMembersList />}
         <View style={styles.searchResultsContainer}>
           {!searchText && (

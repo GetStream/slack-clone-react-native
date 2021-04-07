@@ -1,49 +1,17 @@
 import {useTheme} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import { Platform, StyleSheet, View} from 'react-native';
 
 import {CloseModalButton} from './CloseModalButton';
 import {SCText} from './SCText';
-
-const Spacer = () => <View style={{width: 50}} />;
-export const ModalScreenHeader = (props) => {
-  const {
-    goBack,
-    LeftContent = CloseModalButton,
-    RightContent = Spacer,
-    subTitle,
-    title,
-  } = props;
-  const {colors} = useTheme();
-
-  return (
-    <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: colors.background,
-          borderBottomColor: colors.border,
-        },
-      ]}>
-      <LeftContent goBack={goBack} />
-      <View>
-        <SCText style={[styles.channelTitle, {color: colors.boldText}]}>
-          {title}
-        </SCText>
-        {subTitle && (
-          <SCText style={[styles.channelSubTitle, {color: colors.linkText}]}>
-            {subTitle}
-          </SCText>
-        )}
-      </View>
-      <View style={styles.leftContent}>
-        {!!RightContent && <RightContent />}
-      </View>
-    </View>
-  );
-};
+import { Spacer } from './Spacer';
 
 export const styles = StyleSheet.create({
+  centerContent: {
+    flex: 4,
+    justifyContent: 'center',
+    paddingBottom: 15,
+  },
   channelSubTitle: {
     alignContent: 'center',
     fontSize: 13,
@@ -63,24 +31,56 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingTop: Platform.OS === 'android' ? 10 : 0
   },
-  hamburgerIcon: {
-    fontSize: 27,
+  leftContent: {
+    flex: 1,
+    paddingBottom: 15,
   },
-  leftContent: {},
-  menuIcon: {
-    height: 18,
-    width: 18,
-  },
-  menuIconContainer: {alignSelf: 'center'},
   rightContent: {
-    flexDirection: 'row',
-    marginRight: 10,
+    flex: 1,
+    paddingBottom: 15,
   },
-  searchIcon: {
-    height: 18,
-    width: 18,
-  },
-  searchIconContainer: {alignSelf: 'center', marginRight: 15},
 });
+
+
+export const ModalScreenHeader = (props) => {
+  const {
+    goBack,
+    LeftContent = CloseModalButton,
+    RightContent = () => <Spacer width={50} />,
+    subTitle,
+    title,
+  } = props;
+  const {colors} = useTheme();
+
+  return (
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.background,
+          borderBottomColor: colors.border,
+        },
+      ]}>
+        <View style={styles.leftContent}>
+          <LeftContent goBack={goBack} />
+        </View>
+      <View style={styles.centerContent}>
+        <SCText style={[styles.channelTitle, {color: colors.boldText}]}>
+          {title}
+        </SCText>
+        {!!subTitle && (
+          <SCText style={[styles.channelSubTitle, {color: colors.linkText}]}>
+            {subTitle}
+          </SCText>
+        )}
+      </View>
+      <View style={styles.rightContent}>
+        {!!RightContent && <RightContent />}
+      </View>
+    </View>
+  );
+};
+

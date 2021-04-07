@@ -1,5 +1,5 @@
 import {useTheme} from '@react-navigation/native';
-import Moment from 'moment';
+import Dayjs from 'dayjs';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useMessageContext} from 'stream-chat-react-native';
@@ -21,9 +21,7 @@ export const MessageUserBar = () => {
   const {groupStyles, message} = useMessageContext();
   if (
     groupStyles[0] === 'single' ||
-    groupStyles[0] === 'top' ||
-    message.reply_count > 0 ||
-    message.quoted_message
+    groupStyles[0] === 'top'
   ) {
     return (
       <>
@@ -38,7 +36,7 @@ export const MessageUserBar = () => {
             {message.user.name}
           </SCText>
           <SCText style={styles.messageDate}>
-            {Moment(message.created_at).format('hh:ss A')}
+            {Dayjs(message.created_at).format('LT')}
           </SCText>
         </View>
       </>

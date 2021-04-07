@@ -6,16 +6,6 @@ import {ChannelTitle} from './ChannelTitle';
 import {UnreadCountBadge} from './UnreadCountBadge';
 
 const styles = StyleSheet.create({
-  channelRow: {
-    borderRadius: 6,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginRight: 5,
-    padding: 3,
-    paddingBottom: 5,
-    paddingLeft: 8,
-    paddingTop: 5,
-  },
   channelTitleContainer: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -24,6 +14,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '300',
     padding: 0,
+  },
+  container: {
+    borderRadius: 6,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    maxHeight: 40,
   },
 });
 
@@ -36,7 +32,7 @@ export const GroupChannelItem = (props) => {
     <TouchableOpacity
       key={channel.id}
       onPress={onPress}
-      style={styles.channelRow}>
+      style={styles.container}>
       <View style={styles.channelTitleContainer}>
         <SCText style={[styles.channelTitlePrefix, titleStyle]}>#</SCText>
         <ChannelTitle channel={channel} titleStyle={titleStyle} />

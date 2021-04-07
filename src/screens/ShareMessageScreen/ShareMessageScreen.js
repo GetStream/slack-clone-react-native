@@ -1,7 +1,7 @@
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import debounce from 'lodash/debounce';
 import React, {useMemo, useState} from 'react';
-import {Button, SafeAreaView, StyleSheet, TextInput, View} from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import Autocomplete from 'react-native-autocomplete-input';
 import {useChatContext} from 'stream-chat-react-native';
 
@@ -12,10 +12,23 @@ import {SlackChannelListItem} from '../../components/SlackChannelListItem/SlackC
 import {usePaginatedSearchedChannels} from '../../hooks/usePaginatedSearchedChannels';
 
 const styles = StyleSheet.create({
-  autocompleteContainer: {},
+  autocompleteContainer: {
+    // https://github.com/mrlaessig/react-native-autocomplete-input#android
+    ...Platform.select({
+      android: {
+        flex: 1,
+        left: 0,
+        position: 'absolute',
+        right: 0,
+        top: 0,
+        zIndex: 1
+      },
+    })
+  },
   autocompleteInputContainerStyle: {
     backgroundColor: 'white',
     borderWidth: 0,
+    paddingHorizontal: Platform.OS === 'android' ? 10 : 0,
   },
   autocompleteListStyle: {
     backgroundColor: 'pink',
@@ -26,11 +39,12 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   messageInput: {
-    marginVertical: 20,
+    marginTop: Platform.OS === 'android' ? 30 : 20,
+    marginVertical: 20
   },
   quotedMessageContainer: {
     borderRadius: 10,
-    borderWidth: 2,
+    borderWidth: 0.5,
   },
   selectedChannelContainer: {
     fontWeight: 'bold',
@@ -106,31 +120,57 @@ export const ShareMessageScreen = () => {
     });
   };
 
+  const HeaderLeftButton = () => (
+    <TouchableOpacity onPress={navigation.goBack}>
+      <Text style={{
+        color: colors.linkText
+      }}>
+        Cancel
+      </Text>
+    </TouchableOpacity>
+  );
+
+  const HeaderRightButton = () => (
+    <TouchableOpacity onPress={sendMessage}>
+      <Text style={{
+        color: colors.linkText,
+        textAlign: 'right'
+      }}>
+        Send
+      </Text>
+    </TouchableOpacity>
+  );
+
+  const renderAutocompleteInput = () => (
+    <Autocomplete
+      autoCapitalize='none'
+      autoCorrect={false}
+      data={channels}
+      inputContainerStyle={styles.autocompleteInputContainerStyle}
+      listStyle={{
+        backgroundColor: 'white',
+        borderWidth: 0,
+        height: 300,
+      }}
+      onChangeText={onChangeText}
+      placeholder={'Share with channel'}
+      renderItem={renderItem}
+    />
+  )
   return (
     <SafeAreaView>
       <ModalScreenHeader
-        LeftContent={() => (
-          <Button onPress={navigation.goBack} title={'Cancel'} />
-        )}
-        RightContent={() => <Button onPress={sendMessage} title={'Send'} />}
+        LeftContent={HeaderLeftButton}
+        RightContent={HeaderRightButton}
         title={'Share Message'}
       />
       <View style={styles.container}>
-        {!selectedChannel && (
-          <Autocomplete
-            autoCapitalize='none'
-            autoCorrect={false}
-            data={channels}
-            inputContainerStyle={styles.autocompleteInputContainerStyle}
-            listStyle={{
-              backgroundColor: 'white',
-              borderWidth: 0,
-              height: 300,
-            }}
-            onChangeText={onChangeText}
-            placeholder={'Share with channel'}
-            renderItem={renderItem}
-          />
+        {!selectedChannel && (Platform.OS === 'android' ? (
+          <View style={styles.autocompleteContainer}>
+            {renderAutocompleteInput()}
+          </View>
+        ) : 
+          renderAutocompleteInput()
         )}
         {!!selectedChannel && (
           <View style={styles.selectedChannelContainer}>

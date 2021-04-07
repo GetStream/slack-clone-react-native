@@ -1,6 +1,6 @@
 import {useTheme} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 
 import {BackButton} from '../../components/BackButton';
 import {SCText} from '../../components/SCText';
@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 4,
     justifyContent: 'center',
+    paddingTop: Platform.OS === 'android' ? 10 : 0
   },
   channelSubTitle: {},
   container: {

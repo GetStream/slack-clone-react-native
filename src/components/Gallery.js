@@ -1,5 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {
   makeImageCompatibleUrl,
   useImageGalleryContext,
@@ -59,8 +60,9 @@ export const Gallery = () => {
                 setOverlay('gallery');
               }}
               style={styles.imageContainer}>
-              <Image
+              <FastImage
                 source={{
+                  priority: FastImage.priority.normal,
                   uri: url,
                 }}
                 style={[

@@ -16,9 +16,16 @@ export const ChannelSearchList = (props) => {
   const renderChannelRow = ({item: channel}) => (
     <SlackChannelListItem
       channel={channel}
+      containerStyle={{
+        paddingHorizontal: 10,
+        paddingVertical: 3
+      }}
       key={channel.id}
       onSelect={goToChannelScreen}
       showAvatar
+      titleStyle={{
+        fontWeight: '400'
+      }}
     />
   );
 

@@ -6,10 +6,15 @@ import {KeyboardCompatibleView} from 'stream-chat-react-native';
 export const CustomKeyboardCompatibleView = ({children}) => {
   const insets = useSafeAreaInsets();
 
-  const iosVerticalOffset = insets.bottom > 0 ? 100 : 0;
+  if (Platform.OS === 'android') {
+    return children;
+  }
+
+  const iosVerticalOffset = insets.bottom > 0 ? 60 : 0;
+
   return (
     <KeyboardCompatibleView
-      keyboardVerticalOffset={Platform.OS === 'ios' ? iosVerticalOffset : -200}>
+      keyboardVerticalOffset={iosVerticalOffset}>
       {children}
     </KeyboardCompatibleView>
   );

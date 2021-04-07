@@ -1,4 +1,4 @@
-import {useNavigation, useScrollToTop} from '@react-navigation/native';
+import {useNavigation, useScrollToTop, useTheme} from '@react-navigation/native';
 import React, {useRef} from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -10,7 +10,35 @@ import {useSlackChannels} from '../../hooks/useSlackChannels';
 import {ChatClientService, notImplemented} from '../../utils';
 import {SectionHeader} from './SectionHeader';
 
+const styles = StyleSheet.create({
+  channelRow: {
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  channelTitle: {
+    fontSize: 17,
+    padding: 5,
+    paddingLeft: 10,
+  },
+  channelTitleContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  container: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  sectionList: {
+    flexGrow: 1,
+    flexShrink: 1,
+  },
+});
+
 export const SlackChannelList = () => {
+  const {colors} = useTheme();
   const client = ChatClientService.getClient();
   const navigation = useNavigation();
   const changeChannel = (channel) => {
@@ -48,16 +76,18 @@ export const SlackChannelList = () => {
   };
 
   const renderChannelRow = (channel) => (
-    <SlackChannelListItem
-      channel={channel}
-      containerStyle={{
-        marginVertical: 3,
-      }}
-      key={channel.id}
-      onSelect={changeChannel}
-      presenceIndicator
-      showAvatar={false}
-    />
+    <View style={styles.channelRow}>
+      <SlackChannelListItem
+        channel={channel}
+        containerStyle={{
+          marginVertical: 0,
+        }}
+        key={channel.id}
+        onSelect={changeChannel}
+        presenceIndicator
+        showAvatar={false}
+      />
+    </View>
   );
 
   const renderSectionHeader = ({section: {clickHandler, data, id, title}}) => {
@@ -77,7 +107,12 @@ export const SlackChannelList = () => {
           style={styles.channelRow}>
           <View style={styles.channelTitleContainer}>
             {item.icon}
-            <SCText style={styles.channelTitle}>{item.title}</SCText>
+            <SCText style={[
+              styles.channelTitle,
+              {
+                color: colors.textTitle
+              }
+            ]}>{item.title}</SCText>
           </View>
         </TouchableOpacity>
       );
@@ -135,70 +170,3 @@ export const SlackChannelList = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  channelRow: {
-    borderRadius: 6,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginRight: 5,
-    paddingBottom: 5,
-    paddingLeft: 10,
-    paddingTop: 5,
-  },
-  channelTitle: {
-    padding: 5,
-    paddingLeft: 10,
-  },
-  channelTitleContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  channelTitlePrefix: {
-    fontWeight: '300',
-    padding: 1,
-  },
-  container: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    paddingLeft: 5,
-    paddingRight: 5,
-  },
-  groupTitle: {
-    fontSize: 14,
-  },
-  groupTitleContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginLeft: 10,
-    marginRight: 10,
-    paddingTop: 14,
-  },
-  groupTitleRightButton: {
-    textAlignVertical: 'center',
-  },
-  groupTitleRightButtonText: {
-    fontSize: 25,
-  },
-  headerContainer: {
-    borderColor: '#D3D3D3',
-    borderWidth: 0.5,
-    elevation: 2,
-    margin: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      height: 1,
-      width: 0,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-  },
-  inputSearchBox: {
-    padding: 10,
-  },
-  sectionList: {
-    flexGrow: 1,
-    flexShrink: 1,
-  },
-});

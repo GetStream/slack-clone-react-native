@@ -75,6 +75,7 @@ export default () => {
     messageInput: {
       container: {
         borderWidth: 0,
+        padding: 0,
       }
     },
     messageSimple: {
@@ -114,7 +115,7 @@ export default () => {
         replyContainer: {
           borderWidth: 0,
           height: 0,
-          padding: 0,
+          paddingTop: 0,
         },
         textContainer: {
           borderWidth: 0,

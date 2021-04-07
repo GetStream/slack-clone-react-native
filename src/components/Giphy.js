@@ -1,13 +1,13 @@
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
-
+import FastImage from 'react-native-fast-image';
 import {SCText} from './SCText';
 
 export const Giphy = (props) => (
   <TouchableOpacity style={styles.container}>
     <SCText style={styles.title}>{props.title}</SCText>
     <SCText style={styles.description}>Posted using Giphy.com</SCText>
-    <Image
+    <FastImage
       source={{
         url: props.image_url || props.thumb_url,
       }}

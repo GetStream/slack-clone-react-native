@@ -33,7 +33,7 @@ export const InlineDateSeparator = ({date}) => {
       <SCText style={styles.date}>
         {dayjs(date).calendar(null, {
           lastDay: '[Yesterday]',
-          lastWeek: '[Last] dddd',
+          lastWeek: 'MMM DD',
           nextDay: '[Tomorrow]',
           nextWeek: 'dddd',
           sameDay: '[Today]',

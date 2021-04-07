@@ -1,7 +1,6 @@
 import {useTheme} from '@react-navigation/native';
 import React, {useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {SafeAreaView} from 'react-native';
 
 import {SCText} from '../../components/SCText';
 import {usePaginatedSearchedMessages} from '../../hooks/usePaginatedSearchedMessages';
@@ -9,16 +8,16 @@ import {MessageSearchInput} from './MessageSearchInput';
 import {MessageSearchList} from './MessageSearchList';
 import {RecentSearchList} from './RecentSearchList';
 import {useRecentSearched} from './hooks/useRecentSearches';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    height: '100%',
+    height: '100%'
   },
   recentSearchesContainer: {
     flexGrow: 1,
     flexShrink: 1,
-    marginBottom: 10,
     marginTop: 10,
   },
   resultCountContainer: {
@@ -27,12 +26,12 @@ const styles = StyleSheet.create({
   },
   safeAreaView: {
     flex: 1,
-    height: '100%',
   },
 });
 
 export const MessageSearchScreen = () => {
   const {colors} = useTheme();
+  const insets = useSafeAreaInsets();
   const inputRef = useRef(null);
   const [searchText, setSearchText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -71,11 +70,12 @@ export const MessageSearchScreen = () => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={[
         styles.safeAreaView,
         {
-          backgroundColor: colors.background,
+          backgroundColor: colors.primary,
+          paddingTop: insets.top,
         },
       ]}>
       <View style={styles.container}>
@@ -120,6 +120,6 @@ export const MessageSearchScreen = () => {
           )}
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };

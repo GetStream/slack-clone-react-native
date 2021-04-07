@@ -67,6 +67,15 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - libwebp (1.2.0):
+    - libwebp/demux (= 1.2.0)
+    - libwebp/mux (= 1.2.0)
+    - libwebp/webp (= 1.2.0)
+  - libwebp/demux (1.2.0):
+    - libwebp/webp
+  - libwebp/mux (1.2.0):
+    - libwebp/demux
+  - libwebp/webp (1.2.0)
   - OpenSSL-Universal (1.0.2.20):
     - OpenSSL-Universal/Static (= 1.0.2.20)
   - OpenSSL-Universal/Static (1.0.2.20)
@@ -240,17 +249,15 @@ PODS:
     - React
   - react-native-blur (0.8.0):
     - React
-  - react-native-cameraroll (4.0.2):
+  - react-native-cameraroll (4.0.4):
     - React-Core
-  - react-native-document-picker (5.0.0):
+  - react-native-document-picker (5.0.3):
     - React-Core
   - react-native-get-random-values (1.6.0):
     - React-Core
   - react-native-haptic (1.0.1):
     - React
-  - react-native-image-picker (2.4.0):
-    - React
-  - react-native-image-resizer (1.4.3):
+  - react-native-image-resizer (1.4.4):
     - React-Core
   - react-native-netinfo (6.0.0):
     - React-Core
@@ -326,6 +333,10 @@ PODS:
     - React
   - RNCPicker (1.8.1):
     - React-Core
+  - RNFastImage (8.3.4):
+    - React-Core
+    - SDWebImage (~> 5.8)
+    - SDWebImageWebPCoder (~> 0.6.1)
   - RNFS (2.16.6):
     - React
   - RNGestureHandler (1.10.3):
@@ -372,10 +383,16 @@ PODS:
     - Yoga
   - RNScreens (2.18.1):
     - React-Core
-  - RNShare (5.1.4):
+  - RNShare (5.1.7):
     - React-Core
   - RNSVG (12.1.0):
     - React
+  - SDWebImage (5.10.4):
+    - SDWebImage/Core (= 5.10.4)
+  - SDWebImage/Core (5.10.4)
+  - SDWebImageWebPCoder (0.6.1):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.7)
   - TOCropViewController (2.5.5)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -424,7 +441,6 @@ DEPENDENCIES:
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-haptic (from `../node_modules/react-native-haptic`)
-  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -443,6 +459,7 @@ DEPENDENCIES:
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNCPicker (from `../node_modules/@react-native-community/picker`)"
+  - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
@@ -465,7 +482,10 @@ SPEC REPOS:
     - Flipper-PeerTalk
     - Flipper-RSocket
     - FlipperKit
+    - libwebp
     - OpenSSL-Universal
+    - SDWebImage
+    - SDWebImageWebPCoder
     - TOCropViewController
     - YogaKit
 
@@ -512,8 +532,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-get-random-values"
   react-native-haptic:
     :path: "../node_modules/react-native-haptic"
-  react-native-image-picker:
-    :path: "../node_modules/react-native-image-picker"
   react-native-image-resizer:
     :path: "../node_modules/react-native-image-resizer"
   react-native-netinfo:
@@ -550,6 +568,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNCPicker:
     :path: "../node_modules/@react-native-community/picker"
+  RNFastImage:
+    :path: "../node_modules/react-native-fast-image"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -585,6 +605,7 @@ SPEC CHECKSUMS:
   FlipperKit: ab353d41aea8aae2ea6daaf813e67496642f3d7d
   Folly: aeb27d02cdff07ca01f8a8a5a6dd5bcaf6be6f70
   glog: 2ad46e202fbaa5641fceb4b2af37dcd88fd8762d
+  libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
   OpenSSL-Universal: ff34003318d5e1163e9529b08470708e389ffcdd
   RCTRequired: 48884c74035a0b5b76dbb7a998bd93bcfc5f2047
   RCTTypeSafety: edf4b618033c2f1c5b7bc3d90d8e085ed95ba2ab
@@ -598,12 +619,11 @@ SPEC CHECKSUMS:
   React-jsinspector: 8e68ffbfe23880d3ee9bafa8be2777f60b25cbe2
   react-native-appearance: 0f0e5fc2fcef70e03d48c8fe6b00b9158c2ba8aa
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
-  react-native-cameraroll: 1965db75c851b15e77a22ca0ac78e32af6b571ae
-  react-native-document-picker: ca0c8769c3848866970dc9164e809c6ea45cb5d6
+  react-native-cameraroll: 88f4e62d9ecd0e1f253abe4f685474f2ea14bfa2
+  react-native-document-picker: 2e6ecd112c48215e36431734d902f35201ffab0a
   react-native-get-random-values: f0fc24a5887a3341589515a86282a574407b59e4
   react-native-haptic: d90a0a661333a22cb2b434c7094a65f27aed773d
-  react-native-image-picker: 4e63090db19a528e36c0cc07d1423c8c0cb4c4ef
-  react-native-image-resizer: 5dfbf934fe5788c11ed06ebbcdb6e6fb6beec20c
+  react-native-image-resizer: 13ac4af788f88af36d0353a1324401ebabd04fe4
   react-native-netinfo: e849fc21ca2f4128a5726c801a82fc6f4a6db50d
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
@@ -621,14 +641,17 @@ SPEC CHECKSUMS:
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNCPicker: 914b557e20b3b8317b084aca9ff4b4edb95f61e4
+  RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNImageCropPicker: e641bf83ac47324994cac139bde74635ec52c17c
   RNReactNativeHapticFeedback: 653a8c126a0f5e88ce15ffe280b3ff37e1fbb285
   RNReanimated: b9c929bfff7dedc9c89ab1875f1c6151023358d9
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
-  RNShare: 8af5349f05fc042d230674dd650d19789187ff9c
+  RNShare: 503c37af86611beadccba46156fcc42170c9fb42
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
+  SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
+  SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   TOCropViewController: da59f531f8ac8a94ef6d6c0fc34009350f9e8bfe
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

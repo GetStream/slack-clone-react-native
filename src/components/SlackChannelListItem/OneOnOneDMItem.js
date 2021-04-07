@@ -12,19 +12,14 @@ const styles = StyleSheet.create({
     height: 17,
     width: 17,
   },
-  channelRow: {
-    borderRadius: 6,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginRight: 5,
-    padding: 3,
-    paddingBottom: 5,
-    paddingLeft: 8,
-    paddingTop: 5,
-  },
   channelTitleContainer: {
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  container: {
+    borderRadius: 6,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 
@@ -45,7 +40,7 @@ export const OneOnOneDMItem = (props) => {
     <TouchableOpacity
       key={channel.id}
       onPress={onPress}
-      style={styles.channelRow}>
+      style={styles.container}>
       <View style={styles.channelTitleContainer}>
         {showAvatar ? (
           <Image

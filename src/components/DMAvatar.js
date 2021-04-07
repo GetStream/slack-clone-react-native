@@ -5,7 +5,7 @@ import {useChatContext} from 'stream-chat-react-native';
 
 import {PresenceIndicator} from './PresenceIndicator';
 
-export const DirectMessagingConversationAvatar = ({channel}) => {
+export const DMAvatar = ({channel}) => {
   const {client} = useChatContext();
   const {colors} = useTheme();
   const otherMembers = Object.values(channel.state.members).filter(
@@ -36,6 +36,7 @@ export const DirectMessagingConversationAvatar = ({channel}) => {
       </View>
     );
   }
+
   return (
     <View style={styles.avatarImage}>
       <Image
@@ -63,8 +64,8 @@ export const DirectMessagingConversationAvatar = ({channel}) => {
 const styles = StyleSheet.create({
   avatarImage: {
     borderRadius: 5,
-    height: 55,
-    width: 55,
+    height: 45,
+    width: 45,
   },
   presenceIndicatorContainer: {
     borderRadius: 100 / 2,

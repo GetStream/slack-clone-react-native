@@ -1,6 +1,6 @@
 import {useTheme} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   AutoCompleteInput,
   useChannelContext,
@@ -11,10 +11,37 @@ import {useKeyboard} from '../hooks/useKeaboard';
 import {notImplemented} from '../utils';
 import {SVGIcon} from './SVGIcon';
 
+const styles = StyleSheet.create({
+  actionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
+  },
+  autoCompleteInput: {
+    minHeight: 25,
+  },  
+  container: {
+    borderTopWidth: 0.5,
+    flex: 1,
+    flexDirection: 'column',
+    paddingHorizontal: 10,
+    paddingVertical: Platform.OS === 'ios' ? 10 : 0,
+    width: '100%',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 100,
+  },
+  textActionLabel: {
+    fontSize: 18,
+  },
+});
+
 export const InputBox = (props) => {
   const {colors} = useTheme();
   const {channel} = useChannelContext();
-  const {sendMessage} = useMessageInputContext();
+  const {additionalTextInputProps: contextAdditionalTextInputProps, sendMessage} = useMessageInputContext();
   const {isOpen: isKeyboardOpen} = useKeyboard();
   const [textHeight, setTextHeight] = useState(0);
   const onContentSizeChange = ({
@@ -27,6 +54,7 @@ export const InputBox = (props) => {
     }
   };
   const additionalTextInputProps = {
+    ...contextAdditionalTextInputProps,
     onContentSizeChange,
     placeholder:
       channel && channel.data.name
@@ -37,8 +65,8 @@ export const InputBox = (props) => {
       {
         color: colors.text,
         maxHeight: (textHeight || 17) * 4,
-        minHeight: 25,
       },
+      styles.autoCompleteInput
     ],
   };
 
@@ -102,27 +130,3 @@ export const InputBox = (props) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  actionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 5,
-  },
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    paddingHorizontal: 10,
-    paddingTop: 5,
-    width: '100%',
-  },
-  inputContainer: {},
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 100,
-  },
-  textActionLabel: {
-    fontSize: 18,
-  },
-});
