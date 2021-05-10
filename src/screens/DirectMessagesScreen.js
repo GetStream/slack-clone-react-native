@@ -5,15 +5,17 @@ import {
 } from '@react-navigation/native';
 import React, {useMemo, useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {ChannelList, Chat, useChatContext} from 'stream-chat-react-native';
+import {ChannelList, Chat} from 'stream-chat-react-native';
 
 import {DMAvatar} from '../components/DMAvatar';
 import {JumpToButton} from '../components/JumpToButton';
 import {NewMessageBubble} from '../components/NewMessageBubble';
+import {ChatClientStore} from '../utils';
 import {ScreenHeader} from './ScreenHeader';
 
 export const DirectMessagesScreen = () => {
-  const {client: chatClient} = useChatContext();
+  const chatClient = ChatClientStore.client;
+
   const navigation = useNavigation();
   const {colors} = useTheme();
   const filters = useMemo(

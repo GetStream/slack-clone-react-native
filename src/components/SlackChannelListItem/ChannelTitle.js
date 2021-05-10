@@ -1,6 +1,6 @@
 import {useTheme} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 
 import {getChannelDisplayName, truncate} from '../../utils';
 import {SCText} from '../SCText';
@@ -10,13 +10,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     fontSize: 17,
     marginLeft: 7,
-    padding: 5
+    padding: 5,
   },
   unreadChannelTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
     marginLeft: 7,
     padding: 5,
+    ...Platform.select({
+      android: {
+        fontWeight: 'bold',
+      },
+      ios: {
+        fontWeight: '900',
+      },
+    }),
   },
 });
 

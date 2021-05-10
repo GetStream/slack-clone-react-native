@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {useChatContext} from 'stream-chat-react-native';
 
+import {ChatClientStore} from '../../utils';
 import {PresenceIndicator} from '../PresenceIndicator';
 import {ChannelTitle} from './ChannelTitle';
 import {UnreadCountBadge} from './UnreadCountBadge';
@@ -25,13 +25,13 @@ const styles = StyleSheet.create({
 
 export const OneOnOneDMItem = (props) => {
   const {channel, mode, onPress, titleStyle} = props;
-  const {client} = useChatContext();
+  const chatClient = ChatClientStore.client;
 
   // If its a oneOnOneConversation, then we need to display the name of the other user.
   // For this purpose, we need to find out, among two members of this channel,
   // which one is current user and which one is the other one.
   const members = Object.values(channel.state.members);
-  const otherMember = members.find((m) => m.user_id !== client.user.id);
+  const otherMember = members.find((m) => m.user_id !== chatClient.user.id);
 
   const showAvatar = mode === 'search';
   const showUnreadBadge = mode === 'list';

@@ -1,15 +1,15 @@
 import {useTheme} from '@react-navigation/native';
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
-import {useChatContext} from 'stream-chat-react-native';
 
+import {ChatClientStore} from '../utils';
 import {PresenceIndicator} from './PresenceIndicator';
 
 export const DMAvatar = ({channel}) => {
-  const {client} = useChatContext();
+  const chatClient = ChatClientStore.client;
   const {colors} = useTheme();
   const otherMembers = Object.values(channel.state.members).filter(
-    (m) => m.user.id !== client.user.id,
+    (m) => m.user.id !== chatClient.user.id,
   );
 
   if (otherMembers.length >= 2) {

@@ -1,4 +1,6 @@
-import ChatClientService from './ChatClientService';
+import {StreamChat} from 'stream-chat';
+
+const chatClient = StreamChat.getInstance('q95x9hkbyd6p');
 
 export const getChannelDisplayName = (
   channel,
@@ -20,7 +22,6 @@ export const getChannelDisplayName = (
     return 'Direct Messaging';
   }
 
-  const chatClient = ChatClientService.getClient();
   const otherMembers = Object.values(channel.state.members).filter(
     (m) => m.user.id !== chatClient.user.id,
   );
@@ -44,7 +45,6 @@ export const getChannelDisplayImage = (channel) => {
     return channel.data.image;
   }
 
-  const chatClient = ChatClientService.getClient();
   const otherMembers = Object.values(channel.state.members).filter(
     (m) => m.user.id !== chatClient.user.id,
   );

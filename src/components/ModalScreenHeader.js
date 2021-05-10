@@ -1,10 +1,10 @@
 import {useTheme} from '@react-navigation/native';
 import React from 'react';
-import { Platform, StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 
 import {CloseModalButton} from './CloseModalButton';
 import {SCText} from './SCText';
-import { Spacer } from './Spacer';
+import {Spacer} from './Spacer';
 
 export const styles = StyleSheet.create({
   centerContent: {
@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
-    paddingTop: Platform.OS === 'android' ? 10 : 0
+    paddingTop: Platform.OS === 'android' ? 10 : 0,
   },
   leftContent: {
     flex: 1,
@@ -43,7 +43,6 @@ export const styles = StyleSheet.create({
     paddingBottom: 15,
   },
 });
-
 
 export const ModalScreenHeader = (props) => {
   const {
@@ -64,9 +63,9 @@ export const ModalScreenHeader = (props) => {
           borderBottomColor: colors.border,
         },
       ]}>
-        <View style={styles.leftContent}>
-          <LeftContent goBack={goBack} />
-        </View>
+      <View style={styles.leftContent}>
+        <LeftContent goBack={goBack} />
+      </View>
       <View style={styles.centerContent}>
         <SCText style={[styles.channelTitle, {color: colors.boldText}]}>
           {title}
@@ -83,4 +82,3 @@ export const ModalScreenHeader = (props) => {
     </View>
   );
 };
-

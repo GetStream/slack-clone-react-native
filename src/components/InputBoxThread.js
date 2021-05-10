@@ -7,8 +7,9 @@ import {
   SendButton,
   useChannelContext,
 } from 'stream-chat-react-native';
+import {useMessageInputContext} from 'stream-chat-react-native';
 
-import {getChannelDisplayName} from '../utils';
+import {getChannelDisplayName, notImplemented} from '../utils';
 import {SCText} from './SCText';
 import {SVGIcon} from './SVGIcon';
 
@@ -20,7 +21,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: 'column',
-    height: 60,
+    height: 80,
+    padding: 10,
     width: '100%',
   },
   fileAttachmentIcon: {
@@ -32,6 +34,16 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     marginLeft: 10,
     marginRight: 10,
+  },
+  moreOptionsButton: {
+    borderRadius: 10,
+    padding: 1.5,
+    paddingLeft: 6,
+    paddingRight: 6,
+  },
+  moreOptionsLabel: {
+    color: 'white',
+    fontWeight: '900',
   },
   row: {
     flex: 1,
@@ -50,6 +62,11 @@ export const InputBoxThread = (props) => {
   const {colors} = useTheme();
   const [leftMenuActive, setLeftMenuActive] = useState(true);
   const {channel} = useChannelContext();
+  const {
+    openFilePicker,
+    openMentionsPicker,
+    toggleAttachmentPicker,
+  } = useMessageInputContext();
   const transform = useRef(new Animated.Value(0)).current;
   const translateMenuLeft = useRef(new Animated.Value(0)).current;
   const translateMenuRight = useRef(new Animated.Value(300)).current;
@@ -106,15 +123,12 @@ export const InputBoxThread = (props) => {
               setLeftMenuActive(!leftMenuActive);
             }}
             style={[
+              styles.moreOptionsButton,
               {
                 backgroundColor: colors.linkText,
-                borderRadius: 10,
-                padding: 1.5,
-                paddingLeft: 6,
-                paddingRight: 6,
               },
             ]}>
-            <SCText style={{color: 'white', fontWeight: '900'}}>{'<'}</SCText>
+            <SCText style={styles.moreOptionsLabel}>{'<'}</SCText>
           </TouchableOpacity>
         </Animated.View>
 
@@ -160,14 +174,13 @@ export const InputBoxThread = (props) => {
               width: '100%',
             }}>
             <View style={styles.row}>
-              <TouchableOpacity
-                onPress={() => {
-                  props.appendText('@');
-                }}>
+              <TouchableOpacity onPress={openMentionsPicker}>
                 <SCText style={styles.textActionLabel}>@</SCText>
               </TouchableOpacity>
               {/* Text editor is not functional yet. We will cover it in some future tutorials */}
-              <TouchableOpacity style={styles.textEditorContainer}>
+              <TouchableOpacity
+                onPress={notImplemented}
+                style={styles.textEditorContainer}>
                 <SCText style={styles.textActionLabel}>Aa</SCText>
               </TouchableOpacity>
             </View>
@@ -179,12 +192,12 @@ export const InputBoxThread = (props) => {
                 },
               ]}>
               <TouchableOpacity
-                onPress={props.openFilePicker}
+                onPress={openFilePicker}
                 style={styles.fileAttachmentIcon}>
                 <SVGIcon height='18' type='file-attachment' width='18' />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={props.toggleAttachmentPicker}
+                onPress={toggleAttachmentPicker}
                 style={styles.imageAttachmentIcon}>
                 <SVGIcon height='18' type='image-attachment' width='18' />
               </TouchableOpacity>

@@ -1,15 +1,16 @@
 import {useTheme} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useChatContext} from 'stream-chat-react-native';
 
 import {JumpToButton} from '../../components/JumpToButton';
 import {NewMessageBubble} from '../../components/NewMessageBubble';
+import {ChatClientStore} from '../../utils';
 import {ScreenHeader} from '../ScreenHeader';
 import {SlackChannelList} from './SlackChannelList';
 
 export const ChannelListScreen = () => {
-  const {client: chatClient} = useChatContext();
+  const chatClient = ChatClientStore.client;
+
   const {colors} = useTheme();
 
   return (

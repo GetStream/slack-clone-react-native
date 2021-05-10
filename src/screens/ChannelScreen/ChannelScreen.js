@@ -1,11 +1,16 @@
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
-import {Channel, MessageInput, MessageList, MessageSimple, useMessageContext} from 'stream-chat-react-native';
-import {registerNativeHandlers} from 'stream-chat-react-native-core';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {
+  Channel,
+  MessageInput,
+  MessageList,
+  MessageSimple,
+  useMessageContext,
+} from 'stream-chat-react-native';
 
 import {CustomKeyboardCompatibleView} from '../../components/CustomKeyboardCompatibleView';
-import { EmptyComponent } from '../../components/EmptyComponent';
+import {EmptyComponent} from '../../components/EmptyComponent';
 import {Gallery} from '../../components/Gallery';
 import {Giphy} from '../../components/Giphy';
 import {InlineDateSeparator} from '../../components/InlineDateSeparator';
@@ -19,7 +24,7 @@ import {MessageText} from '../../components/MessageText';
 import {ReactionPickerActionSheet} from '../../components/ReactionPickerActionSheet/ReactionPickerActionSheet';
 import {UrlPreview} from '../../components/UrlPreview';
 import {useDraftMessage} from '../../hooks/useDraftMessage';
-import {ChatClientService} from '../../utils';
+import {ChatClientStore} from '../../utils';
 import {supportedReactions} from '../../utils/supportedReactions';
 import {ChannelHeader} from './ChannelHeader';
 
@@ -66,7 +71,8 @@ export const ChannelScreen = () => {
     params: {channel: paramChannel, channelId = null, messageId = null},
   } = useRoute();
   const navigation = useNavigation();
-  const chatClient = ChatClientService.getClient();
+  const chatClient = ChatClientStore.client;
+
   const [channel, setChannel] = useState(null);
   const [draftText, setDraftText] = useState('');
   const [isReady, setIsReady] = useState(false);
@@ -228,7 +234,6 @@ export const ChannelScreen = () => {
             supportedReactions={supportedReactions}
             UrlPreview={UrlPreview}>
             <MessageList
-              InlineDateIndicator={InlineDateSeparator}
               onThreadSelect={openThread}
               setFlatListRef={(ref) => {
                 messageListRef.current = ref;

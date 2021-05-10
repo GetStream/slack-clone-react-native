@@ -1,11 +1,10 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {useChatContext} from 'stream-chat-react-native';
 
 import {DMAvatar} from '../../components/DMAvatar';
 import {SCText} from '../../components/SCText';
-import {CacheService} from '../../utils';
+import {ChannelsStore, ChatClientStore} from '../../utils';
 
 const styles = StyleSheet.create({
   memberContainer: {
@@ -29,11 +28,11 @@ const styles = StyleSheet.create({
 
 export const HorizonalMembersList = () => {
   const navigation = useNavigation();
-  const {client} = useChatContext();
+  const chatClient = ChatClientStore.client;
 
   const renderItem = ({item}) => {
     const userName = Object.values(item.state.members).find(
-      (m) => m.user.id !== client.user.id,
+      (m) => m.user.id !== chatClient.user.id,
     ).user.name;
     return (
       <TouchableOpacity
@@ -52,7 +51,7 @@ export const HorizonalMembersList = () => {
   return (
     <View style={styles.recentMembersContainer}>
       <FlatList
-        data={CacheService.getOneToOneConversations()}
+        data={ChannelsStore.oneToOneConversations}
         horizontal
         keyboardShouldPersistTaps='always'
         renderItem={renderItem}

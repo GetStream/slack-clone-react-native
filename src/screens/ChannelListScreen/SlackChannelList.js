@@ -1,4 +1,8 @@
-import {useNavigation, useScrollToTop, useTheme} from '@react-navigation/native';
+import {
+  useNavigation,
+  useScrollToTop,
+  useTheme,
+} from '@react-navigation/native';
 import React, {useRef} from 'react';
 import {SectionList, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -7,7 +11,7 @@ import {SCText} from '../../components/SCText';
 import {SVGIcon} from '../../components/SVGIcon';
 import {SlackChannelListItem} from '../../components/SlackChannelListItem/SlackChannelListItem';
 import {useSlackChannels} from '../../hooks/useSlackChannels';
-import {ChatClientService, notImplemented} from '../../utils';
+import {notImplemented} from '../../utils';
 import {SectionHeader} from './SectionHeader';
 
 const styles = StyleSheet.create({
@@ -39,16 +43,14 @@ const styles = StyleSheet.create({
 
 export const SlackChannelList = () => {
   const {colors} = useTheme();
-  const client = ChatClientService.getClient();
+
   const navigation = useNavigation();
   const changeChannel = (channel) => {
     navigation.navigate('ChannelScreen', {
       channel,
     });
   };
-  const {dmConversations, readChannels, unreadChannels} = useSlackChannels(
-    client,
-  );
+  const {dmConversations, readChannels, unreadChannels} = useSlackChannels();
 
   const ref = useRef(null);
   useScrollToTop(ref);
@@ -107,12 +109,15 @@ export const SlackChannelList = () => {
           style={styles.channelRow}>
           <View style={styles.channelTitleContainer}>
             {item.icon}
-            <SCText style={[
-              styles.channelTitle,
-              {
-                color: colors.textTitle
-              }
-            ]}>{item.title}</SCText>
+            <SCText
+              style={[
+                styles.channelTitle,
+                {
+                  color: colors.textTitle,
+                },
+              ]}>
+              {item.title}
+            </SCText>
           </View>
         </TouchableOpacity>
       );

@@ -173,6 +173,7 @@ const moduleBlacklist = [
     ),
     new RegExp(repoDir + '/projects/stream-chat-react-native/expo-package/.*'),
     new RegExp(repoDir + '/projects/stream-chat-react-native/node_modules/.*'),
+    new RegExp(repoDir + '/projects/@flat-list-mvcp/node_modules/.*'),
   ],
   baseModulePath = resolvePath(__dirname, 'node_modules'),
   // watch alternate roots (outside of project root)

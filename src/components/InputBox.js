@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
   autoCompleteInput: {
     minHeight: 25,
-  },  
+  },
   container: {
     borderTopWidth: 0.5,
     flex: 1,
@@ -41,7 +41,16 @@ const styles = StyleSheet.create({
 export const InputBox = (props) => {
   const {colors} = useTheme();
   const {channel} = useChannelContext();
-  const {additionalTextInputProps: contextAdditionalTextInputProps, sendMessage} = useMessageInputContext();
+  const {
+    openAttachmentPicker,
+    openCommandsPicker,
+    openFilePicker,
+    openMentionsPicker,
+  } = useMessageInputContext();
+  const {
+    additionalTextInputProps: contextAdditionalTextInputProps,
+    sendMessage,
+  } = useMessageInputContext();
   const {isOpen: isKeyboardOpen} = useKeyboard();
   const [textHeight, setTextHeight] = useState(0);
   const onContentSizeChange = ({
@@ -66,7 +75,7 @@ export const InputBox = (props) => {
         color: colors.text,
         maxHeight: (textHeight || 17) * 4,
       },
-      styles.autoCompleteInput
+      styles.autoCompleteInput,
     ],
   };
 
@@ -90,14 +99,14 @@ export const InputBox = (props) => {
             {backgroundColor: colors.background},
           ]}>
           <View style={styles.row}>
-            <TouchableOpacity onPress={props.openCommandsPicker}>
+            <TouchableOpacity onPress={openCommandsPicker}>
               <SVGIcon
                 height='18'
                 type={'input-buttons-shortcuts'}
                 width='18'
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={props.openMentionsPicker}>
+            <TouchableOpacity onPress={openMentionsPicker}>
               <SVGIcon height='18' type={'input-buttons-mentions'} width='18' />
             </TouchableOpacity>
             {/* Text editor is not functional yet. We will cover it in some future tutorials */}
@@ -110,10 +119,10 @@ export const InputBox = (props) => {
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
-            <TouchableOpacity onPress={props.openFilePicker}>
+            <TouchableOpacity onPress={openFilePicker}>
               <SVGIcon height='18' type='file-attachment' width='18' />
             </TouchableOpacity>
-            <TouchableOpacity onPress={props.openAttachmentPicker}>
+            <TouchableOpacity onPress={openAttachmentPicker}>
               <SVGIcon height='21' type='image-attachment' width='18' />
             </TouchableOpacity>
             <TouchableOpacity onPress={sendMessage}>

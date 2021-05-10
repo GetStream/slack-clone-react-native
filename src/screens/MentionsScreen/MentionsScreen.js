@@ -2,10 +2,10 @@ import {useTheme} from '@react-navigation/native';
 import React, {useMemo} from 'react';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {useChatContext} from 'stream-chat-react-native';
 
 import {NewMessageBubble} from '../../components/NewMessageBubble';
 import {usePaginatedSearchedMessages} from '../../hooks/usePaginatedSearchedMessages';
+import {ChatClientStore} from '../../utils';
 import {ScreenHeader} from '../ScreenHeader';
 import {MentionedMessage} from './MentionedMessage';
 
@@ -25,7 +25,8 @@ const styles = StyleSheet.create({
 });
 
 export const MentionsScreen = () => {
-  const {client: chatClient} = useChatContext();
+  const chatClient = ChatClientStore.client;
+
   const {colors} = useTheme();
 
   const messageFilters = useMemo(

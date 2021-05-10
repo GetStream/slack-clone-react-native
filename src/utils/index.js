@@ -2,10 +2,11 @@ import React from 'react';
 import {Alert} from 'react-native';
 
 export {default as useStreamChatTheme} from './useStreamChatTheme';
-export {default as ChatClientService} from './ChatClientService';
-export {default as CacheService} from './CacheService';
+export {default as ChannelsStore} from './ChannelsStore';
 export {default as AsyncStore} from './AsyncStore';
+export {default as ChatClientStore} from './ChatClientStore';
 export {getChannelDisplayImage, getChannelDisplayName} from './ChannelUtils';
+
 export {USERS, USER_TOKENS} from './ChatUsers';
 
 export const notImplemented = () => {
@@ -19,4 +20,9 @@ export const truncate = (input, length, end = '...') => {
   return input;
 };
 
-export const ChatUserContext = React.createContext();
+export const getFastImageCompatibleUri = (uri) =>
+  uri !== null && uri !== undefined && uri.includes('/') && uri.includes('.')
+    ? uri
+    : '';
+
+export const SlackAppContext = React.createContext();

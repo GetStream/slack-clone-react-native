@@ -8,7 +8,6 @@ import {
   Channel,
   Message as DefaultMessage,
   MessageList,
-  useChatContext,
 } from 'stream-chat-react-native';
 
 import {Gallery} from '../../components/Gallery';
@@ -20,7 +19,7 @@ import {MessageRepliesAvatars} from '../../components/MessageRepliesAvatars';
 import {MessageText} from '../../components/MessageText';
 import {SCText} from '../../components/SCText';
 import {UrlPreview} from '../../components/UrlPreview';
-import {getChannelDisplayName} from '../../utils';
+import {ChatClientStore, getChannelDisplayName} from '../../utils';
 
 const styles = StyleSheet.create({
   cancelButton: {justifyContent: 'center', padding: 5},
@@ -121,7 +120,8 @@ const MessageWithChannelName = (props) => (
 export const MessageSearchList = (props) => {
   const {loadingResults, results, searchQuery, startNewSearch} = props;
   const navigation = useNavigation();
-  const {client} = useChatContext();
+  const chatClient = ChatClientStore.client;
+
   const [fakeChannel, setFakeChannel] = useState(null);
 
   const goToChannel = ({message}) => {
@@ -132,7 +132,7 @@ export const MessageSearchList = (props) => {
   };
 
   useEffect(() => {
-    const channel = client.channel('dummy', 'dummy');
+    const channel = chatClient.channel('dummy', 'dummy');
     channel.initialized = true;
     setFakeChannel(channel);
   }, []);

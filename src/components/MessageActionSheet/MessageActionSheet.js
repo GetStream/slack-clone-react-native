@@ -14,7 +14,7 @@ import {
   ThreadReply,
 } from 'stream-chat-react-native';
 
-import {ChatClientService} from '../../utils';
+import {ChatClientStore} from '../../utils';
 import {BottomSheetBackground} from '../BottomSheetBackground';
 import {ActionListContainer} from './ActionListContainer';
 
@@ -27,7 +27,7 @@ export const MessageActionSheet = React.forwardRef((props, fRef) => {
     openReactionPicker: propMessageReactionPicker,
   } = props;
 
-  const chatClient = ChatClientService.getClient();
+  const chatClient = ChatClientStore.client;
   const navigation = useNavigation();
 
   const openReactionPicker = () => {

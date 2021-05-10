@@ -1,3 +1,4 @@
+import {ENABLE_USER_PICKER, USER_ID, USER_TOKEN} from '@env';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
@@ -13,7 +14,6 @@ import {
 import {AppearanceProvider, useColorScheme} from 'react-native-appearance';
 import {copilot} from 'react-native-copilot';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {StreamChat} from 'stream-chat';
 import {Chat, OverlayProvider} from 'stream-chat-react-native';
 
 import {DarkTheme, LightTheme} from './src/appTheme';
@@ -31,11 +31,10 @@ import {ProfileScreen} from './src/screens/ProfileScreen';
 import { ShareMessageScreen } from './src/screens/ShareMessageScreen/ShareMessageScreen';
 import {TargettedMessageChannelScreen} from './src/screens/TargettedMessageChannelScreen';
 import {ThreadScreen} from './src/screens/ThreadScreen';
+import { UserPickerModal } from './src/screens/UserPickerModal/UserPickerModal';
 import {
-  ChatClientService,
-  ChatUserContext,
-  USER_TOKENS,
-  USERS,
+  ChatClientStore,
+  SlackAppContext,
   useStreamChatTheme,
 } from './src/utils';
 
@@ -46,34 +45,30 @@ const RootStack = createStackNavigator();
 const HomeStack = createStackNavigator();
 const ModalStack = createStackNavigator();
 
+const chatClient = ChatClientStore.client;
+const defaultUser = {
+  id: USER_ID,
+  token: USER_TOKEN
+};
+
 export default copilot()((props) => {
   const scheme = useColorScheme();
   const [connecting, setConnecting] = useState(true);
-  const [user, setUser] = useState(USERS.vishal);
-  const [client, setClient] = useState(client);
+  const [currentUser, setCurrentUser] = useState(defaultUser);
+  const [pickerVisible, setPickerVisible] = useState(false);
+
   useEffect(() => {
     props.start();
   }, []);
 
   useEffect(() => {
-    let client;
-
     // Initializes Stream's chat client.
     // Documentation: https://getstream.io/chat/docs/init_and_users/?language=js
     const initChat = async () => {
-      client = StreamChat.getInstance('q95x9hkbyd6p', {
-        timeout: 10000,
-      });
+      await chatClient.connectUser({
+        id: currentUser.id
+      }, currentUser.token);
 
-      await client.connectUser(user, USER_TOKENS[user.id]);
-
-      // We are going to store chatClient in following ChatClientService, so that it can be
-      // accessed in other places. Ideally one would store client in a context provider, so that
-      // component can re-render if client is updated. But in our case, client only gets updated
-      // when chat user is switched - and which case we re-render the entire chat application.
-      // So we don't need to worry about re-rendering every component on updating client.
-      ChatClientService.setClient(client);
-      setClient(client);
       setConnecting(false);
     };
 
@@ -81,9 +76,9 @@ export default copilot()((props) => {
     initChat();
 
     return () => {
-      client && client.disconnect();
+      chatClient && chatClient.disconnectUser();
     };
-  }, [user]);
+  }, [currentUser]);
 
   if (connecting) {
     return (
@@ -100,12 +95,38 @@ export default copilot()((props) => {
       <AppearanceProvider>
         <NavigationContainer theme={scheme === 'dark' ? DarkTheme : LightTheme}>
           <View style={styles.container}>
-            <ChatUserContext.Provider
+            <SlackAppContext.Provider
               value={{
-                switchUser: (userId) => setUser(USERS[userId]),
+                openUserPicker: () => {
+                  setPickerVisible(true);
+                },
+                switchUser: (userId) => {
+                  /**
+                   * Dev token generations will only work in case of development mode.
+                   * So please make sure you have auth check disabled, if you are planning to
+                   * check user picker feature.
+                   */
+                  const token = chatClient.devToken(userId);
+                  setCurrentUser({
+                    id: userId,
+                    token,
+                  }),
+                  setPickerVisible(false);
+                }
               }}>
-              <RootNavigation client={client} />
-            </ChatUserContext.Provider>
+              <RootNavigation />
+              {
+                ENABLE_USER_PICKER &&
+                <UserPickerModal
+                  label={'name'}
+                  modalVisible={pickerVisible}
+                  onRequestClose={() => setPickerVisible(false)}
+                  onValueChange={() => {
+                    setPickerVisible(false);
+                  }}
+                />
+              }
+            </SlackAppContext.Provider>
           </View>
         </NavigationContainer>
       </AppearanceProvider>
@@ -181,11 +202,12 @@ const TabNavigation = () => (
 
   );
 
-const RootNavigation = (props) => {
+const RootNavigation = () => {
   const chatStyles = useStreamChatTheme();
+
   return (
     <OverlayProvider>
-      <Chat client={props.client} style={chatStyles}>
+      <Chat client={ChatClientStore.client} style={chatStyles}>
           <RootStack.Navigator mode='modal'>
             <RootStack.Screen component={TabNavigation} name='Tabs' options={{headerShown: false}}/>
             <RootStack.Screen component={ModalStackNavigator} name={'Modals'} options={{headerShown: false}}/>

@@ -23,12 +23,15 @@ export const JumpToButton = () => {
           shadowColor: colors.shadow,
         },
       ]}>
-      <SCText style={[
-        styles.title,
-        {
-          color: colors.textTitle
-        }
-      ]}>Jump to...</SCText>
+      <SCText
+        style={[
+          styles.title,
+          {
+            color: colors.textTitle,
+          },
+        ]}>
+        Jump to...
+      </SCText>
     </TouchableOpacity>
   );
 };
@@ -43,5 +46,5 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 17,
-  }
+  },
 });

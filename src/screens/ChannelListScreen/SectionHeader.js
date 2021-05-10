@@ -38,9 +38,7 @@ export const SectionHeader = (props) => {
       ]}>
       <SCText style={styles.title}>{title}</SCText>
       {onPress && (
-        <TouchableOpacity
-          onPress={onPress}
-          style={styles.titleRightButton}>
+        <TouchableOpacity onPress={onPress} style={styles.titleRightButton}>
           <SCText style={styles.titleRightButtonText}>+</SCText>
         </TouchableOpacity>
       )}

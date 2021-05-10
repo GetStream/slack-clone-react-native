@@ -2,8 +2,8 @@ import {useTheme} from '@react-navigation/native';
 import React from 'react';
 import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import { useKeyboard } from '../hooks/useKeaboard';
 
+import {useKeyboard} from '../hooks/useKeaboard';
 import {SCText} from './SCText';
 import {SVGIcon} from './SVGIcon';
 

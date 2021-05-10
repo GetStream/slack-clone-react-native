@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 
-import {CacheService, ChatClientService} from '../utils';
+import {ChannelsStore, ChatClientStore} from '../utils';
 
 const sort = {
   has_unread: -1,
@@ -14,7 +14,7 @@ const options = {
 };
 
 export const useSlackChannels = () => {
-  const client = ChatClientService.getClient();
+  const chatClient = ChatClientStore.client;
   const [activeChannelId, setActiveChannelId] = useState(null);
   const [unreadChannels, setUnreadChannels] = useState([]);
   const [readChannels, setReadChannels] = useState([]);
@@ -25,26 +25,26 @@ export const useSlackChannels = () => {
     () => ({
       example: 'slack-demo',
       members: {
-        $in: [client.user.id],
+        $in: [chatClient.user.id],
       },
       name: {
         $ne: '',
       },
       type: 'messaging',
     }),
-    [client.user.id],
+    [chatClient.user.id],
   );
 
   const dmFilters = useMemo(
     () => ({
       example: 'slack-demo',
       members: {
-        $in: [client.user.id],
+        $in: [chatClient.user.id],
       },
       name: '',
       type: 'messaging',
     }),
-    [client.user.id],
+    [chatClient.user.id],
   );
 
   useEffect(() => {
@@ -54,11 +54,10 @@ export const useSlackChannels = () => {
 
     const fetchChannels = async () => {
       // Query channels where name is not empty.
-      const channels = await client.queryChannels(filters, sort, options);
+      const channels = await chatClient.queryChannels(filters, sort, options);
 
       channels.forEach((c) => {
         if (c.countUnread() > 0) {
-          console.log('found one unread');
           _unreadChannels.push(c);
         } else {
           _readChannels.push(c);
@@ -70,12 +69,12 @@ export const useSlackChannels = () => {
       setDMConversations([..._dmConversations]);
 
       // Cache the data so that it can be used on other screens.
-      CacheService.setChannels(channels);
+      ChannelsStore.channels = channels;
     };
 
     const fetchDMConversations = async () => {
       // Query channels where name is empty - direct messaging conversations
-      const directMessagingChannels = await client.queryChannels(
+      const directMessagingChannels = await chatClient.queryChannels(
         dmFilters,
         sort,
         options,
@@ -99,14 +98,12 @@ export const useSlackChannels = () => {
       setDMConversations([..._dmConversations]);
 
       // Cache the data so that it can be used on other screens.
-      CacheService.setDMConversations(directMessagingChannels);
+      ChannelsStore.dmConversations = directMessagingChannels;
     };
 
     async function init() {
       await fetchChannels();
       await fetchDMConversations();
-
-      CacheService.loadRecentAndOneToOne();
     }
 
     init();
@@ -115,11 +112,8 @@ export const useSlackChannels = () => {
   useEffect(() => {
     function handleEvents(e) {
       if (e.type === 'message.new') {
-        if (e.user.id === client.user.id) {
+        if (e.user.id === chatClient.user.id) {
           return;
-        }
-        if (client.user.id === 'vishal') {
-          console.log('message.new');
         }
 
         const cid = e.cid;
@@ -164,12 +158,8 @@ export const useSlackChannels = () => {
       }
 
       if (e.type === 'message.read') {
-        if (e.user.id !== client.user.id) {
+        if (e.user.id !== chatClient.user.id) {
           return;
-        }
-
-        if (client.user.id === 'vishal') {
-          console.log('message.red');
         }
 
         const cid = e.cid;
@@ -196,12 +186,12 @@ export const useSlackChannels = () => {
       }
     }
 
-    client.on(handleEvents);
+    chatClient.on(handleEvents);
 
     return () => {
-      client.off(handleEvents);
+      chatClient.off(handleEvents);
     };
-  }, [client, readChannels, unreadChannels, dmConversations]);
+  }, [chatClient, readChannels, unreadChannels, dmConversations]);
 
   return {
     activeChannelId,

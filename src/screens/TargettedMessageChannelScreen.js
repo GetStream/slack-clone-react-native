@@ -7,7 +7,7 @@ import {Channel, Chat, MessageList} from 'stream-chat-react-native';
 import {CustomKeyboardCompatibleView} from '../components/CustomKeyboardCompatibleView';
 import {DateSeparator} from '../components/DateSeparator';
 import {MessageSlack} from '../components/MessageSlack';
-import {ChatClientService, useStreamChatTheme} from '../utils';
+import {ChatClientStore, useStreamChatTheme} from '../utils';
 import {ChannelHeader} from './ChannelScreen/ChannelHeader';
 
 export const TargettedMessageChannelScreen = () => {
@@ -17,8 +17,10 @@ export const TargettedMessageChannelScreen = () => {
     params: {message = null},
   } = useRoute();
   const {colors} = useTheme();
-  const chatClient = ChatClientService.getClient();
+  const chatClient = ChatClientStore.client;
+
   const [channel, setChannel] = useState(null);
+
   useEffect(() => {
     const initChannel = async () => {
       if (!message) {

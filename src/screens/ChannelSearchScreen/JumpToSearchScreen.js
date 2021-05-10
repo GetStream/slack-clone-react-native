@@ -1,11 +1,10 @@
 import {useTheme} from '@react-navigation/native';
 import React, {useMemo, useState} from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
-import {useChatContext} from 'stream-chat-react-native';
 
 import {SCText} from '../../components/SCText';
 import {usePaginatedSearchedChannels} from '../../hooks/usePaginatedSearchedChannels';
-import {CacheService} from '../../utils';
+import {ChannelsStore, ChatClientStore} from '../../utils';
 import {ChannelSearchInput} from './ChannelSearchInput';
 import {ChannelSearchList} from './ChannelSearchList';
 import {HorizonalMembersList} from './HorizontalMembersList';
@@ -26,7 +25,8 @@ const styles = StyleSheet.create({
 });
 
 export const JumpToSearchScreen = () => {
-  const {client: chatClient} = useChatContext();
+  const chatClient = ChatClientStore.client;
+
   const {colors} = useTheme();
   const [searchText, setSearchText] = useState('');
 
@@ -51,7 +51,7 @@ export const JumpToSearchScreen = () => {
   const {channels: results} = usePaginatedSearchedChannels(queryFilters);
 
   const channels =
-    results?.length > 0 ? results : CacheService.getRecentConversations();
+    results?.length > 0 ? results : ChannelsStore.recentConversations;
   const onSubmit = ({nativeEvent: {text}}) => {
     setSearchText(text);
   };
@@ -62,12 +62,13 @@ export const JumpToSearchScreen = () => {
         backgroundColor: colors.background,
       }}>
       <View>
-        <View style={[
-          styles.searchInputContainer,
-          {
-            borderBottomColor: colors.border
-          }
-        ]}>
+        <View
+          style={[
+            styles.searchInputContainer,
+            {
+              borderBottomColor: colors.border,
+            },
+          ]}>
           <ChannelSearchInput onSubmit={onSubmit} />
         </View>
         {!searchText && <HorizonalMembersList />}

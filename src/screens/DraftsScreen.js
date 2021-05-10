@@ -5,11 +5,12 @@ import {FlatList} from 'react-native-gesture-handler';
 
 import {NewMessageBubble} from '../components/NewMessageBubble';
 import {SCText} from '../components/SCText';
-import {AsyncStore, ChatClientService} from '../utils';
+import {AsyncStore, ChatClientStore} from '../utils';
 
 export const DraftsScreen = () => {
   const [results, setResults] = useState([]);
-  const chatClient = ChatClientService.getClient();
+  const chatClient = ChatClientStore.client;
+
   const navigation = useNavigation();
   const {colors} = useTheme();
 

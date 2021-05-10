@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
-import {useChatContext} from 'stream-chat-react-native';
+
+import {ChatClientStore} from '../utils';
 
 export const CHANNEL_SEARCH_LIMIT = 30;
 
@@ -10,7 +11,7 @@ export const usePaginatedSearchedChannels = (queryFilters) => {
   const offset = useRef(0);
   const hasMoreResults = useRef(true);
   const queryInProgress = useRef(false);
-  const {client: chatClient} = useChatContext();
+  const chatClient = ChatClientStore.client;
 
   const done = () => {
     queryInProgress.current = false;

@@ -36,6 +36,7 @@ export const ChannelSearchInput = (props) => {
         onSubmitEditing={onSubmit}
         placeholder='Search'
         placeholderTextColor={colors.text}
+        returnKeyType='search'
         style={[
           styles.inputBox,
           {

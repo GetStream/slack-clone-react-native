@@ -1,6 +1,7 @@
 import {useTheme} from '@react-navigation/native';
 import React, {useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {SCText} from '../../components/SCText';
 import {usePaginatedSearchedMessages} from '../../hooks/usePaginatedSearchedMessages';
@@ -8,12 +9,11 @@ import {MessageSearchInput} from './MessageSearchInput';
 import {MessageSearchList} from './MessageSearchList';
 import {RecentSearchList} from './RecentSearchList';
 import {useRecentSearched} from './hooks/useRecentSearches';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    height: '100%'
+    height: '100%',
   },
   recentSearchesContainer: {
     flexGrow: 1,

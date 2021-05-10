@@ -1,8 +1,9 @@
 import {useEffect, useRef, useState} from 'react';
-import {useChatContext} from 'stream-chat-react-native';
+
+import {ChatClientStore} from '../utils';
 
 export const usePaginatedSearchedUsers = () => {
-  const {chatClient} = useChatContext;
+  const chatClient = ChatClientStore.client;
 
   const [initialResults, setInitialResults] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -108,7 +109,6 @@ export const usePaginatedSearchedUsers = () => {
         queryInProgress.current = false;
         return;
       }
-
       const res = await chatClient?.queryUsers(
         filter,
         {name: 1},
@@ -166,6 +166,7 @@ export const usePaginatedSearchedUsers = () => {
   }, []);
 
   return {
+    addUser,
     clearText: () => {
       setSearchText('');
       fetchUsers('');

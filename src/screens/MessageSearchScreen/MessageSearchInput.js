@@ -8,7 +8,7 @@ import {SCText} from '../../components/SCText';
 const styles = StyleSheet.create({
   cancelButton: {
     justifyContent: 'center',
-    padding: 5
+    padding: 5,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 
 export const MessageSearchInput = React.forwardRef((props, fRef) => {
   const {onChangeText, onSubmit: propOnSubmit, value} = props;
-  const {colors, dark} = useTheme();
+  const {colors} = useTheme();
   const navigation = useNavigation();
 
   const onSubmit = ({nativeEvent: {text}}) => {
@@ -33,10 +33,7 @@ export const MessageSearchInput = React.forwardRef((props, fRef) => {
   };
 
   return (
-    <View
-      style={[
-        styles.headerContainer,
-      ]}>
+    <View style={[styles.headerContainer]}>
       <TextInput
         autoFocus
         clearButtonMode={'while-editing'}
@@ -56,9 +53,12 @@ export const MessageSearchInput = React.forwardRef((props, fRef) => {
         value={value}
       />
       <TouchableOpacity onPress={navigation.goBack} style={styles.cancelButton}>
-        <SCText style={{
-          color: 'grey'
-        }}>Cancel</SCText>
+        <SCText
+          style={{
+            color: 'grey',
+          }}>
+          Cancel
+        </SCText>
       </TouchableOpacity>
     </View>
   );

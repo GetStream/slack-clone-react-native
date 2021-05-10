@@ -1,15 +1,23 @@
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import debounce from 'lodash/debounce';
 import React, {useMemo, useState} from 'react';
-import { Platform, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Autocomplete from 'react-native-autocomplete-input';
-import {useChatContext} from 'stream-chat-react-native';
 
 import {ListItemSeparator} from '../../components/ListItemSeparator';
 import {ModalScreenHeader} from '../../components/ModalScreenHeader';
 import {Reply} from '../../components/Reply';
 import {SlackChannelListItem} from '../../components/SlackChannelListItem/SlackChannelListItem';
 import {usePaginatedSearchedChannels} from '../../hooks/usePaginatedSearchedChannels';
+import {ChatClientStore} from '../../utils';
 
 const styles = StyleSheet.create({
   autocompleteContainer: {
@@ -21,9 +29,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 0,
         top: 0,
-        zIndex: 1
+        zIndex: 1,
       },
-    })
+    }),
   },
   autocompleteInputContainerStyle: {
     backgroundColor: 'white',
@@ -40,7 +48,7 @@ const styles = StyleSheet.create({
   },
   messageInput: {
     marginTop: Platform.OS === 'android' ? 30 : 20,
-    marginVertical: 20
+    marginVertical: 20,
   },
   quotedMessageContainer: {
     borderRadius: 10,
@@ -53,7 +61,8 @@ const styles = StyleSheet.create({
 });
 
 export const ShareMessageScreen = () => {
-  const {client} = useChatContext();
+  const chatClient = ChatClientStore.client;
+
   const [searchText, setSearchText] = useState('');
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [attachedMessageText, setAttachedMessageText] = useState('');
@@ -86,7 +95,7 @@ export const ShareMessageScreen = () => {
         },
       ],
       members: {
-        $in: [client.user?.id],
+        $in: [chatClient.user?.id],
       },
       type: 'messaging',
     }),
@@ -122,9 +131,10 @@ export const ShareMessageScreen = () => {
 
   const HeaderLeftButton = () => (
     <TouchableOpacity onPress={navigation.goBack}>
-      <Text style={{
-        color: colors.linkText
-      }}>
+      <Text
+        style={{
+          color: colors.linkText,
+        }}>
         Cancel
       </Text>
     </TouchableOpacity>
@@ -132,10 +142,11 @@ export const ShareMessageScreen = () => {
 
   const HeaderRightButton = () => (
     <TouchableOpacity onPress={sendMessage}>
-      <Text style={{
-        color: colors.linkText,
-        textAlign: 'right'
-      }}>
+      <Text
+        style={{
+          color: colors.linkText,
+          textAlign: 'right',
+        }}>
         Send
       </Text>
     </TouchableOpacity>
@@ -156,7 +167,7 @@ export const ShareMessageScreen = () => {
       placeholder={'Share with channel'}
       renderItem={renderItem}
     />
-  )
+  );
   return (
     <SafeAreaView>
       <ModalScreenHeader
@@ -165,13 +176,14 @@ export const ShareMessageScreen = () => {
         title={'Share Message'}
       />
       <View style={styles.container}>
-        {!selectedChannel && (Platform.OS === 'android' ? (
-          <View style={styles.autocompleteContainer}>
-            {renderAutocompleteInput()}
-          </View>
-        ) : 
-          renderAutocompleteInput()
-        )}
+        {!selectedChannel &&
+          (Platform.OS === 'android' ? (
+            <View style={styles.autocompleteContainer}>
+              {renderAutocompleteInput()}
+            </View>
+          ) : (
+            renderAutocompleteInput()
+          ))}
         {!!selectedChannel && (
           <View style={styles.selectedChannelContainer}>
             <SlackChannelListItem

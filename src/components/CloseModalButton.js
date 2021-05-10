@@ -1,7 +1,7 @@
 import React from 'react';
-import { TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 
-import { SVGIcon } from './SVGIcon';
+import {SVGIcon} from './SVGIcon';
 
 export const CloseModalButton = ({goBack}) => (
   <TouchableOpacity
@@ -10,7 +10,7 @@ export const CloseModalButton = ({goBack}) => (
     }}
     style={{
       flex: 1,
-      height: '100%'
+      height: '100%',
     }}>
     <SVGIcon height={15} type={'close-button'} width={15} />
   </TouchableOpacity>

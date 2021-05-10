@@ -1,11 +1,11 @@
 import {useTheme} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {CopilotStep, walkthroughable} from 'react-native-copilot';
+import React, {useContext} from 'react';
+import {Image, StyleSheet, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {SCText} from '../components/SCText';
-import {UserPicker} from '../components/UserPicker';
+import {SlackAppContext} from '../utils';
 
 const styles = StyleSheet.create({
   container: {
@@ -27,13 +27,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const CopilotLogo = walkthroughable(TouchableOpacity);
-
 export const ScreenHeader = ({showLogo = false, title}) => {
   const insets = useSafeAreaInsets();
 
   const {colors} = useTheme();
-  const [pickerVisible, setPickerVisible] = useState(false);
+  const {openUserPicker} = useContext(SlackAppContext);
 
   return (
     <>
@@ -46,24 +44,17 @@ export const ScreenHeader = ({showLogo = false, title}) => {
             paddingTop: insets.top,
           },
         ]}>
-        <CopilotStep
-          name='hello'
-          text='You can switch user by pressing on logo'>
-          <CopilotLogo
-            onPress={() => {
-              setPickerVisible(true);
-            }}>
-            {showLogo && (
-              <Image
-                source={{
-                  uri:
-                    'https://avatars.githubusercontent.com/u/8597527?s=200&v=4',
-                }}
-                style={styles.logo}
-              />
-            )}
-          </CopilotLogo>
-        </CopilotStep>
+        {showLogo && (
+          <TouchableOpacity onPress={openUserPicker}>
+            <Image
+              source={{
+                uri:
+                  'https://avatars.githubusercontent.com/u/8597527?s=200&v=4',
+              }}
+              style={styles.logo}
+            />
+          </TouchableOpacity>
+        )}
         <SCText
           style={[
             styles.title,
@@ -74,15 +65,6 @@ export const ScreenHeader = ({showLogo = false, title}) => {
           {title}
         </SCText>
       </View>
-      <UserPicker
-        label={'name'}
-        modalVisible={pickerVisible}
-        onRequestClose={() => setPickerVisible(false)}
-        onValueChange={() => {
-          setPickerVisible(false);
-        }}
-        value={'id'}
-      />
     </>
   );
 };

@@ -3,12 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {
-  Channel,
-  MessageInput,
-  MessageList,
-  useChatContext,
-} from 'stream-chat-react-native';
+import {Channel, MessageInput, MessageList} from 'stream-chat-react-native';
 
 import {CustomKeyboardCompatibleView} from '../../components/CustomKeyboardCompatibleView';
 import {InputBox} from '../../components/InputBox';
@@ -19,6 +14,7 @@ import {MessageRepliesAvatars} from '../../components/MessageRepliesAvatars';
 import {MessageText} from '../../components/MessageText';
 import {ModalScreenHeader} from '../../components/ModalScreenHeader';
 import {UrlPreview} from '../../components/UrlPreview';
+import {ChatClientStore} from '../../utils';
 import {getSupportedReactions} from '../../utils/supportedReactions';
 import {UserSearch} from './UserSearch/UserSearch';
 
@@ -46,15 +42,18 @@ const getChannelUsingMembers = async (client, members) => {
     members,
     name: '',
   });
+
   await newChannel.watch();
+
+  return newChannel;
 };
 
 export const NewMessageScreen = () => {
   const selectedUsers = useRef([]);
   const [channel, setChannel] = useState(null);
   const navigation = useNavigation();
-  const {client: chatClient} = useChatContext();
-  // eslint-disable-next-line no-unused-vars
+  const chatClient = ChatClientStore.client;
+
   const [focusOnSearch, setFocusOnSearch] = useState(true);
   const {colors} = useTheme();
 
@@ -64,9 +63,8 @@ export const NewMessageScreen = () => {
        * When message input is focused, switch to channel with selected members.
        */
       onFocus: async () => {
-        console.log('focusing')
         setFocusOnSearch(false);
-        const newChannel = await getChannelUsingMembers([
+        const newChannel = await getChannelUsingMembers(chatClient, [
           ...selectedUsers.current.map((t) => t.id),
           chatClient.user.id,
         ]);
@@ -112,6 +110,10 @@ export const NewMessageScreen = () => {
     setChannel(dummyChannel);
   }, [chatClient]);
 
+  if (!channel) {
+    return null;
+  }
+
   return (
     <SafeAreaView
       style={{
@@ -120,8 +122,7 @@ export const NewMessageScreen = () => {
       }}>
       <View style={styles.container}>
         <ModalScreenHeader goBack={navigation.goBack} title='New Message' />
-        <View
-          style={styles.channelContainer}>
+        <View style={styles.channelContainer}>
           <Channel
             additionalTextInputProps={additionalTextInputProps}
             channel={channel}

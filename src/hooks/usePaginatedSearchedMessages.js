@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
-import {useChatContext} from 'stream-chat-react-native';
+
+import {ChatClientStore} from '../utils';
 
 export const MESSAGE_SEARCH_LIMIT = 10;
 export const usePaginatedSearchedMessages = (messageFilters = {}) => {
@@ -9,7 +10,7 @@ export const usePaginatedSearchedMessages = (messageFilters = {}) => {
   const offset = useRef(0);
   const hasMoreResults = useRef(true);
   const queryInProgress = useRef(false);
-  const {client: chatClient} = useChatContext();
+  const chatClient = ChatClientStore.client;
 
   const done = () => {
     queryInProgress.current = false;

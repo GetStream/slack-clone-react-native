@@ -1,16 +1,16 @@
 import {useNavigation} from '@react-navigation/core';
 import {useCallback, useEffect} from 'react';
-import {useChatContext} from 'stream-chat-react-native';
 
 import {
   AsyncStore,
+  ChatClientStore,
   getChannelDisplayImage,
   getChannelDisplayName,
 } from '../utils';
 
 export const useDraftMessage = (currentMessage, channel) => {
   const navigation = useNavigation();
-  const {client: chatClient} = useChatContext();
+  const chatClient = ChatClientStore.client;
 
   const saveDraftMessage = useCallback(async () => {
     const storeObject = {

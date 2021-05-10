@@ -5,12 +5,12 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import {SCText} from '../components/SCText';
 import {SVGIcon} from '../components/SVGIcon';
-import {ChatClientService, notImplemented} from '../utils';
+import {ChatClientStore, notImplemented} from '../utils';
 import {ScreenHeader} from './ScreenHeader';
 
 export const ProfileScreen = (props) => {
   const {colors} = useTheme();
-  const chatClient = ChatClientService.getClient();
+  const chatClient = ChatClientStore.client;
 
   return (
     <View

@@ -18,13 +18,13 @@ export const ChannelSearchList = (props) => {
       channel={channel}
       containerStyle={{
         paddingHorizontal: 10,
-        paddingVertical: 3
+        paddingVertical: 3,
       }}
       key={channel.id}
       onSelect={goToChannelScreen}
       showAvatar
       titleStyle={{
-        fontWeight: '400'
+        fontWeight: '400',
       }}
     />
   );
