@@ -2,6 +2,7 @@ import {useEffect, useMemo, useState} from 'react';
 
 import {ChannelsStore, ChatClientStore} from '../utils';
 import {useMessageNewListener} from './listeners/useMessageNewListener';
+import {useMessageReadListener} from './listeners/useMessageReadListener';
 import {useNotificationAddedToChannelListener} from './listeners/useNotificationAddedToChannelListener';
 import {useNotificationMessageNewListener} from './listeners/useNotificationMessageNewListener';
 
@@ -67,10 +68,6 @@ export const useSlackChannels = () => {
         }
       });
 
-      setUnreadChannels([..._unreadChannels]);
-      setReadChannels([..._readChannels]);
-      setDMConversations([..._dmConversations]);
-
       // Cache the data so that it can be used on other screens.
       ChannelsStore.channels = channels;
     };
@@ -96,10 +93,6 @@ export const useSlackChannels = () => {
         a.state.last_message_at > b.state.last_message_at ? -1 : 1,
       );
 
-      setUnreadChannels([..._unreadChannels]);
-      setReadChannels([..._readChannels]);
-      setDMConversations([..._dmConversations]);
-
       // Cache the data so that it can be used on other screens.
       ChannelsStore.dmConversations = directMessagingChannels;
     };
@@ -107,6 +100,10 @@ export const useSlackChannels = () => {
     async function init() {
       await fetchChannels();
       await fetchDMConversations();
+
+      setUnreadChannels([..._unreadChannels]);
+      setReadChannels([..._readChannels]);
+      setDMConversations([..._dmConversations]);
     }
 
     init();
@@ -133,43 +130,14 @@ export const useSlackChannels = () => {
     setUnreadChannels,
   );
 
-  useEffect(() => {
-    function handleEvents(e) {
-      if (e.type === 'message.read') {
-        if (e.user.id !== chatClient.user.id) {
-          return;
-        }
-
-        const cid = e.cid;
-        // get channel index
-        const channelIndex = unreadChannels.findIndex(
-          (channel) => channel.cid === cid,
-        );
-
-        if (channelIndex < 0) {
-          return;
-        }
-
-        // get channel from channels
-        const channel = unreadChannels[channelIndex];
-
-        unreadChannels.splice(channelIndex, 1);
-        setUnreadChannels([...unreadChannels]);
-
-        if (!channel.data.name) {
-          setDMConversations([channel, ...dmConversations]);
-        } else {
-          setReadChannels([channel, ...readChannels]);
-        }
-      }
-    }
-
-    chatClient.on(handleEvents);
-
-    return () => {
-      chatClient.off(handleEvents);
-    };
-  }, [chatClient, readChannels, unreadChannels, dmConversations]);
+  useMessageReadListener(
+    readChannels,
+    unreadChannels,
+    dmConversations,
+    setDMConversations,
+    setReadChannels,
+    setUnreadChannels,
+  );
 
   return {
     activeChannelId,

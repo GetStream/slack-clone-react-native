@@ -60,5 +60,5 @@ export const useMessageNewListener = (
 
     chatClient.on('message.new', handleEvent);
     return () => chatClient.off('message.new', handleEvent);
-  }, []);
+  }, [readChannels, unreadChannels, dmConversations]);
 };
