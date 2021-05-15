@@ -6,15 +6,29 @@ import {useMessageContext} from 'stream-chat-react-native';
 
 import {SCText} from './SCText';
 
-export const MessageHeader = (props) => (
-  <View style={styles.column}>
-    {props.message.attachments.length > 0 && (
-      <View style={styles.header}>
-        <MessageUserBar {...props} />
-      </View>
-    )}
-  </View>
-);
+const styles = StyleSheet.create({
+  column: {
+    flexDirection: 'column',
+  },
+  header: {
+    paddingLeft: 2,
+  },
+  messageDate: {
+    color: 'grey',
+    fontSize: 10,
+    marginLeft: 6,
+  },
+  messageUserName: {
+    fontFamily: 'Lato-Bold',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  userBar: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: 5,
+  },
+});
 
 export const MessageUserBar = () => {
   const {colors} = useTheme();
@@ -42,26 +56,12 @@ export const MessageUserBar = () => {
   return null;
 };
 
-const styles = StyleSheet.create({
-  column: {
-    flexDirection: 'column',
-  },
-  header: {
-    paddingLeft: 2,
-  },
-  messageDate: {
-    color: 'grey',
-    fontSize: 10,
-    marginLeft: 6,
-  },
-  messageUserName: {
-    fontFamily: 'Lato-Bold',
-    fontSize: 15,
-    fontWeight: '900',
-  },
-  userBar: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginBottom: 5,
-  },
-});
+export const MessageHeader = (props) => (
+  <View style={styles.column}>
+    {props.message.attachments.length > 0 && (
+      <View style={styles.header}>
+        <MessageUserBar {...props} />
+      </View>
+    )}
+  </View>
+);

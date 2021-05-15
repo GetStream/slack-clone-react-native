@@ -93,7 +93,7 @@ export const ChannelScreen = () => {
           : 'Message',
       placeholderTextColor: '#979A9A',
     }),
-    [channel],
+    [channel.id],
   );
 
   /**

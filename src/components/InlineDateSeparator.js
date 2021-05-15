@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const InlineDateSeparator = ({date}) => {
+export const InlineDateSeparator = React.memo(({date}) => {
   const {colors} = useTheme();
 
   return (
@@ -42,4 +42,4 @@ export const InlineDateSeparator = ({date}) => {
       </SCText>
     </View>
   );
-};
+});

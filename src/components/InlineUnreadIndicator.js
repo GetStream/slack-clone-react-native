@@ -21,9 +21,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export const InlineUnreadIndicator = () => (
+export const InlineUnreadIndicator = React.memo(() => (
   <View style={styles.container}>
     <View style={styles.line} />
     <SCText style={styles.label}>Unread</SCText>
   </View>
-);
+));
