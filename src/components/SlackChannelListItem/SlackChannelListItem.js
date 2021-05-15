@@ -15,7 +15,7 @@ export const SlackChannelListItem = (props) => {
     titleStyle = {},
   } = props;
 
-  const isDM = !channel.data.name;
+  const isDM = channel.id.indexOf('!members-') === 0;
   const isOneOnOneDM = isDM && Object.keys(channel.state.members).length === 2;
 
   const onPress = () => {

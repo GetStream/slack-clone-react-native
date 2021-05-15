@@ -115,6 +115,9 @@ export const ShareMessageScreen = () => {
       key={channel.cid}
       onSelect={() => setSelectedChannel(channel)}
       showAvatar
+      titleStyle={{
+        fontWeight: '400',
+      }}
     />
   );
 

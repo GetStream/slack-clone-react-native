@@ -7,20 +7,34 @@ import {
 
 import {Spacer} from './Spacer';
 
+const randomImageBaseUrl = 'https://getstream.io/random_png/';
+const getInitials = (fullName) =>
+  fullName
+    .split(' ')
+    .slice(0, 2)
+    .map((name) => name.charAt(0))
+    .join(' ');
+const avatarSize = 40;
+
 export const MessageAvatar = () => {
   const {groupStyles, message} = useMessageContext();
-
   if (groupStyles[0] === 'single' || groupStyles[0] === 'top') {
     return (
       <Image
         source={{
-          uri: makeImageCompatibleUrl(message.user.image),
+          uri: message.user.image
+            ? makeImageCompatibleUrl(message.user.image)
+            : `${randomImageBaseUrl}${
+                message.user.name
+                  ? `?name=${getInitials(message.user.name)}&size=${avatarSize}`
+                  : ''
+              }`,
         }}
         style={{
           borderRadius: 5,
-          height: 40,
+          height: avatarSize,
           marginRight: 10,
-          width: 40,
+          width: avatarSize,
         }}
       />
     );

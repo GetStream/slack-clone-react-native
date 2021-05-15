@@ -1,6 +1,6 @@
-import {StreamChat} from 'stream-chat';
+import ChatClientStore from './ChatClientStore';
 
-const chatClient = StreamChat.getInstance('q95x9hkbyd6p');
+const chatClient = ChatClientStore.client;
 
 export const getChannelDisplayName = (
   channel,
@@ -27,7 +27,7 @@ export const getChannelDisplayName = (
   );
 
   if (otherMembers.length === 1) {
-    return `${otherMembers[0].user.name}  ${
+    return `${otherMembers[0].user.name || otherMembers[0].user.id}  ${
       includeUserStatus && otherMembers[0].user.status
         ? otherMembers[0].user.status
         : ''
