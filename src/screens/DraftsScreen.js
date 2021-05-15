@@ -5,11 +5,11 @@ import {FlatList} from 'react-native-gesture-handler';
 
 import {NewMessageBubble} from '../components/NewMessageBubble';
 import {SCText} from '../components/SCText';
-import {AsyncStore, ChatClientStore} from '../utils';
+import {AsyncStore} from '../utils';
+import {getUserDraftKey} from '../utils/draftUtils';
 
 export const DraftsScreen = () => {
   const [results, setResults] = useState([]);
-  const chatClient = ChatClientStore.client;
 
   const navigation = useNavigation();
   const {colors} = useTheme();
@@ -17,9 +17,7 @@ export const DraftsScreen = () => {
   useEffect(() => {
     const getDraftMessages = async () => {
       const keys = await AsyncStore.getAllKeys();
-      const draftKeys = keys.filter(
-        (k) => k.indexOf(`@slack-clone-draft-${chatClient.user.id}`) === 0,
-      );
+      const draftKeys = keys.filter((k) => k.indexOf(getUserDraftKey()) === 0);
 
       const items = await AsyncStore.multiGet(draftKeys);
       const drafts = items.map((i) => {

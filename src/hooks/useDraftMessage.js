@@ -7,10 +7,12 @@ import {
   getChannelDisplayImage,
   getChannelDisplayName,
 } from '../utils';
+import {getChannelDraftKey} from '../utils/draftUtils';
+
+const chatClient = ChatClientStore.client;
 
 export const useDraftMessage = (currentMessage, channel) => {
   const navigation = useNavigation();
-  const chatClient = ChatClientStore.client;
 
   const saveDraftMessage = useCallback(async () => {
     const storeObject = {
@@ -19,17 +21,11 @@ export const useDraftMessage = (currentMessage, channel) => {
       text: currentMessage,
       title: getChannelDisplayName(channel, true),
     };
-    await AsyncStore.setItem(
-      `@slack-clone-draft-${chatClient.user.id}-${channel.id}`,
-      storeObject,
-    );
+    await AsyncStore.setItem(getChannelDraftKey(channel.id), storeObject);
   }, [currentMessage, channel?.id]);
 
   const getDraftMessageText = async (channelId) => {
-    const draft = await AsyncStore.getItem(
-      `@slack-clone-draft-${chatClient.user.id}-${channelId}`,
-      null,
-    );
+    const draft = await AsyncStore.getItem(getChannelDraftKey(channelId), null);
 
     return draft?.text;
   };
@@ -38,7 +34,7 @@ export const useDraftMessage = (currentMessage, channel) => {
   useEffect(() => {
     const listener = (event) => {
       if (event.message.user.id === chatClient.user.id) {
-        AsyncStore.removeItem(`@slack-clone-draft-${channel.id}`);
+        AsyncStore.removeItem(getChannelDraftKey(channel.id));
       }
     };
 
