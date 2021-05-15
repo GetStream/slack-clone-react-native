@@ -2,6 +2,7 @@ import {useTheme} from '@react-navigation/native';
 import React from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
 
+import {HEADER_HEIGHT} from '../utils';
 import {CloseModalButton} from './CloseModalButton';
 import {SCText} from './SCText';
 import {Spacer} from './Spacer';
@@ -30,6 +31,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 0.5,
     flexDirection: 'row',
+    height: HEADER_HEIGHT,
     justifyContent: 'space-between',
     paddingHorizontal: 15,
     paddingTop: Platform.OS === 'android' ? 10 : 0,

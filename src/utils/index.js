@@ -26,3 +26,5 @@ export const getFastImageCompatibleUri = (uri) =>
     : '';
 
 export const SlackAppContext = React.createContext();
+
+export const HEADER_HEIGHT = 55;

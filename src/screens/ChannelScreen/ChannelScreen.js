@@ -121,6 +121,7 @@ export const ChannelScreen = () => {
   const onLongPressMessage = ({actionHandlers, message}) => {
     setActionSheetData({
       actionHandlers,
+      channelId: channel.id,
       message,
       openReactionPicker,
     });

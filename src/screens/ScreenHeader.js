@@ -5,7 +5,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {SCText} from '../components/SCText';
-import {SlackAppContext} from '../utils';
+import {HEADER_HEIGHT, SlackAppContext} from '../utils';
 
 const styles = StyleSheet.create({
   container: {
@@ -40,7 +40,7 @@ export const ScreenHeader = ({showLogo = false, title}) => {
           styles.container,
           {
             backgroundColor: colors.primary,
-            height: 60 + insets.top,
+            height: HEADER_HEIGHT + insets.top,
             paddingTop: insets.top,
           },
         ]}>

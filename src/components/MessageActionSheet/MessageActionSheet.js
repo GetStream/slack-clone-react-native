@@ -23,6 +23,7 @@ const snapPoints = [300, 500];
 export const MessageActionSheet = React.forwardRef((props, fRef) => {
   const {
     actionHandlers,
+    channelId,
     message,
     openReactionPicker: propMessageReactionPicker,
   } = props;
@@ -33,6 +34,12 @@ export const MessageActionSheet = React.forwardRef((props, fRef) => {
   const openReactionPicker = () => {
     propMessageReactionPicker(message);
   };
+
+  const openThread = () =>
+    navigation.navigate('ThreadScreen', {
+      channelId,
+      threadId: message.id,
+    });
 
   const callHandlerAndDismissSheet = (handler, ...args) => {
     fRef.current?.dismiss();
@@ -85,7 +92,7 @@ export const MessageActionSheet = React.forwardRef((props, fRef) => {
 
       options.push({
         Icon: ThreadReply,
-        handler: callHandlerAndDismissSheet.bind(null),
+        handler: callHandlerAndDismissSheet.bind(null, openThread),
         id: 'threadReply',
         title: 'Reply in Thread',
       });

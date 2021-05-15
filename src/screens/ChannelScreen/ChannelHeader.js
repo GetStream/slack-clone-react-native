@@ -5,7 +5,7 @@ import {Platform, StyleSheet, View} from 'react-native';
 import {BackButton} from '../../components/BackButton';
 import {SCText} from '../../components/SCText';
 import {SlackChannelListItem} from '../../components/SlackChannelListItem/SlackChannelListItem';
-import {notImplemented} from '../../utils';
+import {HEADER_HEIGHT, notImplemented} from '../../utils';
 
 export const styles = StyleSheet.create({
   centerContent: {
@@ -14,11 +14,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: Platform.OS === 'android' ? 10 : 0,
   },
-  channelSubTitle: {},
+  channelSubTitle: {
+    fontSize: 12,
+  },
   container: {
     borderBottomColor: 'grey',
     borderBottomWidth: 0.5,
     flexDirection: 'row',
+    height: HEADER_HEIGHT,
     justifyContent: 'space-between',
     paddingBottom: 5,
     paddingHorizontal: 10,

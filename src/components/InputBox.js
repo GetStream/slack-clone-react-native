@@ -3,6 +3,8 @@ import React, {useState} from 'react';
 import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   AutoCompleteInput,
+  FileUploadPreview,
+  ImageUploadPreview,
   useChannelContext,
   useMessageInputContext,
 } from 'stream-chat-react-native';
@@ -20,6 +22,9 @@ const styles = StyleSheet.create({
   autoCompleteInput: {
     minHeight: 25,
   },
+  buttonSection: {
+    width: 100,
+  },
   container: {
     borderTopWidth: 0.5,
     flex: 1,
@@ -29,16 +34,36 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   row: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 100,
   },
   textActionLabel: {
     fontSize: 18,
   },
 });
 
-export const InputBox = (props) => {
+const SendButton = () => {
+  const {
+    fileUploads,
+    imageUploads,
+    sendMessage,
+    text,
+  } = useMessageInputContext();
+  const isMessageEmpty = !text && !imageUploads.length && !fileUploads.length;
+
+  return (
+    <TouchableOpacity disabled={isMessageEmpty} onPress={sendMessage}>
+      <SVGIcon
+        fill={isMessageEmpty ? 'grey' : '#1F629E'}
+        height='18'
+        type={'input-buttons-send'}
+        width='18'
+      />
+    </TouchableOpacity>
+  );
+};
+export const InputBox = () => {
   const {colors} = useTheme();
   const {channel} = useChannelContext();
   const {
@@ -49,7 +74,6 @@ export const InputBox = (props) => {
   } = useMessageInputContext();
   const {
     additionalTextInputProps: contextAdditionalTextInputProps,
-    sendMessage,
   } = useMessageInputContext();
   const {isOpen: isKeyboardOpen} = useKeyboard();
   const [textHeight, setTextHeight] = useState(0);
@@ -88,17 +112,21 @@ export const InputBox = (props) => {
           borderTopColor: colors.border,
         },
       ]}>
-      <AutoCompleteInput
-        {...props}
-        additionalTextInputProps={additionalTextInputProps}
-      />
+      <View style={styles.row}>
+        <AutoCompleteInput
+          additionalTextInputProps={additionalTextInputProps}
+        />
+        {!isKeyboardOpen && <SendButton />}
+      </View>
+      <ImageUploadPreview />
+      <FileUploadPreview />
       {!!isKeyboardOpen && (
         <View
           style={[
             styles.actionsContainer,
             {backgroundColor: colors.background},
           ]}>
-          <View style={styles.row}>
+          <View style={[styles.row, styles.buttonSection]}>
             <TouchableOpacity onPress={openCommandsPicker}>
               <SVGIcon
                 height='18'
@@ -118,21 +146,14 @@ export const InputBox = (props) => {
               />
             </TouchableOpacity>
           </View>
-          <View style={styles.row}>
+          <View style={[styles.row, styles.buttonSection]}>
             <TouchableOpacity onPress={openFilePicker}>
               <SVGIcon height='18' type='file-attachment' width='18' />
             </TouchableOpacity>
             <TouchableOpacity onPress={openAttachmentPicker}>
               <SVGIcon height='21' type='image-attachment' width='18' />
             </TouchableOpacity>
-            <TouchableOpacity onPress={sendMessage}>
-              <SVGIcon
-                fill={'#1F629E'}
-                height='18'
-                type={'input-buttons-send'}
-                width='18'
-              />
-            </TouchableOpacity>
+            <SendButton />
           </View>
         </View>
       )}
