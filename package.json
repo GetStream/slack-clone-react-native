@@ -53,8 +53,7 @@
     "react-native-svg-transformer": "^0.14.3",
     "react-native-tags": "^2.2.0",
     "stream-chat": "^3.1.4",
-    "stream-chat-react-native": "3.3.2",
-    "stream-chat-react-native-core": "link:../stream-chat-react-native",
+    "stream-chat-react-native": "3.4.0",
     "stream-chat-test-data-cli": "0.1.0-beta.3"
   },
   "devDependencies": {

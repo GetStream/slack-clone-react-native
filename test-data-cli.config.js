@@ -1,14 +1,15 @@
-/* eslint-disable no-undef */
-/* eslint-disable sort-keys-fix/sort-keys-fix */
-
 // For details about these configs, please check:
 // https://github.com/GetStream/stream-chat-test-data-cli/blob/master/config.js.template
 module.exports = {
   // ============================================================================
   //          Set your API key and secret here
   // ============================================================================
+
   apiKey: '',
   secret: '',
+
+  // ============================================================================
+  // ============================================================================
 
   baseUrl: 'https://chat-us-east-1.stream-io-api.com',
   channelType: 'messaging',
@@ -65,7 +66,7 @@ module.exports = {
   attachmentFrequency: 10,
   urlFrequency: 7,
   reactionFrequency: 4,
-  threadReplyFrequency: -1,
+  threadReplyFrequency: 5,
   truncateBeforeAddingNewMessages: true,
   reactions: ['like', 'love', 'haha', 'wow', 'sad'],
   urls: [

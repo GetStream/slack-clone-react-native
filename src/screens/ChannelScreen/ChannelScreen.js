@@ -13,6 +13,7 @@ import {CustomKeyboardCompatibleView} from '../../components/CustomKeyboardCompa
 import {Gallery} from '../../components/Gallery';
 import {Giphy} from '../../components/Giphy';
 import {InlineDateSeparator} from '../../components/InlineDateSeparator';
+import {InlineUnreadIndicator} from '../../components/InlineUnreadIndicator';
 import {InputBox} from '../../components/InputBox';
 import {MessageActionSheet} from '../../components/MessageActionSheet/MessageActionSheet';
 import {MessageAvatar} from '../../components/MessageAvatar';
@@ -217,6 +218,7 @@ export const ChannelScreen = () => {
             initialScrollToFirstUnreadMessage
             initialValue={draftText}
             InlineDateSeparator={InlineDateSeparator}
+            InlineUnreadIndicator={InlineUnreadIndicator}
             Input={InputBox}
             InputButtons={RenderNothing}
             KeyboardCompatibleView={CustomKeyboardCompatibleView}
@@ -234,6 +236,7 @@ export const ChannelScreen = () => {
             onPressInMessage={RenderNothing}
             ReactionList={RenderNothing}
             Reply={RenderNothing}
+            ScrollToBottomButton={RenderNothing}
             supportedReactions={supportedReactions}
             UrlPreview={UrlPreview}>
             <MessageList
