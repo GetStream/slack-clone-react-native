@@ -27,7 +27,6 @@ export const useSlackChannels = () => {
   // Base filter
   const filters = useMemo(
     () => ({
-      example: 'slack-demo',
       members: {
         $in: [chatClient.user.id],
       },
@@ -41,7 +40,6 @@ export const useSlackChannels = () => {
 
   const dmFilters = useMemo(
     () => ({
-      example: 'slack-demo',
       members: {
         $in: [chatClient.user.id],
       },

@@ -5,7 +5,6 @@ import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {Channel, Thread} from 'stream-chat-react-native';
 
 import {CustomKeyboardCompatibleView} from '../components/CustomKeyboardCompatibleView';
-import {EmptyComponent} from '../components/EmptyComponent';
 import {Gallery} from '../components/Gallery';
 import {Giphy} from '../components/Giphy';
 import {InputBoxThread} from '../components/InputBoxThread';
@@ -17,6 +16,7 @@ import {MessageRepliesAvatars} from '../components/MessageRepliesAvatars';
 import {MessageText} from '../components/MessageText';
 import {ModalScreenHeader} from '../components/ModalScreenHeader';
 import {ReactionPicker} from '../components/ReactionPicker';
+import {RenderNothing} from '../components/RenderNothing';
 import {UrlPreview} from '../components/UrlPreview';
 import {ChatClientStore, getChannelDisplayName, truncate} from '../utils';
 import {getSupportedReactions} from '../utils/supportedReactions';
@@ -159,15 +159,15 @@ export const ThreadScreen = () => {
               Input={InputBoxThread}
               KeyboardCompatibleView={ThreadKeyboardCompatibleView}
               MessageAvatar={MessageAvatar}
-              MessageDeleted={EmptyComponent}
+              MessageDeleted={RenderNothing}
               MessageFooter={renderMessageFooter}
               MessageHeader={MessageHeader}
               MessageRepliesAvatars={MessageRepliesAvatars}
               MessageText={MessageText}
               onLongPressMessage={onLongPressMessage}
-              onPressInMessage={EmptyComponent}
-              ReactionList={EmptyComponent}
-              ShowThreadMessageInChannelButton={EmptyComponent}
+              onPressInMessage={RenderNothing}
+              ReactionList={RenderNothing}
+              ShowThreadMessageInChannelButton={RenderNothing}
               supportedReactions={supportedReactions}
               thread={thread}
               UrlPreview={UrlPreview}>

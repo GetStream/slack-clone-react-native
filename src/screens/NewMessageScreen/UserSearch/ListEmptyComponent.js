@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const ListEmptyComponent = React.memo(() => (
+export const ListRenderNothing = React.memo(() => (
   <View style={styles.emptyResultIndicator}>
     <SCText style={styles.emptyResultIndicatorEmoji}>😕</SCText>
     <SCText>No user matches these keywords</SCText>

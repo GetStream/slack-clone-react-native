@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const EmptyComponent = () => null;
+const RenderNothing = () => null;
 const MessageListSeparator = () => (
   <ListItemSeparator
     borderColor={'#00000010'}
@@ -164,7 +164,7 @@ export const MessageSearchList = (props) => {
         Gallery={Gallery}
         Message={MessageWithChannelName}
         MessageAvatar={MessageAvatar}
-        MessageDeleted={EmptyComponent}
+        MessageDeleted={RenderNothing}
         MessageFooter={MessageFooter}
         MessageHeader={MessageHeader}
         MessageRepliesAvatars={MessageRepliesAvatars}
@@ -173,10 +173,10 @@ export const MessageSearchList = (props) => {
         onLongPressMessage={() => null}
         onPressMessage={goToChannel}
         otherAttachments={[]}
-        ReactionList={EmptyComponent}
-        Reply={EmptyComponent}
-        ScrollToBottomButton={EmptyComponent}
-        StickyHeader={EmptyComponent}
+        ReactionList={RenderNothing}
+        Reply={RenderNothing}
+        ScrollToBottomButton={RenderNothing}
+        StickyHeader={RenderNothing}
         UrlPreview={UrlPreview}>
         <MessageList
           additionalFlatListProps={{

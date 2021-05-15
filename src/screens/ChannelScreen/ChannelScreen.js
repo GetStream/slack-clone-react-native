@@ -10,7 +10,6 @@ import {
 } from 'stream-chat-react-native';
 
 import {CustomKeyboardCompatibleView} from '../../components/CustomKeyboardCompatibleView';
-import {EmptyComponent} from '../../components/EmptyComponent';
 import {Gallery} from '../../components/Gallery';
 import {Giphy} from '../../components/Giphy';
 import {InlineDateSeparator} from '../../components/InlineDateSeparator';
@@ -22,6 +21,7 @@ import {MessageHeader} from '../../components/MessageHeader';
 import {MessageRepliesAvatars} from '../../components/MessageRepliesAvatars';
 import {MessageText} from '../../components/MessageText';
 import {ReactionPickerActionSheet} from '../../components/ReactionPickerActionSheet/ReactionPickerActionSheet';
+import {RenderNothing} from '../../components/RenderNothing';
 import {UrlPreview} from '../../components/UrlPreview';
 import {useDraftMessage} from '../../hooks/useDraftMessage';
 import {ChatClientStore} from '../../utils';
@@ -155,6 +155,9 @@ export const ChannelScreen = () => {
       });
     }
   };
+  const setFlatListRef = (ref) => {
+    messageListRef.current = ref;
+  };
 
   useEffect(() => {
     const init = async () => {
@@ -207,7 +210,7 @@ export const ChannelScreen = () => {
             additionalTextInputProps={additionalTextInputProps}
             animatedLongPress={false}
             channel={channel}
-            DateHeader={EmptyComponent}
+            DateHeader={RenderNothing}
             forceAlignMessages={'left'}
             Gallery={Gallery}
             Giphy={Giphy}
@@ -215,11 +218,11 @@ export const ChannelScreen = () => {
             initialValue={draftText}
             InlineDateSeparator={InlineDateSeparator}
             Input={InputBox}
-            InputButtons={EmptyComponent}
+            InputButtons={RenderNothing}
             KeyboardCompatibleView={CustomKeyboardCompatibleView}
             maxTimeBetweenGroupedMessages={4000}
             MessageAvatar={MessageAvatar}
-            MessageDeleted={EmptyComponent}
+            MessageDeleted={RenderNothing}
             MessageFooter={renderMessageFooter}
             MessageHeader={MessageHeader}
             messageId={messageId}
@@ -228,16 +231,14 @@ export const ChannelScreen = () => {
             MessageText={MessageText}
             onChangeText={onChangeText}
             onLongPressMessage={onLongPressMessage}
-            onPressInMessage={EmptyComponent}
-            ReactionList={EmptyComponent}
-            Reply={EmptyComponent}
+            onPressInMessage={RenderNothing}
+            ReactionList={RenderNothing}
+            Reply={RenderNothing}
             supportedReactions={supportedReactions}
             UrlPreview={UrlPreview}>
             <MessageList
               onThreadSelect={openThread}
-              setFlatListRef={(ref) => {
-                messageListRef.current = ref;
-              }}
+              setFlatListRef={setFlatListRef}
             />
             <MessageInput />
           </Channel>
