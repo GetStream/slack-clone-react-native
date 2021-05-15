@@ -1,6 +1,9 @@
 import {useEffect, useMemo, useState} from 'react';
 
 import {ChannelsStore, ChatClientStore} from '../utils';
+import {useMessageNewListener} from './listeners/useMessageNewListener';
+import {useNotificationAddedToChannelListener} from './listeners/useNotificationAddedToChannelListener';
+import {useNotificationMessageNewListener} from './listeners/useNotificationMessageNewListener';
 
 const sort = {
   has_unread: -1,
@@ -109,54 +112,29 @@ export const useSlackChannels = () => {
     init();
   }, []);
 
+  useNotificationMessageNewListener(
+    setDMConversations,
+    setReadChannels,
+    setUnreadChannels,
+  );
+
+  useNotificationAddedToChannelListener(
+    setDMConversations,
+    setReadChannels,
+    setUnreadChannels,
+  );
+
+  useMessageNewListener(
+    readChannels,
+    unreadChannels,
+    dmConversations,
+    setDMConversations,
+    setReadChannels,
+    setUnreadChannels,
+  );
+
   useEffect(() => {
     function handleEvents(e) {
-      if (e.type === 'message.new') {
-        if (e.user.id === chatClient.user.id) {
-          return;
-        }
-
-        const cid = e.cid;
-
-        // Check if the channel (which received new message) exists in group channels.
-        const channelReadIndex = readChannels.findIndex(
-          (channel) => channel.cid === cid,
-        );
-
-        if (channelReadIndex >= 0) {
-          // If yes, then remove it from readChannels list and add it to unreadChannels list
-          const channel = readChannels[channelReadIndex];
-          readChannels.splice(channelReadIndex, 1);
-          setReadChannels([...readChannels]);
-          setUnreadChannels([channel, ...unreadChannels]);
-        }
-
-        // Check if the channel (which received new message) exists in dmConversations list.
-        const dmConversationIndex = dmConversations.findIndex(
-          (channel) => channel.cid === cid,
-        );
-
-        if (dmConversationIndex >= 0) {
-          // If yes, then remove it from dmConversations list and add it to unreadChannels list
-          const channel = dmConversations[dmConversationIndex];
-          dmConversations.splice(dmConversationIndex, 1);
-          setDMConversations([...dmConversations]);
-          setUnreadChannels([channel, ...unreadChannels]);
-        }
-
-        // Check if the channel (which received new message) already exists in unreadChannels.
-        const channelUnreadIndex = unreadChannels.findIndex(
-          (channel) => channel.cid === cid,
-        );
-
-        if (channelUnreadIndex >= 0) {
-          const channel = unreadChannels[channelUnreadIndex];
-          unreadChannels.splice(channelUnreadIndex, 1);
-          setReadChannels([...readChannels]);
-          setUnreadChannels([channel, ...unreadChannels]);
-        }
-      }
-
       if (e.type === 'message.read') {
         if (e.user.id !== chatClient.user.id) {
           return;
