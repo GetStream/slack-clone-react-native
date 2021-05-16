@@ -43,6 +43,7 @@ const MessageAvatarWithContext = (props) => {
 
   return <Spacer width={50} />;
 };
+
 const areEqual = (prevProps, nextProps) => {
   const {groupStyles: prevGroupStyles, message: prevMessage} = prevProps;
   const {groupStyles: nextGroupStyles, message: nextMessage} = nextProps;

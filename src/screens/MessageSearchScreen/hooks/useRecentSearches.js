@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 
-import {AsyncStore} from '../../../utils';
+import AsyncStore, {getRecentSearchesKey} from '../../../utils/AsyncStore';
 
 export const useRecentSearched = () => {
   const [recentSearches, setRecentSearches] = useState([]);
@@ -13,10 +13,7 @@ export const useRecentSearched = () => {
     const slicesRecentSearches = updatedRecentSearches.slice(0, 7);
     setRecentSearches(slicesRecentSearches);
 
-    await AsyncStore.setItem(
-      '@slack-clone-recent-searches',
-      slicesRecentSearches,
-    );
+    await AsyncStore.setItem(getRecentSearchesKey(), slicesRecentSearches);
   };
 
   const removeFromRecentSearches = async (index) => {
@@ -25,16 +22,13 @@ export const useRecentSearched = () => {
 
     setRecentSearches(updatedRecentSearch);
 
-    await AsyncStore.setItem(
-      '@slack-clone-recent-searches',
-      updatedRecentSearch,
-    );
+    await AsyncStore.setItem(getRecentSearchesKey(), updatedRecentSearch);
   };
 
   useEffect(() => {
     const loadRecentSearches = async () => {
       const recentSearches = await AsyncStore.getItem(
-        '@slack-clone-recent-searches',
+        getRecentSearchesKey(),
         [],
       );
       setRecentSearches(recentSearches);

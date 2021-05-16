@@ -116,7 +116,6 @@ const MessageWithChannelName = (props) => (
   </>
 );
 
-// eslint-disable-next-line arrow-body-style
 export const MessageSearchList = (props) => {
   const {loadingResults, results, searchQuery, startNewSearch} = props;
   const navigation = useNavigation();
@@ -127,7 +126,7 @@ export const MessageSearchList = (props) => {
   const goToChannel = ({message}) => {
     navigation.navigate('ChannelScreen', {
       channelId: message.channel.id,
-      message,
+      messageId: message.id,
     });
   };
 

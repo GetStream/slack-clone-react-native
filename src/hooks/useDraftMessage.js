@@ -2,12 +2,11 @@ import {useNavigation} from '@react-navigation/core';
 import {useCallback, useEffect} from 'react';
 
 import {
-  AsyncStore,
   ChatClientStore,
   getChannelDisplayImage,
   getChannelDisplayName,
 } from '../utils';
-import {getChannelDraftKey} from '../utils/draftUtils';
+import AsyncStore, {getChannelDraftKey} from '../utils/AsyncStore';
 
 const chatClient = ChatClientStore.client;
 

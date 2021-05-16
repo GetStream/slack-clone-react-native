@@ -5,8 +5,7 @@ import {FlatList} from 'react-native-gesture-handler';
 
 import {NewMessageBubble} from '../components/NewMessageBubble';
 import {SCText} from '../components/SCText';
-import {AsyncStore} from '../utils';
-import {getUserDraftKey} from '../utils/draftUtils';
+import AsyncStore, {getUserDraftKey} from '../utils/AsyncStore';
 
 export const DraftsScreen = () => {
   const [results, setResults] = useState([]);
