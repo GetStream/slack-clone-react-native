@@ -40,7 +40,7 @@ export const useMessageReadListener = (
       }
     };
 
-    chatClient.on('message.new', handleEvent);
-    return () => chatClient.off('message.new', handleEvent);
+    chatClient.on('message.read', handleEvent);
+    return () => chatClient.off('message.read', handleEvent);
   }, [readChannels, unreadChannels, dmConversations]);
 };

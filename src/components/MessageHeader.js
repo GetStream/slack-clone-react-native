@@ -32,7 +32,10 @@ const styles = StyleSheet.create({
 export const MessageUserBar = React.memo(({message}) => {
   const {colors} = useTheme();
 
-  if (message.groupStyles[0] === 'single' || message.groupStyles[0] === 'top') {
+  if (
+    message?.groupStyles?.[0] === 'single' ||
+    message?.groupStyles?.[0] === 'top'
+  ) {
     return (
       <>
         <View style={styles.userBar}>

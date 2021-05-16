@@ -197,6 +197,9 @@ export const ChannelScreen = () => {
       }
 
       const newChannel = chatClient.channel('messaging', channelId);
+      if (!newChannel.initialized) {
+        await newChannel.watch();
+      }
       setChannel(newChannel);
 
       const draft = await getDraftMessageText(channelId);
@@ -210,7 +213,7 @@ export const ChannelScreen = () => {
       setText(draft);
       setIsReady(true);
     };
-
+    setIsReady(false);
     init();
   }, [channelId, messageId]);
 

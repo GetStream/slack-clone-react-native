@@ -1,14 +1,13 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
 import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Colors} from 'stream-chat-react-native';
+import {Colors, useThreadContext} from 'stream-chat-react-native';
 
-import {truncate} from '../utils';
 import {MessageUserBar} from './MessageHeader';
 import {SCText} from './SCText';
 
 export const MessageTextWithContext = (props) => {
-  const {message, renderText} = props;
+  const {isThreadChannel, message, renderText} = props;
 
   const {colors} = useTheme();
   const navigation = useNavigation();
@@ -16,40 +15,37 @@ export const MessageTextWithContext = (props) => {
   return (
     <>
       {message.attachments.length === 0 && <MessageUserBar {...props} />}
-      {message.show_in_channel && (
+      {message.show_in_channel && !isThreadChannel && (
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('ThreadScreen', {
-              channelId: message.cid.slice(message.cid.findIndex(':') + 1),
+              channelId: message.cid.substring(message.cid.indexOf(':') + 1),
               threadId: message.parent_id,
             });
           }}
           style={{
+            backgroundColor: 'transparent',
             marginBottom: 10,
           }}>
           <SCText
             style={{
               color: colors.dimmedText,
             }}>
-            replied to a thread:{' '}
-            <SCText
+            replied to a thread{' '}
+            {/* <SCText
               style={{
                 color: colors.linkText,
               }}>
               {message.parentMessageText
                 ? truncate(message.parentMessageText, 70, '...')
-                : 'click to go'}
-            </SCText>
+                : ''}
+            </SCText> */}
           </SCText>
         </TouchableOpacity>
       )}
       {renderText({
         colors: Colors,
         markdownStyles: {
-          // link: {
-          //   color: 'blue',
-          //   fontSize: 25,
-          // },
           inlineCode: {
             color: 'red',
             fontWeight: '200',
@@ -85,8 +81,20 @@ export const MessageTextWithContext = (props) => {
 };
 
 const areEqual = (prevProps, nextProps) => {
-  const {message: prevMessage, onlyEmojis: prevOnlyEmojis} = prevProps;
-  const {message: nextMessage, onlyEmojis: nextOnlyEmojis} = nextProps;
+  const {
+    isThreadChannel: prevIsThreadChannel,
+    message: prevMessage,
+    onlyEmojis: prevOnlyEmojis,
+  } = prevProps;
+  const {
+    isThreadChannel: nextIsThreadChannel,
+    message: nextMessage,
+    onlyEmojis: nextOnlyEmojis,
+  } = nextProps;
+
+  const isThreadChannelChannelEqual =
+    prevIsThreadChannel === nextIsThreadChannel;
+  if (!isThreadChannelChannelEqual) return false;
 
   const messageTextEqual = prevMessage.text === nextMessage.text;
   if (!messageTextEqual) return false;
@@ -114,8 +122,12 @@ const MemoizedMessageTextContainer = React.memo(
 
 export const MessageText = (props) => {
   const {message, renderText} = props;
-
+  const {thread} = useThreadContext();
   return (
-    <MemoizedMessageTextContainer message={message} renderText={renderText} />
+    <MemoizedMessageTextContainer
+      isThreadChannel={!!thread}
+      message={message}
+      renderText={renderText}
+    />
   );
 };

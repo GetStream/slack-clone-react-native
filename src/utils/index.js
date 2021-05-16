@@ -1,7 +1,6 @@
 import React from 'react';
 import {Alert} from 'react-native';
 
-export {default as useStreamChatTheme} from './useStreamChatTheme';
 export {default as ChannelsStore} from './ChannelsStore';
 export {default as AsyncStore} from './AsyncStore';
 export {default as ChatClientStore} from './ChatClientStore';

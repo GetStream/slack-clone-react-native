@@ -5,8 +5,8 @@ module.exports = {
   //          Set your API key and secret here
   // ============================================================================
 
-  apiKey: '',
-  secret: '',
+  apiKey: 'samf9ubytcez',
+  secret: 'jrw8bkcq6g7pjqkperfzgrgb8pn5555ycqf2zx8qadszzt3tamkshr9jnpvchvsy',
 
   // ============================================================================
   // ============================================================================
@@ -68,7 +68,7 @@ module.exports = {
   reactionFrequency: 4,
   threadReplyFrequency: 5,
   truncateBeforeAddingNewMessages: true,
-  reactions: ['like', 'love', 'haha', 'wow', 'sad'],
+  reactions: ['204', '209', '249', '344', '315'],
   urls: [
     'https://www.youtube.com/watch?v=ceGLEhahLKQ',
     'https://reactnative.dev/',

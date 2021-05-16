@@ -7,7 +7,8 @@ import {Channel, Chat, MessageList} from 'stream-chat-react-native';
 import {CustomKeyboardCompatibleView} from '../components/CustomKeyboardCompatibleView';
 import {DateSeparator} from '../components/DateSeparator';
 import {MessageSlack} from '../components/MessageSlack';
-import {ChatClientStore, useStreamChatTheme} from '../utils';
+import useStreamChatTheme from '../hooks/useStreamChatTheme';
+import {ChatClientStore} from '../utils';
 import {ChannelHeader} from './ChannelScreen/ChannelHeader';
 
 export const TargettedMessageChannelScreen = () => {

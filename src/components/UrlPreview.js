@@ -2,6 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {goToURL} from 'stream-chat-react-native';
 
+import {truncate} from '../utils';
 import {SCText} from './SCText';
 
 export const UrlPreview = React.memo((props) => {
@@ -25,7 +26,7 @@ export const UrlPreview = React.memo((props) => {
       <View style={styles.detailsContainer}>
         <SCText style={styles.titleUrl}>{getDomain(props.title_link)}</SCText>
         <SCText style={styles.title}>{props.title}</SCText>
-        <SCText style={styles.description}>{props.text}</SCText>
+        <SCText style={styles.description}>{truncate(props.text, 100)}</SCText>
       </View>
       <View style={styles.thumbnailContainer}>
         <Image

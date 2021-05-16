@@ -1,5 +1,5 @@
 import {useTheme} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   AutoCompleteInput,
@@ -12,6 +12,7 @@ import {
 import {useKeyboard} from '../hooks/useKeaboard';
 import {notImplemented} from '../utils';
 import {SVGIcon} from './SVGIcon';
+import {SendButton} from './SendButton';
 
 const styles = StyleSheet.create({
   actionsContainer: {
@@ -43,26 +44,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const SendButton = () => {
-  const {
-    fileUploads,
-    imageUploads,
-    sendMessage,
-    text,
-  } = useMessageInputContext();
-  const isMessageEmpty = !text && !imageUploads.length && !fileUploads.length;
-
-  return (
-    <TouchableOpacity disabled={isMessageEmpty} onPress={sendMessage}>
-      <SVGIcon
-        fill={isMessageEmpty ? 'grey' : '#1F629E'}
-        height='18'
-        type={'input-buttons-send'}
-        width='18'
-      />
-    </TouchableOpacity>
-  );
-};
 export const InputBox = () => {
   const {colors} = useTheme();
   const {channel} = useChannelContext();
@@ -77,31 +58,38 @@ export const InputBox = () => {
   } = useMessageInputContext();
   const {isOpen: isKeyboardOpen} = useKeyboard();
   const [textHeight, setTextHeight] = useState(0);
-  const onContentSizeChange = ({
-    nativeEvent: {
-      contentSize: {height},
-    },
-  }) => {
-    if (!textHeight) {
-      setTextHeight(height);
-    }
-  };
-  const additionalTextInputProps = {
-    ...contextAdditionalTextInputProps,
-    onContentSizeChange,
-    placeholder:
-      channel && channel.data.name
-        ? 'Message #' + channel.data.name.toLowerCase().replace(' ', '_')
-        : 'Message',
-    placeholderTextColor: '#979A9A',
-    style: [
-      {
-        color: colors.text,
-        maxHeight: (textHeight || 17) * 4,
+
+  const additionalTextInputProps = useMemo(
+    () => ({
+      ...contextAdditionalTextInputProps,
+      onContentSizeChange: ({
+        nativeEvent: {
+          contentSize: {height},
+        },
+      }) => {
+        if (!textHeight) {
+          try {
+            setTextHeight(height);
+          } catch (_) {
+            // do nothing
+          }
+        }
       },
-      styles.autoCompleteInput,
-    ],
-  };
+      placeholder:
+        channel && channel.data.name
+          ? 'Message #' + channel.data.name.toLowerCase().replace(' ', '_')
+          : 'Message',
+      placeholderTextColor: '#979A9A',
+      style: [
+        {
+          color: colors.text,
+          maxHeight: (textHeight || 17) * 4,
+        },
+        styles.autoCompleteInput,
+      ],
+    }),
+    [channel?.id, textHeight],
+  );
 
   return (
     <View

@@ -102,7 +102,6 @@ export default () => {
           width: maxWidth,
         },
         containerInner: {
-          backgroundColor: streamColors.white_snow,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
           borderTopLeftRadius: 0,
