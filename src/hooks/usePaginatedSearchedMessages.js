@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 
-import {ChatClientStore} from '../utils';
+import {ChatClientStore} from '../utils/ChatClientStore';
 
 export const MESSAGE_SEARCH_LIMIT = 10;
 export const usePaginatedSearchedMessages = (messageFilters = {}) => {

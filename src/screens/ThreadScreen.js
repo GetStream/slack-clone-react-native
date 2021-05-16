@@ -18,7 +18,9 @@ import {ModalScreenHeader} from '../components/ModalScreenHeader';
 import {ReactionPicker} from '../components/ReactionPicker';
 import {RenderNothing} from '../components/RenderNothing';
 import {UrlPreview} from '../components/UrlPreview';
-import {ChatClientStore, getChannelDisplayName, truncate} from '../utils';
+import {truncate} from '../utils';
+import {ChatClientStore} from '../utils/ChatClientStore';
+import {getChannelDisplayName} from '../utils/channelUtils';
 import {getSupportedReactions} from '../utils/supportedReactions';
 
 const supportedReactions = getSupportedReactions();
@@ -51,12 +53,6 @@ const styles = StyleSheet.create({
     width: 50,
   },
 });
-
-const ThreadKeyboardCompatibleView = ({children}) => (
-  <CustomKeyboardCompatibleView isThread>
-    {children}
-  </CustomKeyboardCompatibleView>
-);
 
 export const ThreadScreen = () => {
   const {colors} = useTheme();
@@ -97,8 +93,8 @@ export const ThreadScreen = () => {
     actionSheetRef.current?.present();
   };
 
-  const renderMessageFooter = (props) => (
-    <MessageFooter {...props} openReactionPicker={openReactionPicker} />
+  const renderMessageFooter = () => (
+    <MessageFooter openReactionPicker={openReactionPicker} />
   );
 
   useEffect(() => {
@@ -157,7 +153,7 @@ export const ThreadScreen = () => {
               Gallery={Gallery}
               Giphy={Giphy}
               Input={InputBoxThread}
-              KeyboardCompatibleView={ThreadKeyboardCompatibleView}
+              KeyboardCompatibleView={CustomKeyboardCompatibleView}
               MessageAvatar={MessageAvatar}
               MessageDeleted={RenderNothing}
               MessageFooter={renderMessageFooter}

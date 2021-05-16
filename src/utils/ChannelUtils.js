@@ -1,4 +1,4 @@
-import ChatClientStore from './ChatClientStore';
+import {ChatClientStore} from './ChatClientStore';
 
 const chatClient = ChatClientStore.client;
 

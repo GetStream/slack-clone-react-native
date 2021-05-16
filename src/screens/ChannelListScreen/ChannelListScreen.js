@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native';
 
 import {JumpToButton} from '../../components/JumpToButton';
 import {NewMessageBubble} from '../../components/NewMessageBubble';
-import {ChatClientStore} from '../../utils';
+import {ChatClientStore} from '../../utils/ChatClientStore';
 import {ScreenHeader} from '../ScreenHeader';
 import {SlackChannelList} from './SlackChannelList';
 

@@ -1,7 +1,7 @@
 import {TouchableOpacity} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
 import dayjs from 'dayjs';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ActivityIndicator} from 'react-native';
 import {
@@ -17,28 +17,13 @@ import {MessageFooter} from '../../components/MessageFooter';
 import {MessageHeader} from '../../components/MessageHeader';
 import {MessageRepliesAvatars} from '../../components/MessageRepliesAvatars';
 import {MessageText} from '../../components/MessageText';
+import {RenderNothing} from '../../components/RenderNothing';
 import {SCText} from '../../components/SCText';
 import {UrlPreview} from '../../components/UrlPreview';
-import {ChatClientStore, getChannelDisplayName} from '../../utils';
+import {ChatClientStore} from '../../utils/ChatClientStore';
+import {getChannelDisplayName} from '../../utils/channelUtils';
 
 const styles = StyleSheet.create({
-  cancelButton: {justifyContent: 'center', padding: 5},
-  container: {
-    flexDirection: 'column',
-    height: '100%',
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    padding: 10,
-    width: '100%',
-  },
-  inputBox: {
-    borderRadius: 10,
-    borderWidth: 0.5,
-    flex: 1,
-    margin: 3,
-    padding: 10,
-  },
   listEmptyContainer: {
     alignItems: 'center',
     flexGrow: 1,
@@ -50,22 +35,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     justifyContent: 'center',
-  },
-  recentSearchItemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
-  },
-  recentSearchText: {fontSize: 14},
-  recentSearchesContainer: {
-    flexGrow: 1,
-    flexShrink: 1,
-    marginBottom: 10,
-    marginTop: 10,
-  },
-  recentSearchesTitle: {
-    fontSize: 13,
-    padding: 5,
   },
   resetButton: {
     borderColor: '#696969',
@@ -82,21 +51,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 10,
   },
-  resultCountContainer: {
-    borderBottomWidth: 0.5,
-    padding: 15,
-  },
-  resultItemContainer: {
-    padding: 10,
-  },
-  resultsContainer: {flexGrow: 1, flexShrink: 1},
-  safeAreaView: {
-    flex: 1,
-    height: '100%',
-  },
 });
 
-const RenderNothing = () => null;
+const chatClient = ChatClientStore.client;
+
 const MessageListSeparator = () => (
   <ListItemSeparator
     borderColor={'#00000010'}
@@ -117,11 +75,11 @@ const MessageWithChannelName = (props) => (
 );
 
 export const MessageSearchList = (props) => {
-  const {loadingResults, results, searchQuery, startNewSearch} = props;
+  const {loadingResults, resetSearch, results, searchQuery} = props;
   const navigation = useNavigation();
-  const chatClient = ChatClientStore.client;
 
-  const [fakeChannel, setFakeChannel] = useState(null);
+  const fakeChannel = chatClient.channel('dummy', 'dummy');
+  fakeChannel.initialized = true;
 
   const goToChannel = ({message}) => {
     navigation.navigate('ChannelScreen', {
@@ -129,12 +87,6 @@ export const MessageSearchList = (props) => {
       messageId: message.id,
     });
   };
-
-  useEffect(() => {
-    const channel = chatClient.channel('dummy', 'dummy');
-    channel.initialized = true;
-    setFakeChannel(channel);
-  }, []);
 
   if (loadingResults) {
     return (
@@ -149,12 +101,13 @@ export const MessageSearchList = (props) => {
       <View style={[styles.listEmptyContainer]}>
         {/* eslint-disable-next-line react/no-unescaped-entities */}
         <SCText>No results for '{searchQuery}'</SCText>
-        <TouchableOpacity onPress={startNewSearch} style={styles.resetButton}>
+        <TouchableOpacity onPress={resetSearch} style={styles.resetButton}>
           <SCText>Start a new search</SCText>
         </TouchableOpacity>
       </View>
     );
   }
+
   return (
     <>
       <Channel
@@ -169,9 +122,8 @@ export const MessageSearchList = (props) => {
         MessageRepliesAvatars={MessageRepliesAvatars}
         messages={results}
         MessageText={MessageText}
-        onLongPressMessage={() => null}
+        onLongPressMessage={RenderNothing}
         onPressMessage={goToChannel}
-        otherAttachments={[]}
         ReactionList={RenderNothing}
         Reply={RenderNothing}
         ScrollToBottomButton={RenderNothing}
@@ -180,6 +132,7 @@ export const MessageSearchList = (props) => {
         <MessageList
           additionalFlatListProps={{
             ItemSeparatorComponent: MessageListSeparator,
+            keyboardShouldPersistTaps: 'never',
             showsVerticalScrollIndicator: false,
           }}
           inverted={false}

@@ -17,7 +17,8 @@ import {
 import {useMessageInputContext} from 'stream-chat-react-native';
 
 import {useKeyboard} from '../hooks/useKeaboard';
-import {getChannelDisplayName, notImplemented} from '../utils';
+import {notImplemented} from '../utils';
+import {getChannelDisplayName} from '../utils/channelUtils';
 import {SCText} from './SCText';
 import {SVGIcon} from './SVGIcon';
 import {SendButton} from './SendButton';
@@ -78,9 +79,8 @@ export const InputBoxThread = () => {
   const opacityMenuLeft = useRef(new Animated.Value(1)).current;
   const opacityMenuRight = useRef(new Animated.Value(0)).current;
   const isDM = !channel.data.name;
-  const {
-    additionalTextInputProps: contextAdditionalTextInputProps,
-  } = useMessageInputContext();
+  const {additionalTextInputProps: contextAdditionalTextInputProps} =
+    useMessageInputContext();
   const [textHeight, setTextHeight] = useState(0);
 
   const additionalTextInputProps = useMemo(

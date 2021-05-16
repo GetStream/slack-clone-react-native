@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-import ChatClientStore from './ChatClientStore';
+import {ChatClientStore} from './ChatClientStore';
 
 export default {
   flushGetRequests: () => AsyncStorage.flushGetRequests(),

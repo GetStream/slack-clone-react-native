@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 
-import {ChatClientStore} from '../utils';
+import {ChatClientStore} from '../utils/ChatClientStore';
 
 export const usePaginatedSearchedUsers = () => {
   const chatClient = ChatClientStore.client;

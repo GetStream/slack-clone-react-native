@@ -3,7 +3,30 @@ import React, {useContext} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {SCText} from '../../components/SCText';
-import {ChatClientStore, SlackAppContext} from '../../utils';
+import {SlackAppContext} from '../../contexts/SlackAppContext';
+import {ChatClientStore} from '../../utils/ChatClientStore';
+
+const styles = StyleSheet.create({
+  avatar: {
+    borderRadius: 17,
+    height: 35,
+    width: 35,
+  },
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding: 5,
+  },
+  currentUserSubtext: {
+    color: '#32CD32',
+    fontSize: 12,
+    fontStyle: 'italic',
+  },
+  userId: {
+    fontSize: 10,
+    paddingLeft: 20,
+  },
+});
 
 export const UserListItem = ({user}) => {
   const {switchUser} = useContext(SlackAppContext);
@@ -48,25 +71,3 @@ export const UserListItem = ({user}) => {
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  avatar: {
-    borderRadius: 17,
-    height: 35,
-    width: 35,
-  },
-  container: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    padding: 5,
-  },
-  currentUserSubtext: {
-    color: '#32CD32',
-    fontSize: 12,
-    fontStyle: 'italic',
-  },
-  userId: {
-    fontSize: 10,
-    paddingLeft: 20,
-  },
-});

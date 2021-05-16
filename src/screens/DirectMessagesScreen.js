@@ -10,7 +10,7 @@ import {ChannelList, Chat} from 'stream-chat-react-native';
 import {DMAvatar} from '../components/DMAvatar';
 import {JumpToButton} from '../components/JumpToButton';
 import {NewMessageBubble} from '../components/NewMessageBubble';
-import {ChatClientStore} from '../utils';
+import {ChatClientStore} from '../utils/ChatClientStore';
 import {ScreenHeader} from './ScreenHeader';
 
 export const DirectMessagesScreen = () => {

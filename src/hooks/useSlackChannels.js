@@ -1,6 +1,7 @@
 import {useEffect, useMemo, useState} from 'react';
 
-import {ChannelsStore, ChatClientStore} from '../utils';
+import ChannelsStore from '../utils/ChannelsStore';
+import {ChatClientStore} from '../utils/ChatClientStore';
 import {useMessageNewListener} from './listeners/useMessageNewListener';
 import {useMessageReadListener} from './listeners/useMessageReadListener';
 import {useNotificationAddedToChannelListener} from './listeners/useNotificationAddedToChannelListener';

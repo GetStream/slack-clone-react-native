@@ -7,11 +7,52 @@ import {NewMessageBubble} from '../components/NewMessageBubble';
 import {SCText} from '../components/SCText';
 import AsyncStore, {getUserDraftKey} from '../utils/AsyncStore';
 
-export const DraftsScreen = () => {
-  const [results, setResults] = useState([]);
+const styles = StyleSheet.create({
+  backIcon: {
+    fontSize: 35,
+    textAlign: 'left',
+  },
+  container: {
+    height: '100%',
+  },
+  draftChannelTitle: {
+    fontWeight: 'bold',
+  },
+  draftItemContainer: {
+    borderBottomWidth: 0.3,
+    padding: 12,
+    paddingLeft: 20,
+  },
+  draftMessageText: {
+    fontWeight: '400',
+    marginTop: 10,
+  },
+  headerContainer: {
+    borderBottomColor: 'grey',
+    borderBottomWidth: 0.5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '900',
+  },
+  headerTitleContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  leftContent: {
+    flexDirection: 'row',
+  },
+});
 
+export const DraftsScreen = () => {
   const navigation = useNavigation();
   const {colors} = useTheme();
+
+  const [results, setResults] = useState([]);
 
   useEffect(() => {
     const getDraftMessages = async () => {
@@ -28,6 +69,7 @@ export const DraftsScreen = () => {
 
     getDraftMessages();
   }, []);
+
   return (
     <SafeAreaView
       style={{
@@ -36,10 +78,7 @@ export const DraftsScreen = () => {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <View style={styles.leftContent}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.goBack();
-              }}>
+            <TouchableOpacity onPress={navigation.goBack}>
               <SCText style={styles.backIcon}>{'‹'}</SCText>
             </TouchableOpacity>
           </View>
@@ -84,44 +123,3 @@ export const DraftsScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  backIcon: {
-    fontSize: 35,
-    textAlign: 'left',
-  },
-  container: {
-    height: '100%',
-  },
-  draftChannelTitle: {
-    fontWeight: 'bold',
-  },
-  draftItemContainer: {
-    borderBottomWidth: 0.3,
-    padding: 12,
-    paddingLeft: 20,
-  },
-  draftMessageText: {
-    fontWeight: '400',
-    marginTop: 10,
-  },
-  headerContainer: {
-    borderBottomColor: 'grey',
-    borderBottomWidth: 0.5,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 15,
-  },
-  headerTitle: {
-    fontSize: 17,
-    fontWeight: '900',
-  },
-  headerTitleContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  leftContent: {
-    flexDirection: 'row',
-  },
-});

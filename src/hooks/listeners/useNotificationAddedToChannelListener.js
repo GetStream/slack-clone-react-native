@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 
-import {ChatClientStore} from '../../utils';
+import {ChatClientStore} from '../../utils/ChatClientStore';
 
 const chatClient = ChatClientStore.client;
 export const useNotificationAddedToChannelListener = (

@@ -26,7 +26,7 @@
     "@react-navigation/native": "^5.1.1",
     "@react-navigation/stack": "^5.9.3",
     "@stream-io/flat-list-mvcp": "0.10.1",
-    "@stream-io/react-native-simple-markdown": "^",
+    "@stream-io/react-native-simple-markdown": "1.2.1",
     "moment": "^2.24.0",
     "react": "16.13.1",
     "react-native": "0.63.3",

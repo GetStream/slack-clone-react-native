@@ -3,7 +3,7 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {SCText} from '../../components/SCText';
-import {getChannelDisplayName} from '../../utils';
+import {getChannelDisplayName} from '../../utils/channelUtils';
 
 const styles = StyleSheet.create({
   container: {

@@ -8,7 +8,7 @@ import {CustomKeyboardCompatibleView} from '../components/CustomKeyboardCompatib
 import {DateSeparator} from '../components/DateSeparator';
 import {MessageSlack} from '../components/MessageSlack';
 import useStreamChatTheme from '../hooks/useStreamChatTheme';
-import {ChatClientStore} from '../utils';
+import {ChatClientStore} from '../utils/ChatClientStore';
 import {ChannelHeader} from './ChannelScreen/ChannelHeader';
 
 export const TargettedMessageChannelScreen = () => {

@@ -53,9 +53,8 @@ export const InputBox = () => {
     openFilePicker,
     openMentionsPicker,
   } = useMessageInputContext();
-  const {
-    additionalTextInputProps: contextAdditionalTextInputProps,
-  } = useMessageInputContext();
+  const {additionalTextInputProps: contextAdditionalTextInputProps} =
+    useMessageInputContext();
   const {isOpen: isKeyboardOpen} = useKeyboard();
   const [textHeight, setTextHeight] = useState(0);
 

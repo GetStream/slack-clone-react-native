@@ -25,7 +25,7 @@ import {ReactionPickerActionSheet} from '../../components/ReactionPickerActionSh
 import {RenderNothing} from '../../components/RenderNothing';
 import {UrlPreview} from '../../components/UrlPreview';
 import {useDraftMessage} from '../../hooks/useDraftMessage';
-import {ChatClientStore} from '../../utils';
+import {ChatClientStore} from '../../utils/ChatClientStore';
 import {supportedReactions} from '../../utils/supportedReactions';
 import {ChannelHeader} from './ChannelHeader';
 import {JumpToRecentMessagesButton} from './JumpToRecentMessagesButton';
@@ -84,13 +84,14 @@ const additionalFlatListProps = {
   windowSize: 10,
 };
 
+const chatClient = ChatClientStore.client;
+
 export const ChannelScreen = () => {
   const {colors} = useTheme();
   const {
     params: {channelId = null, messageId = null},
   } = useRoute();
   const navigation = useNavigation();
-  const chatClient = ChatClientStore.client;
 
   const [channel, setChannel] = useState(null);
   const [draftText, setDraftText] = useState('');
@@ -118,7 +119,7 @@ export const ChannelScreen = () => {
    * When `openReactionPicker` is called from MessageFooter,
    * it will give you access to corresponding message.
    *
-   * @param {*} toggleReactionHandler
+   * @param {function} toggleReactionHandler
    */
   const openReactionPicker = (message) => {
     setReactionPickerData({
@@ -146,6 +147,11 @@ export const ChannelScreen = () => {
     actionSheetRef.current?.present();
   };
 
+  /**
+   * Switch to ThreadScreen.
+   *
+   * @param thread {object} Message object corresponding to thread.
+   */
   const openThread = useCallback(
     (thread) => {
       navigation.navigate('ThreadScreen', {
@@ -156,6 +162,13 @@ export const ChannelScreen = () => {
     [channel?.id, messageId],
   );
 
+  /**
+   * Jump to given message. The target message could be part of current channel
+   * or a different channel. If it's a different channel, then switch to that
+   * channel.
+   *
+   * @param {*} targetMessage
+   */
   const goToMessage = (targetMessage) => {
     if (channel.cid !== targetMessage.cid) {
       navigation.setParams({

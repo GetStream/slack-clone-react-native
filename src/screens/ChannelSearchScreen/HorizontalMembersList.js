@@ -4,7 +4,8 @@ import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {DMAvatar} from '../../components/DMAvatar';
 import {SCText} from '../../components/SCText';
-import {ChannelsStore, ChatClientStore} from '../../utils';
+import ChannelsStore from '../../utils/ChannelsStore';
+import {ChatClientStore} from '../../utils/ChatClientStore';
 
 const styles = StyleSheet.create({
   memberContainer: {

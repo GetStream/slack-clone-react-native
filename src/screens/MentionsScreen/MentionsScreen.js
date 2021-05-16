@@ -5,7 +5,7 @@ import {FlatList} from 'react-native-gesture-handler';
 
 import {NewMessageBubble} from '../../components/NewMessageBubble';
 import {usePaginatedSearchedMessages} from '../../hooks/usePaginatedSearchedMessages';
-import {ChatClientStore} from '../../utils';
+import {ChatClientStore} from '../../utils/ChatClientStore';
 import {ScreenHeader} from '../ScreenHeader';
 import {MentionedMessage} from './MentionedMessage';
 

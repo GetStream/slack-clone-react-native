@@ -82,12 +82,8 @@ export const SlackReactionList = (props) => {
   const {openReactionPicker} = props;
   const {channel} = useChannelContext();
   const {message} = useMessageContext();
-  const {
-    ownReactionTypes,
-    reactionCounts,
-    reactionsByType,
-    toggleReaction,
-  } = useMessageReactions(channel, message);
+  const {ownReactionTypes, reactionCounts, reactionsByType, toggleReaction} =
+    useMessageReactions(channel, message);
 
   return (
     <SlackReactionListWithContext

@@ -2,7 +2,8 @@ import {useTheme} from '@react-navigation/native';
 import React from 'react';
 import {Platform, StyleSheet} from 'react-native';
 
-import {getChannelDisplayName, truncate} from '../../utils';
+import {truncate} from '../../utils';
+import {getChannelDisplayName} from '../../utils/channelUtils';
 import {SCText} from '../SCText';
 
 const styles = StyleSheet.create({

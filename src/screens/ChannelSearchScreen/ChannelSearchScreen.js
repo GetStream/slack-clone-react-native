@@ -5,7 +5,8 @@ import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {ModalScreenHeader} from '../../components/ModalScreenHeader';
 import {SCText} from '../../components/SCText';
 import {usePaginatedSearchedChannels} from '../../hooks/usePaginatedSearchedChannels';
-import {ChannelsStore, ChatClientStore} from '../../utils';
+import ChannelsStore from '../../utils/ChannelsStore';
+import {ChatClientStore} from '../../utils/ChatClientStore';
 import {ChannelSearchInput} from './ChannelSearchInput';
 import {ChannelSearchList} from './ChannelSearchList';
 
@@ -41,9 +42,8 @@ export const ChannelSearchScreen = () => {
     [searchText],
   );
 
-  const {channels: results} = usePaginatedSearchedChannels(
-    queryFiltersChannels,
-  );
+  const {channels: results} =
+    usePaginatedSearchedChannels(queryFiltersChannels);
 
   const channels =
     results?.length > 0 ? results : ChannelsStore.recentConversations;

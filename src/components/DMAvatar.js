@@ -2,7 +2,7 @@ import {useTheme} from '@react-navigation/native';
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 
-import {ChatClientStore} from '../utils';
+import {ChatClientStore} from '../utils/ChatClientStore';
 import {PresenceIndicator} from './PresenceIndicator';
 
 export const DMAvatar = ({channel}) => {

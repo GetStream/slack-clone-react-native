@@ -14,7 +14,7 @@ import {MessageRepliesAvatars} from '../../components/MessageRepliesAvatars';
 import {MessageText} from '../../components/MessageText';
 import {ModalScreenHeader} from '../../components/ModalScreenHeader';
 import {UrlPreview} from '../../components/UrlPreview';
-import {ChatClientStore} from '../../utils';
+import {ChatClientStore} from '../../utils/ChatClientStore';
 import {getSupportedReactions} from '../../utils/supportedReactions';
 import {UserSearch} from './UserSearch/UserSearch';
 

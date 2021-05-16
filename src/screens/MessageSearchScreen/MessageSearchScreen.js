@@ -36,15 +36,11 @@ export const MessageSearchScreen = () => {
   const [searchText, setSearchText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const {loading: loadingMessages, messages} = usePaginatedSearchedMessages(
-    searchQuery,
-  );
+  const {loading: loadingMessages, messages} =
+    usePaginatedSearchedMessages(searchQuery);
 
-  const {
-    addToRecentSearches,
-    recentSearches,
-    removeFromRecentSearches,
-  } = useRecentSearched();
+  const {addToRecentSearches, recentSearches, removeFromRecentSearches} =
+    useRecentSearched();
 
   const startNewSearch = (text) => {
     setSearchText(text);
@@ -114,8 +110,8 @@ export const MessageSearchScreen = () => {
           {!!searchQuery && (
             <MessageSearchList
               loadingResults={loadingMessages}
+              resetSearch={startNewSearch.bind('', null)}
               results={messages}
-              startNewSearch={startNewSearch}
             />
           )}
         </View>

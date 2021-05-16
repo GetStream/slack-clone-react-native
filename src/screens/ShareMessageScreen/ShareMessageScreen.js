@@ -17,7 +17,7 @@ import {ModalScreenHeader} from '../../components/ModalScreenHeader';
 import {Reply} from '../../components/Reply';
 import {SlackChannelListItem} from '../../components/SlackChannelListItem/SlackChannelListItem';
 import {usePaginatedSearchedChannels} from '../../hooks/usePaginatedSearchedChannels';
-import {ChatClientStore} from '../../utils';
+import {ChatClientStore} from '../../utils/ChatClientStore';
 
 const styles = StyleSheet.create({
   autocompleteContainer: {

@@ -14,7 +14,7 @@ import {
   ThreadReply,
 } from 'stream-chat-react-native';
 
-import {ChatClientStore} from '../../utils';
+import {ChatClientStore} from '../../utils/ChatClientStore';
 import {BottomSheetBackground} from '../BottomSheetBackground';
 import {ActionListContainer} from './ActionListContainer';
 

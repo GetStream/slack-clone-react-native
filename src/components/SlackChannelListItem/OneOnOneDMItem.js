@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 
-import {ChatClientStore} from '../../utils';
+import {ChatClientStore} from '../../utils/ChatClientStore';
 import {PresenceIndicator} from '../PresenceIndicator';
 import {ChannelTitle} from './ChannelTitle';
 import {UnreadCountBadge} from './UnreadCountBadge';

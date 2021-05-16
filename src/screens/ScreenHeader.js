@@ -5,7 +5,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {SCText} from '../components/SCText';
-import {HEADER_HEIGHT, SlackAppContext} from '../utils';
+import {SlackAppContext} from '../contexts/SlackAppContext';
+import {HEADER_HEIGHT} from '../utils';
 
 const styles = StyleSheet.create({
   container: {
@@ -48,8 +49,7 @@ export const ScreenHeader = ({showLogo = false, title}) => {
           <TouchableOpacity onPress={openUserPicker}>
             <Image
               source={{
-                uri:
-                  'https://avatars.githubusercontent.com/u/8597527?s=200&v=4',
+                uri: 'https://avatars.githubusercontent.com/u/8597527?s=200&v=4',
               }}
               style={styles.logo}
             />

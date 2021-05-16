@@ -4,7 +4,8 @@ import {SafeAreaView, StyleSheet, View} from 'react-native';
 
 import {SCText} from '../../components/SCText';
 import {usePaginatedSearchedChannels} from '../../hooks/usePaginatedSearchedChannels';
-import {ChannelsStore, ChatClientStore} from '../../utils';
+import ChannelsStore from '../../utils/ChannelsStore';
+import {ChatClientStore} from '../../utils/ChatClientStore';
 import {ChannelSearchInput} from './ChannelSearchInput';
 import {ChannelSearchList} from './ChannelSearchList';
 import {HorizonalMembersList} from './HorizontalMembersList';

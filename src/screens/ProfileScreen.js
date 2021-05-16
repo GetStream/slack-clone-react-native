@@ -5,12 +5,51 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import {SCText} from '../components/SCText';
 import {SVGIcon} from '../components/SVGIcon';
-import {ChatClientStore, notImplemented} from '../utils';
+import {notImplemented} from '../utils';
+import {ChatClientStore} from '../utils/ChatClientStore';
 import {ScreenHeader} from './ScreenHeader';
 
-export const ProfileScreen = (props) => {
+const styles = StyleSheet.create({
+  actionItemContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 50,
+  },
+  actionItemSection: {},
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  status: {
+    fontSize: 12,
+    fontWeight: '400',
+  },
+  userDetails: {
+    flex: 1,
+    flexDirection: 'column',
+    flexGrow: 1,
+    padding: 8,
+    paddingLeft: 20,
+  },
+  userImage: {
+    borderRadius: 7,
+    height: 60,
+    width: 60,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});
+
+const chatClient = ChatClientStore.client;
+
+/** @todo: Cleanup styling */
+export const ProfileScreen = () => {
   const {colors} = useTheme();
-  const chatClient = ChatClientStore.client;
 
   return (
     <View
@@ -19,7 +58,7 @@ export const ProfileScreen = (props) => {
         flex: 1,
       }}>
       <View style={{flex: 1}}>
-        <ScreenHeader navigation={props.navigation} title='You' />
+        <ScreenHeader title='You' />
         <View style={styles.container}>
           <View style={styles.row}>
             <View>
@@ -117,39 +156,3 @@ export const ProfileScreen = (props) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  actionItemContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    height: 50,
-  },
-  actionItemSection: {},
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  status: {
-    fontSize: 12,
-    fontWeight: '400',
-  },
-  userDetails: {
-    flex: 1,
-    flexDirection: 'column',
-    flexGrow: 1,
-    padding: 8,
-    paddingLeft: 20,
-  },
-  userImage: {
-    borderRadius: 7,
-    height: 60,
-    width: 60,
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});
