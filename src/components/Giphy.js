@@ -4,7 +4,7 @@ import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {getFastImageCompatibleUri} from '../utils';
 import {SCText} from './SCText';
 
-export const Giphy = (props) => (
+export const Giphy = React.memo((props) => (
   <TouchableOpacity style={styles.container}>
     <SCText style={styles.title}>{props.title}</SCText>
     <SCText style={styles.description}>Posted using Giphy.com</SCText>
@@ -15,7 +15,7 @@ export const Giphy = (props) => (
       style={styles.thumbnail}
     />
   </TouchableOpacity>
-);
+));
 
 const styles = StyleSheet.create({
   container: {

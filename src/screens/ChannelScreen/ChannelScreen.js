@@ -1,5 +1,5 @@
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {
   Channel,
@@ -57,13 +57,18 @@ const styles = StyleSheet.create({
     width: 50,
   },
 });
-
-const MessageWithoutDeleted = (props) => {
+const MessageWithoutDeleted = React.memo(() => {
   const {message} = useMessageContext();
+
   if (message.type === 'deleted') {
     return null;
   }
-  return <MessageSimple {...props} />;
+
+  return <MessageSimple />;
+});
+
+const additionalFlatListProps = {
+  windowSize: 10,
 };
 
 export const ChannelScreen = () => {
@@ -93,7 +98,7 @@ export const ChannelScreen = () => {
           : 'Message',
       placeholderTextColor: '#979A9A',
     }),
-    [channel.id],
+    [channelId],
   );
 
   /**
@@ -128,19 +133,14 @@ export const ChannelScreen = () => {
     actionSheetRef.current?.present();
   };
 
-  const openThread = (thread) => {
-    navigation.navigate('ThreadScreen', {
-      channelId: channel.id,
-      threadId: thread.id,
-    });
-  };
-
-  const renderMessageFooter = (props) => (
-    <MessageFooter
-      {...props}
-      openReactionPicker={openReactionPicker}
-      scrollToMessage={scrollToMessage}
-    />
+  const openThread = useCallback(
+    (thread) => {
+      navigation.navigate('ThreadScreen', {
+        channelId: channel.id,
+        threadId: thread.id,
+      });
+    },
+    [channelId],
   );
 
   const scrollToMessage = (messageId) => {
@@ -157,6 +157,14 @@ export const ChannelScreen = () => {
       });
     }
   };
+
+  const renderMessageFooter = () => (
+    <MessageFooter
+      openReactionPicker={openReactionPicker}
+      scrollToMessage={scrollToMessage}
+    />
+  );
+
   const setFlatListRef = (ref) => {
     messageListRef.current = ref;
   };
@@ -209,6 +217,7 @@ export const ChannelScreen = () => {
             },
           ]}>
           <Channel
+            additionalFlatListProps={additionalFlatListProps}
             additionalTextInputProps={additionalTextInputProps}
             animatedLongPress={false}
             channel={channel}
@@ -223,7 +232,7 @@ export const ChannelScreen = () => {
             Input={InputBox}
             InputButtons={RenderNothing}
             KeyboardCompatibleView={CustomKeyboardCompatibleView}
-            maxTimeBetweenGroupedMessages={4000}
+            maxTimeBetweenGroupedMessages={30000}
             MessageAvatar={MessageAvatar}
             MessageDeleted={RenderNothing}
             MessageFooter={renderMessageFooter}

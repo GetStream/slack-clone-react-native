@@ -69,14 +69,17 @@ export const HeaderReactionList = ({openReactionPicker, toggleReaction}) => {
 
   return (
     <View style={styles.reactionListContainer}>
-      {reactions.map((r, index) => (
-        <ReactionItem
-          handleReaction={toggleReaction}
-          icon={r.icon}
-          key={index}
-          type={r.id}
-        />
-      ))}
+      {reactions.map((r, index) => {
+        if (!r?.icon) return null;
+        return (
+          <ReactionItem
+            handleReaction={toggleReaction}
+            icon={r.icon}
+            key={index}
+            type={r.id}
+          />
+        );
+      })}
       <TouchableOpacity
         onPress={() => {
           openReactionPicker();

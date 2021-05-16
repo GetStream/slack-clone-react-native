@@ -16,8 +16,9 @@ const getInitials = (fullName) =>
     .join(' ');
 const avatarSize = 40;
 
-export const MessageAvatar = () => {
-  const {groupStyles, message} = useMessageContext();
+const MessageAvatarWithContext = (props) => {
+  const {groupStyles, message} = props;
+
   if (groupStyles[0] === 'single' || groupStyles[0] === 'top') {
     return (
       <Image
@@ -41,4 +42,23 @@ export const MessageAvatar = () => {
   }
 
   return <Spacer width={50} />;
+};
+const areEqual = (prevProps, nextProps) => {
+  const {groupStyles: prevGroupStyles, message: prevMessage} = prevProps;
+  const {groupStyles: nextGroupStyles, message: nextMessage} = nextProps;
+
+  if (prevMessage.user.image !== nextMessage.user.image) return false;
+
+  const groupStylesEqual =
+    prevGroupStyles.length === nextGroupStyles.length &&
+    prevGroupStyles[0] === nextGroupStyles[0];
+
+  if (!groupStylesEqual) return false;
+};
+const MemoizedMessageAvatar = React.memo(MessageAvatarWithContext, areEqual);
+
+export const MessageAvatar = () => {
+  const {groupStyles, message} = useMessageContext();
+
+  return <MemoizedMessageAvatar groupStyles={groupStyles} message={message} />;
 };

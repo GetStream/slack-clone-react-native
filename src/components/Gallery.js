@@ -35,10 +35,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Gallery = () => {
-  const {setImage} = useImageGalleryContext();
-  const {setBlurType, setOverlay} = useOverlayContext();
-  const {images, message} = useMessageContext();
+const GalleryWithContext = (props) => {
+  const {images, message, setBlurType, setImage, setOverlay} = props;
 
   if (!images?.length) {
     return null;
@@ -87,5 +85,43 @@ export const Gallery = () => {
         return null;
       })}
     </View>
+  );
+};
+
+const areEqual = (prevProps, nextProps) => {
+  const {images: prevImages} = prevProps;
+  const {images: nextImages} = nextProps;
+
+  const imagesEqual =
+    prevImages.length === nextImages.length &&
+    prevImages.every(
+      (image, index) =>
+        image.image_url === nextImages[index].image_url &&
+        image.thumb_url === nextImages[index].thumb_url,
+    );
+  if (!imagesEqual) return false;
+
+  return true;
+};
+
+const MemoizedGallery = React.memo(GalleryWithContext, areEqual);
+
+export const Gallery = () => {
+  const {setImage} = useImageGalleryContext();
+  const {setBlurType, setOverlay} = useOverlayContext();
+  const {images, message} = useMessageContext();
+
+  if (!images?.length) {
+    return null;
+  }
+
+  return (
+    <MemoizedGallery
+      images={images}
+      message={message}
+      setBlurType={setBlurType}
+      setImage={setImage}
+      setOverlay={setOverlay}
+    />
   );
 };

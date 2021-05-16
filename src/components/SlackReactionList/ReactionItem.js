@@ -16,6 +16,25 @@ const styles = StyleSheet.create({
   },
 });
 
+const areEqual = (prevProps, nextProps) => {
+  const {
+    count: prevCount,
+    Icon: prevIcon,
+    isOwnReaction: prevIsOwnReaction,
+  } = prevProps;
+  const {
+    count: nextCount,
+    Icon: nextIcon,
+    isOwnReaction: nextIsOwnReaction,
+  } = nextProps;
+
+  return (
+    prevCount === nextCount &&
+    prevIcon === nextIcon &&
+    prevIsOwnReaction === nextIsOwnReaction
+  );
+};
+
 export const ReactionItem = React.memo(
   ({count, Icon, isOwnReaction, onPress}) => {
     const {dark} = useTheme();
@@ -53,4 +72,5 @@ export const ReactionItem = React.memo(
       </TouchableOpacity>
     );
   },
+  areEqual,
 );

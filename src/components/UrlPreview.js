@@ -4,7 +4,7 @@ import {goToURL} from 'stream-chat-react-native';
 
 import {SCText} from './SCText';
 
-export const UrlPreview = (props) => {
+export const UrlPreview = React.memo((props) => {
   const getDomain = (url) => {
     const domain = url && url.replace('https://', '').replace('http://', '');
 
@@ -38,7 +38,7 @@ export const UrlPreview = (props) => {
       </View>
     </TouchableOpacity>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

@@ -40,7 +40,7 @@ function listDirectories(rootPath, cb) {
     }
 
     const external = isExternalModule(fullFileName);
-    cb({rootPath, symbolic, external, fullFileName, fileName});
+    cb({external, fileName, fullFileName, rootPath, symbolic});
   });
 }
 
@@ -66,7 +66,7 @@ function buildFullModuleMap(
 
   listDirectories(
     moduleRoot,
-    ({fileName, fullFileName, symbolic, external}) => {
+    ({external, fileName, fullFileName, symbolic}) => {
       if (symbolic) {
         return buildFullModuleMap(
           resolvePath(fullFileName, 'node_modules'),
@@ -116,7 +116,7 @@ function findAlernateRoots(
 
   alreadyVisited[moduleRoot] = true;
 
-  listDirectories(moduleRoot, ({fullFileName, fileName, external}) => {
+  listDirectories(moduleRoot, ({external, fileName, fullFileName}) => {
     if (fileName.charAt(0) !== '@') {
       if (external) {
         alternateRoots.push(fullFileName);
@@ -161,7 +161,7 @@ const repoDir = PATH.dirname(PATH.dirname(__dirname));
 const moduleBlacklist = [
     new RegExp(
       repoDir +
-        '/projects/stream-chat-react-native/examples/NativeMessaging/.*',
+        '/projects/stream-chat-react-native/examples/.*',
     ),
     new RegExp(
       repoDir + '/projects/stream-chat-react-native/examples/ExpoMessaging/.*',
@@ -188,25 +188,28 @@ if (alternateRoots && alternateRoots.length) {
 
 module.exports = (async () => {
   const {
-    resolver: {sourceExts, assetExts},
+    resolver: {assetExts, sourceExts},
   } = await getDefaultConfig();
   return {
     resolver: {
+      assetExts: assetExts.filter((ext) => ext !== 'svg'),
       blacklistRE: blacklist(moduleBlacklist),
       extraNodeModules,
-      useWatchman: false,
-      assetExts: assetExts.filter((ext) => ext !== 'svg'),
       sourceExts: [...sourceExts, 'svg'],
+      useWatchman: false,
     },
-    watchFolders: [PATH.resolve(__dirname)].concat(alternateRoots),
     // transformer: {
-    //   babelTransformerPath: require.resolve('./compiler/transformer'),
-    // },
-    serializer: {
+//   babelTransformerPath: require.resolve('./compiler/transformer'),
+// },
+serializer: {
       getPolyfills: getPolyfillHelper(),
     },
+    
+    
+    
     transformer: {
       babelTransformerPath: require.resolve('react-native-svg-transformer'),
     },
+    watchFolders: [PATH.resolve(__dirname)].concat(alternateRoots),
   };
 })();

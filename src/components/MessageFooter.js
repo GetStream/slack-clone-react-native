@@ -1,5 +1,5 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useChannelContext, useMessageContext} from 'stream-chat-react-native';
 
@@ -23,16 +23,19 @@ const styles = StyleSheet.create({
   },
 });
 
-export const MessageFooter = (props) => {
-  const {openReactionPicker: propOpenReactionPicker, scrollToMessage} = props;
+const MessageFooterWithContext = React.memo((props) => {
   const {
     channel,
     loadChannelAtMessage,
+    message,
+    openReactionPicker: propOpenReactionPicker,
+    scrollToMessage,
     setTargetedMessage,
-  } = useChannelContext();
+  } = props;
+
   const navigation = useNavigation();
-  const {message} = useMessageContext();
   const {colors} = useTheme();
+  const messageId = message?.id;
 
   const goToMessage = (message) => {
     if (channel.cid === message.cid) {
@@ -50,14 +53,14 @@ export const MessageFooter = (props) => {
       navigation.setParams({
         // cid -> `${channelType}:${channelId}`
         channelId: message.cid.replace('messaging:', ''),
-        messageId: message.id,
+        messageId,
       });
     }
   };
 
-  const openReactionPicker = () => {
+  const openReactionPicker = useCallback(() => {
     propOpenReactionPicker(message);
-  };
+  }, [messageId]);
 
   return (
     <View style={styles.reactionListContainer}>
@@ -73,5 +76,27 @@ export const MessageFooter = (props) => {
       </View>
       <SlackReactionList openReactionPicker={openReactionPicker} />
     </View>
+  );
+});
+
+export const MessageFooter = (props) => {
+  const {openReactionPicker, scrollToMessage} = props;
+  const {
+    channel,
+    loadChannelAtMessage,
+    setTargetedMessage,
+  } = useChannelContext();
+
+  const {message} = useMessageContext();
+
+  return (
+    <MessageFooterWithContext
+      channel={channel}
+      loadChannelAtMessage={loadChannelAtMessage}
+      message={message}
+      openReactionPicker={openReactionPicker}
+      scrollToMessage={scrollToMessage}
+      setTargetedMessage={setTargetedMessage}
+    />
   );
 };

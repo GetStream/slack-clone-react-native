@@ -2,7 +2,6 @@ import {useTheme} from '@react-navigation/native';
 import Dayjs from 'dayjs';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useMessageContext} from 'stream-chat-react-native';
 
 import {SCText} from './SCText';
 
@@ -30,10 +29,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export const MessageUserBar = () => {
+export const MessageUserBar = React.memo(({message}) => {
   const {colors} = useTheme();
-  const {groupStyles, message} = useMessageContext();
-  if (groupStyles[0] === 'single' || groupStyles[0] === 'top') {
+
+  if (message.groupStyles[0] === 'single' || message.groupStyles[0] === 'top') {
     return (
       <>
         <View style={styles.userBar}>
@@ -54,14 +53,14 @@ export const MessageUserBar = () => {
     );
   }
   return null;
-};
+});
 
-export const MessageHeader = (props) => (
+export const MessageHeader = React.memo(({message}) => (
   <View style={styles.column}>
-    {props.message.attachments.length > 0 && (
+    {message.attachments.length > 0 && (
       <View style={styles.header}>
-        <MessageUserBar {...props} />
+        <MessageUserBar message={message} />
       </View>
     )}
   </View>
-);
+));

@@ -23,12 +23,65 @@ const styles = StyleSheet.create({
   },
 });
 
+const SlackReactionListWithContext = React.memo(
+  (props) => {
+    const {
+      openReactionPicker,
+      ownReactionTypes,
+      reactionCounts,
+      reactionsByType,
+      toggleReaction,
+    } = props;
+    const {dark} = useTheme();
+
+    if (!reactionsByType || Object.keys(reactionsByType).length === 0) {
+      return null;
+    }
+
+    const renderReactionItem = (type) => {
+      if (!supportedReactionsByType[type]) return null;
+
+      const Icon = supportedReactionsByType[type].Icon;
+      const count = reactionCounts[type];
+      const isOwnReaction = ownReactionTypes.indexOf(type) > -1;
+
+      return (
+        <ReactionItem
+          count={count}
+          Icon={Icon}
+          isOwnReaction={isOwnReaction}
+          key={type}
+          onPress={() => toggleReaction(type)}
+        />
+      );
+    };
+
+    return (
+      <View style={styles.container}>
+        {Object.keys(reactionsByType).map(renderReactionItem)}
+        <TouchableOpacity
+          onPress={openReactionPicker}
+          style={[
+            styles.reactionPickerContainer,
+            {
+              backgroundColor: dark ? '#313538' : '#F0F0F0',
+            },
+          ]}>
+          <SVGIcon height='18' type='emoji' width='18' />
+        </TouchableOpacity>
+      </View>
+    );
+  },
+  (prevProps, nextProps) =>
+    Object.keys(prevProps.reactionsByType) ===
+      Object.keys(nextProps.reactionsByType) &&
+    prevProps.ownReactionTypes.length === nextProps.ownReactionTypes.length,
+);
+
 export const SlackReactionList = (props) => {
   const {openReactionPicker} = props;
   const {channel} = useChannelContext();
   const {message} = useMessageContext();
-  const {dark} = useTheme();
-
   const {
     ownReactionTypes,
     reactionCounts,
@@ -36,39 +89,13 @@ export const SlackReactionList = (props) => {
     toggleReaction,
   } = useMessageReactions(channel, message);
 
-  if (!reactionsByType || Object.keys(reactionsByType).length === 0) {
-    return null;
-  }
-
-  const renderReactionItem = (type) => {
-    const Icon = supportedReactionsByType[type].Icon;
-    const count = reactionCounts[type];
-    const isOwnReaction = ownReactionTypes.indexOf(type) > -1;
-
-    return (
-      <ReactionItem
-        count={count}
-        Icon={Icon}
-        isOwnReaction={isOwnReaction}
-        key={type}
-        onPress={() => toggleReaction(type)}
-      />
-    );
-  };
-
   return (
-    <View style={styles.container}>
-      {Object.keys(reactionsByType).map(renderReactionItem)}
-      <TouchableOpacity
-        onPress={openReactionPicker}
-        style={[
-          styles.reactionPickerContainer,
-          {
-            backgroundColor: dark ? '#313538' : '#F0F0F0',
-          },
-        ]}>
-        <SVGIcon height='18' type='emoji' width='18' />
-      </TouchableOpacity>
-    </View>
+    <SlackReactionListWithContext
+      openReactionPicker={openReactionPicker}
+      ownReactionTypes={ownReactionTypes}
+      reactionCounts={reactionCounts}
+      reactionsByType={reactionsByType}
+      toggleReaction={toggleReaction}
+    />
   );
 };

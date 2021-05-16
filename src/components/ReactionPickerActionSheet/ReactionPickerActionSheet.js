@@ -17,6 +17,7 @@ export const ReactionPickerActionSheet = React.forwardRef((props, fRef) => {
     fRef.current?.dismiss();
     toggleReaction(reactionType);
   };
+
   const renderBackdrop = useCallback((props) => {
     const opacityStyle = useAnimatedStyle(
       () => ({

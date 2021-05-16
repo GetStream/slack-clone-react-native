@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, View} from 'react-native';
 
-export const MessageRepliesAvatars = ({message}) => {
+export const MessageRepliesAvatars = React.memo(({message}) => {
   const avatars = message.thread_participants;
 
   return (
@@ -22,4 +22,4 @@ export const MessageRepliesAvatars = ({message}) => {
       ))}
     </View>
   );
-};
+});
