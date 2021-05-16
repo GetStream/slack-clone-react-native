@@ -7,9 +7,9 @@ import {SlackChannelListItem} from '../../components/SlackChannelListItem/SlackC
 export const ChannelSearchList = (props) => {
   const {channels} = props;
   const navigation = useNavigation();
-  const goToChannelScreen = (channelId) => {
+  const goToChannelScreen = (channel) => {
     navigation.navigate('ChannelScreen', {
-      channelId,
+      channelId: channel.id,
     });
   };
 
