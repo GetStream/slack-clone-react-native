@@ -74,7 +74,7 @@ const additionalFlatListProps = {
 export const ChannelScreen = () => {
   const {colors} = useTheme();
   const {
-    params: {channel: paramChannel, channelId = null, messageId = null},
+    params: {channelId = null, messageId = null},
   } = useRoute();
   const navigation = useNavigation();
   const chatClient = ChatClientStore.client;
@@ -98,7 +98,7 @@ export const ChannelScreen = () => {
           : 'Message',
       placeholderTextColor: '#979A9A',
     }),
-    [channelId],
+    [channel?.id, messageId],
   );
 
   /**
@@ -140,28 +140,48 @@ export const ChannelScreen = () => {
         threadId: thread.id,
       });
     },
-    [channelId],
+    [channel?.id, messageId],
   );
 
-  const scrollToMessage = (messageId) => {
+  const goToMessage = (targetMessage) => {
+    if (channel.cid !== targetMessage.cid) {
+      navigation.setParams({
+        channelId: targetMessage.cid.replace('messaging:', ''),
+        messageId: targetMessage.id,
+      });
+
+      return;
+    }
+
     const messages = channel.state.messages;
     const indexOfParentInMessageList = messages?.findIndex(
-      (message) => message?.id === messageId,
+      (message) => message?.id === targetMessage.id,
     );
-    if (messageListRef.current) {
-      /**
-       * Since the flatlist is inverted, we need to calculate the index from most recent message
-       */
-      messageListRef.current.scrollToIndex({
-        index: messages.length - indexOfParentInMessageList - 1,
-      });
+
+    try {
+      if (messageListRef.current) {
+        /**
+         * Since the flatlist is inverted, we need to calculate the index from most recent message
+         */
+        messageListRef.current.scrollToIndex({
+          index: messages.length - indexOfParentInMessageList - 1,
+          viewPosition: 0.5,
+        });
+        return;
+      }
+    } catch (_) {
+      // do nothing
     }
+    navigation.setParams({
+      channelId: channel?.id,
+      messageId,
+    });
   };
 
   const renderMessageFooter = () => (
     <MessageFooter
+      goToMessage={goToMessage}
       openReactionPicker={openReactionPicker}
-      scrollToMessage={scrollToMessage}
     />
   );
 
@@ -171,19 +191,15 @@ export const ChannelScreen = () => {
 
   useEffect(() => {
     const init = async () => {
-      if (!channelId && !paramChannel) {
+      if (!channelId) {
         navigation.goBack();
         return;
       }
 
-      if (paramChannel && paramChannel.initialized) {
-        setChannel(paramChannel);
-      } else {
-        const newChannel = chatClient.channel('messaging', channelId);
-        setChannel(newChannel);
-      }
+      const newChannel = chatClient.channel('messaging', channelId);
+      setChannel(newChannel);
 
-      const draft = await getDraftMessageText(channelId || paramChannel.id);
+      const draft = await getDraftMessageText(channelId);
 
       if (!draft) {
         setIsReady(true);
@@ -196,7 +212,7 @@ export const ChannelScreen = () => {
     };
 
     init();
-  }, [channelId]);
+  }, [channelId, messageId]);
 
   if (!isReady) {
     return null;

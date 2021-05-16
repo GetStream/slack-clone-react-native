@@ -47,7 +47,7 @@ export const SlackChannelList = () => {
   const navigation = useNavigation();
   const changeChannel = (channel) => {
     navigation.navigate('ChannelScreen', {
-      channel,
+      channelId: channel.id,
     });
   };
   const {dmConversations, readChannels, unreadChannels} = useSlackChannels();
