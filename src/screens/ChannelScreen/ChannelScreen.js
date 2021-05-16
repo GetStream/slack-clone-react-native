@@ -28,6 +28,7 @@ import {useDraftMessage} from '../../hooks/useDraftMessage';
 import {ChatClientStore} from '../../utils';
 import {supportedReactions} from '../../utils/supportedReactions';
 import {ChannelHeader} from './ChannelHeader';
+import {JumpToRecentMessagesButton} from './JumpToRecentMessagesButton';
 
 const styles = StyleSheet.create({
   channelScreenContainer: {flexDirection: 'column', height: '100%'},
@@ -43,6 +44,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#3F0E40',
     width: 350,
   },
+  recentMessageLink: {
+    alignSelf: 'center',
+    height: 60,
+    paddingTop: 20,
+    width: '100%',
+  },
+  recentMessageLinkText: {
+    alignSelf: 'center',
+    color: '#1E90FF',
+    fontSize: 15,
+  },
   touchableOpacityStyle: {
     alignItems: 'center',
     backgroundColor: '#3F0E40',
@@ -57,6 +69,7 @@ const styles = StyleSheet.create({
     width: 50,
   },
 });
+
 const MessageWithoutDeleted = React.memo(() => {
   const {message} = useMessageContext();
 
@@ -244,7 +257,6 @@ export const ChannelScreen = () => {
             forceAlignMessages={'left'}
             Gallery={Gallery}
             Giphy={Giphy}
-            initialScrollToFirstUnreadMessage
             initialValue={draftText}
             InlineDateSeparator={InlineDateSeparator}
             InlineUnreadIndicator={InlineUnreadIndicator}
@@ -265,7 +277,9 @@ export const ChannelScreen = () => {
             onPressInMessage={RenderNothing}
             ReactionList={RenderNothing}
             Reply={RenderNothing}
-            ScrollToBottomButton={RenderNothing}
+            ScrollToBottomButton={
+              messageId ? JumpToRecentMessagesButton : RenderNothing
+            }
             supportedReactions={supportedReactions}
             UrlPreview={UrlPreview}>
             <MessageList
