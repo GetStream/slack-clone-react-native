@@ -1,9 +1,6 @@
+⚠ We are moving to a separate monorepo-like repository for all the [React Native Sample projects](https://github.com/GetStream/react-native-samples). Updated version of Slack Clone based on `v3` of `stream-chat-react-native` is available here - https://github.com/GetStream/react-native-samples/tree/main/projects/slack-clone
+
 # Slack-clone 2.0 using React Native, Stream
-
-## ⚠ Important Note
-
-Slack clone is built using `stream-chat-react-native@2.x.x`. This example won't work on [`stream-chat-react-native@3.x.x`](https://github.com/GetStream/stream-chat-react-native/wiki#v300) yet, which brought plenty of breaking changes. We will publish a new version for slack clone soon. Currently we are busy with polishing of `stream-chat-react-native@3.x.x` :)
-
 
 <div style="display: inline">
 <img src="https://stream-blog-v2.imgix.net/blog/wp-content/uploads/80af4fbb74a77a4465679f6118af7427/image.png" alt="IMAGE ALT TEXT HERE"/>
